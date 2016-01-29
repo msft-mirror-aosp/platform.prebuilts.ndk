@@ -149,23 +149,27 @@ def main():
     install_dir = 'current'
     install_subdir = os.path.join(install_dir, 'toolchains')
 
-    print('Removing old files...')
-    subprocess.check_call(
-        ['git', 'rm', '-rf', '--ignore-unmatch', install_subdir])
-
-    # Git doesn't believe in directories, so `git rm -rf` might leave behind
-    # empty directories.
-    if os.path.isdir(install_subdir):
-        shutil.rmtree(install_subdir)
-
-    os.makedirs(install_subdir)
-
     for host, arch, package in packages:
+        toolchain = build_support.arch_to_toolchain(arch) + '-4.9'
+        toolchain_path = os.path.join(install_subdir, host, toolchain)
+        if os.path.exists(toolchain_path):
+            print('Removing old {} {}...'.format(host, toolchain))
+            subprocess.check_call(
+                ['git', 'rm', '-rf', '--ignore-unmatch', toolchain_path])
+
+            # Git doesn't believe in directories, so `git rm -rf` might leave
+            # behind empty directories.
+            if os.path.isdir(toolchain_path):
+                shutil.rmtree(toolchain_path)
+
+        if not os.path.exists(install_subdir):
+            os.makedirs(install_subdir)
+
         print('Extracting {}...'.format(package))
         extract_package(package, host, install_dir)
 
-    print('Adding files to index...')
-    subprocess.check_call(['git', 'add', install_subdir])
+        print('Adding {} {} files to index...'.format(host, toolchain))
+        subprocess.check_call(['git', 'add', toolchain_path])
 
     print('Committing update...')
     message = 'Update prebuilt GCC to build {}.'.format(args.build)
