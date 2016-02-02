@@ -88,7 +88,7 @@ def main():
     hosts = ('darwin-x86_64', 'linux-x86_64', 'windows', 'windows-x86_64')
     for host in hosts:
         install_path = os.path.join('current/toolchains', host, 'llvm')
-        if os.path.exists(install_path):
+        if os.path.lexists(install_path):
             print('Removing old Clang link for {}...'.format(host))
             subprocess.check_call(['git', 'rm', install_path])
 
