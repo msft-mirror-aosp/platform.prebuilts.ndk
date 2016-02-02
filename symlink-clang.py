@@ -87,8 +87,9 @@ def main():
 
     hosts = ('darwin-x86_64', 'linux-x86_64', 'windows', 'windows-x86_64')
     for host in hosts:
-        install_path = os.path.join('current/toolchains', host, 'llvm')
-        if os.path.exists(install_path):
+        install_path = build_support.android_path(
+            'prebuilts/ndk/current/toolchains', host, 'llvm')
+        if os.path.lexists(install_path):
             print('Removing old Clang link for {}...'.format(host))
             subprocess.check_call(['git', 'rm', install_path])
 
@@ -96,8 +97,12 @@ def main():
         prebuilt_path = build_support.android_path(
             'prebuilts/clang/host', prebuilt_host, 'clang-{}'.format(build))
 
+        install_dir = os.path.dirname(install_path)
+        relative_path = os.path.relpath(prebuilt_path, install_dir)
+
+        print(relative_path, install_path)
         print('Linking {} clang-{}...'.format(host, build))
-        os.symlink(prebuilt_path, install_path)
+        os.symlink(relative_path, install_path)
 
         print('Adding {} link to index...'.format(host))
         subprocess.check_call(['git', 'add', install_path])
