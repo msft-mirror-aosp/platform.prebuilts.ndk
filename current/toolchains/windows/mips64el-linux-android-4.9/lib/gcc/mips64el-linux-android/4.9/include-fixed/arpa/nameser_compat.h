@@ -2,7 +2,7 @@
 
     It has been auto-edited by fixincludes from:
 
-	"/tmp/6af77428a3b67462ddc3a4206c322e48/sysroot/usr/include/arpa/nameser_compat.h"
+	"/tmp/355c44184e291691f857fd64ecb76f08/sysroot/usr/include/arpa/nameser_compat.h"
 
     This had to be done to correct non-standard usages in the
     original, manufacturer supplied header file.  */
