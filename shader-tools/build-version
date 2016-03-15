@@ -1,0 +1,5 @@
+shaderc ae10c0ff1934dbd0bdbb50daaf041de20a47d0b3
+spirv-tools 942762e4b7cc9eb5c77d9bf32e0db9dbd860466c
+glslang 2a86a24e21bddd19bba0bd5ceb088bf8e376204c
+
+Target: SPIR-V 1.0 rev 3
