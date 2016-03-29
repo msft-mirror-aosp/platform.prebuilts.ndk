@@ -45,7 +45,7 @@ def get_latest_build():
             clangs.append(int(version_str))
         except ValueError:
             pass
-    return sorted(clangs)[-1]
+    return str(sorted(clangs)[-1])
 
 
 def get_prebuilt_host(host):
@@ -62,7 +62,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        'build', metavar='BUILD', nargs='?', type=int,
+        'build', metavar='BUILD', nargs='?',
         help='Build number to symlink. Defaults to the latest available.')
 
     parser.add_argument(
