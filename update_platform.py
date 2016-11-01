@@ -119,7 +119,17 @@ def main():
     remove(package)
 
     fetch_artifact(args.branch, 'ndk', args.build, 'repo.prop')
-    rename('repo.prop', os.path.join(install_path, 'repo.prop'))
+
+    # It's easier to rearrange the package here than it is in the NDK's build.
+    # NOTICE and repo.prop are in the package root by convention, but we don't
+    # actually want this whole package to be the installed sysroot in the NDK.
+    # We have $INSTALL_DIR/sysroot and $INSTALL_DIR/platforms.
+    # $INSTALL_DIR/sysroot will be installed to $NDK/sysroot, but
+    # $INSTALL_DIR/platforms is used as input to gen-platforms.sh. Shift the
+    # repo.prop and NOTICE into the sysroot directory.
+    rename('repo.prop', os.path.join(install_path, 'sysroot/repo.prop'))
+    rename(os.path.join(install_path, 'NOTICE'),
+           os.path.join(install_path, 'sysroot/NOTICE'))
 
     check_call(['git', 'add', install_path])
     message = textwrap.dedent("""\
