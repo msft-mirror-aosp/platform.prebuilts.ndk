@@ -130,6 +130,7 @@ def main():
     rename('repo.prop', os.path.join(install_path, 'sysroot/repo.prop'))
     rename(os.path.join(install_path, 'NOTICE'),
            os.path.join(install_path, 'sysroot/NOTICE'))
+    rmtree(os.path.join(install_path, 'platforms/android-current'))
 
     check_call(['git', 'add', install_path])
     message = textwrap.dedent("""\
