@@ -43,12 +43,12 @@ __BEGIN_DECLS
 typedef unsigned long shmatt_t;
 
 
-#if 0
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
 void* shmat(int, const void*, int) __INTRODUCED_IN_FUTURE;
 int shmctl(int, int, struct shmid_ds*) __INTRODUCED_IN_FUTURE;
 int shmdt(const void*) __INTRODUCED_IN_FUTURE;
 int shmget(key_t, size_t, int) __INTRODUCED_IN_FUTURE;
-#endif /* 0 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
 
 
 __END_DECLS

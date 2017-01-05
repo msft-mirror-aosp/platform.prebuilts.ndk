@@ -44,18 +44,18 @@
 __BEGIN_DECLS
 
 
-#if 0
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
 int semctl(int, int, int, ...) __INTRODUCED_IN_FUTURE;
 int semget(key_t, int, int) __INTRODUCED_IN_FUTURE;
 int semop(int, struct sembuf*, size_t) __INTRODUCED_IN_FUTURE;
-#endif /* 0 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
 
 
 #if defined(__USE_GNU)
 
-#if 0
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
 int semtimedop(int, struct sembuf*, size_t, const struct timespec*) __INTRODUCED_IN_FUTURE;
-#endif /* 0 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
 
 #endif
 

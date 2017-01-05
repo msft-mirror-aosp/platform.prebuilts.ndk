@@ -35,7 +35,7 @@
 
 __BEGIN_DECLS
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 int iswalnum_l(wint_t, locale_t) __INTRODUCED_IN(21);
 int iswalpha_l(wint_t, locale_t) __INTRODUCED_IN(21);
 int iswblank_l(wint_t, locale_t) __INTRODUCED_IN(21);
@@ -49,17 +49,17 @@ int iswspace_l(wint_t, locale_t) __INTRODUCED_IN(21);
 int iswupper_l(wint_t, locale_t) __INTRODUCED_IN(21);
 int iswxdigit_l(wint_t, locale_t) __INTRODUCED_IN(21);
 
-wint_t towlower_l(int, locale_t) __INTRODUCED_IN(21);
-wint_t towupper_l(int, locale_t) __INTRODUCED_IN(21);
+wint_t towlower_l(wint_t, locale_t) __INTRODUCED_IN(21);
+wint_t towupper_l(wint_t, locale_t) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
 #endif
 
 
-#if 0
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
 wint_t towctrans_l(wint_t, wctrans_t, locale_t) __INTRODUCED_IN_FUTURE;
 wctrans_t wctrans_l(const char*, locale_t) __INTRODUCED_IN_FUTURE;
-#endif /* 0 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
 
 
 
