@@ -16,14 +16,18 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef __VSP1_USER_H__
-#define __VSP1_USER_H__
-#include <linux/types.h>
-#include <linux/videodev2.h>
+#ifndef __UAPI_SOUND_TLV_H
+#define __UAPI_SOUND_TLV_H
+#define SNDRV_CTL_TLVT_CONTAINER 0
+#define SNDRV_CTL_TLVT_DB_SCALE 1
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define VIDIOC_VSP1_LUT_CONFIG _IOWR('V', BASE_VIDIOC_PRIVATE + 1, struct vsp1_lut_config)
-struct vsp1_lut_config {
-  __u32 lut[256];
-};
+#define SNDRV_CTL_TLVT_DB_LINEAR 2
+#define SNDRV_CTL_TLVT_DB_RANGE 3
+#define SNDRV_CTL_TLVT_DB_MINMAX 4
+#define SNDRV_CTL_TLVT_DB_MINMAX_MUTE 5
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
+#define SNDRV_CTL_TLVT_CHMAP_FIXED 0x101
+#define SNDRV_CTL_TLVT_CHMAP_VAR 0x102
+#define SNDRV_CTL_TLVT_CHMAP_PAIRED 0x103
 #endif
+/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

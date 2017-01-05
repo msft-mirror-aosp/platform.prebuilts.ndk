@@ -228,9 +228,9 @@ pthread_t pthread_self(void) __attribute_const__;
 
 #if defined(__USE_GNU)
 
-#if 0
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
 int pthread_getname_np(pthread_t, char* _Nonnull, size_t) __INTRODUCED_IN_FUTURE;
-#endif /* 0 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
 
 #endif
 /* TODO: this should be __USE_GNU too. */

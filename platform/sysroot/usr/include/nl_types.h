@@ -40,11 +40,11 @@ typedef void* nl_catd;
 typedef int nl_item;
 
 
-#if 0
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
 nl_catd catopen(const char*, int) __INTRODUCED_IN_FUTURE;
 char* catgets(nl_catd, int, int, const char*) __INTRODUCED_IN_FUTURE;
 int catclose(nl_catd) __INTRODUCED_IN_FUTURE;
-#endif /* 0 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
 
 
 __END_DECLS
