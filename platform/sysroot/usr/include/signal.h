@@ -29,12 +29,13 @@
 #ifndef _SIGNAL_H_
 #define _SIGNAL_H_
 
+#include <sys/cdefs.h>
+#include <sys/types.h>
+
 #include <asm/sigcontext.h>
 #include <bits/pthread_types.h>
 #include <bits/timespec.h>
 #include <limits.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
 
 #if defined(__LP64__) || defined(__mips__)
 /* For 64-bit (and mips), the kernel's struct sigaction doesn't match the POSIX one,
@@ -121,7 +122,7 @@ int sigaction(int, const struct sigaction*, struct sigaction*);
 
 int siginterrupt(int, int);
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 sighandler_t signal(int, sighandler_t) __INTRODUCED_IN(21);
 int sigaddset(sigset_t*, int) __INTRODUCED_IN(21);
 int sigdelset(sigset_t*, int) __INTRODUCED_IN(21);
@@ -138,7 +139,7 @@ int sigsuspend(const sigset_t* _Nonnull);
 int sigwait(const sigset_t* _Nonnull, int* _Nonnull);
 
 
-#if 0
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
 int sighold(int)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
   __INTRODUCED_IN_FUTURE;
@@ -151,7 +152,7 @@ int sigrelse(int)
   __INTRODUCED_IN_FUTURE;
 sighandler_t sigset(int, sighandler_t)
   __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN_FUTURE;
-#endif /* 0 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
 
 
 int raise(int);

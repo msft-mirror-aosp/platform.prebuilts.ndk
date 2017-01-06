@@ -29,12 +29,13 @@
 #ifndef _ANDROID_LEGACY_TERMIOS_INLINES_H_
 #define _ANDROID_LEGACY_TERMIOS_INLINES_H_
 
-#include <linux/termios.h>
 #include <sys/cdefs.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 
-#if __ANDROID_API__ < 21
+#include <linux/termios.h>
+
+#if __ANDROID_API__ < __ANDROID_API_L__
 
 __BEGIN_DECLS
 

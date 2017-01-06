@@ -70,9 +70,9 @@ FILE* setmntent(const char*, const char*) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
-#if 0
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
 char* hasmntopt(const struct mntent*, const char*) __INTRODUCED_IN_FUTURE;
-#endif /* 0 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
 
 
 __END_DECLS

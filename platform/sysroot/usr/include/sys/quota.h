@@ -41,9 +41,9 @@
 __BEGIN_DECLS
 
 
-#if 0
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
 int quotactl(int, const char*, int, char*) __INTRODUCED_IN_FUTURE;
-#endif /* 0 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
 
 
 __END_DECLS

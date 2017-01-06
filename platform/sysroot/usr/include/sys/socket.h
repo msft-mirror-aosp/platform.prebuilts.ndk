@@ -114,7 +114,7 @@ struct cmsghdr {
    ? (struct cmsghdr*) (msg)->msg_control : (struct cmsghdr*) NULL)
 #define CMSG_OK(mhdr, cmsg) ((cmsg)->cmsg_len >= sizeof(struct cmsghdr) &&   (cmsg)->cmsg_len <= (unsigned long)   ((mhdr)->msg_controllen -   ((char*)(cmsg) - (char*)(mhdr)->msg_control)))
 
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 struct cmsghdr* __cmsg_nxthdr(struct msghdr*, struct cmsghdr*) __INTRODUCED_IN(21);
 #else
 /* TODO(danalbert): Move this into libandroid_support. */
@@ -129,7 +129,7 @@ static inline struct cmsghdr* __cmsg_nxthdr(struct msghdr* msg, struct cmsghdr* 
   }
   return ptr;
 }
-#endif /* __ANDROID_API__ >= 21 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
 #define SCM_RIGHTS 0x01
 #define SCM_CREDENTIALS 0x02
@@ -182,7 +182,9 @@ struct ucred {
 #define AF_ALG 38
 #define AF_NFC 39
 #define AF_VSOCK 40
-#define AF_MAX 41
+#define AF_KCM 41
+#define AF_QIPCRTR 42
+#define AF_MAX 43
 
 #define PF_UNSPEC AF_UNSPEC
 #define PF_UNIX AF_UNIX
@@ -225,6 +227,8 @@ struct ucred {
 #define PF_ALG AF_ALG
 #define PF_NFC AF_NFC
 #define PF_VSOCK AF_VSOCK
+#define PF_KCM AF_KCM
+#define PF_QIPCRTR AF_QIPCRTR
 #define PF_MAX AF_MAX
 
 #define SOMAXCONN 128
@@ -247,6 +251,7 @@ struct ucred {
 #define MSG_NOSIGNAL 0x4000
 #define MSG_MORE 0x8000
 #define MSG_WAITFORONE 0x10000
+#define MSG_BATCH 0x40000
 #define MSG_FASTOPEN 0x20000000
 #define MSG_CMSG_CLOEXEC 0x40000000
 #define MSG_EOF MSG_FIN
@@ -275,6 +280,16 @@ struct ucred {
 #define SOL_DCCP 269
 #define SOL_NETLINK 270
 #define SOL_TIPC 271
+#define SOL_RXRPC 272
+#define SOL_PPPOL2TP 273
+#define SOL_BLUETOOTH 274
+#define SOL_PNPIPE 275
+#define SOL_RDS 276
+#define SOL_IUCV 277
+#define SOL_CAIF 278
+#define SOL_ALG 279
+#define SOL_NFC 280
+#define SOL_KCM 281
 
 #define IPX_TYPE 1
 
@@ -331,7 +346,7 @@ ssize_t __recvfrom_real(int, void*, size_t, int, struct sockaddr*, socklen_t*) _
 
 #if defined(__BIONIC_FORTIFY)
 
-#if __ANDROID_API__ >= 24
+#if __ANDROID_API__ >= __ANDROID_API_N__
 __BIONIC_FORTIFY_INLINE
 ssize_t recvfrom(int fd, void* buf, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addr_len) {
   size_t bos = __bos0(buf);
@@ -352,7 +367,7 @@ ssize_t recvfrom(int fd, void* buf, size_t len, int flags, struct sockaddr* src_
 
   return __recvfrom_chk(fd, buf, len, bos, flags, src_addr, addr_len);
 }
-#endif /* __ANDROID_API__ >= 24 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
 __BIONIC_FORTIFY_INLINE
 ssize_t recv(int socket, void* buf, size_t len, int flags) {

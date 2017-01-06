@@ -29,10 +29,11 @@
 #ifndef _SYS_SELECT_H_
 #define _SYS_SELECT_H_
 
-#include <linux/time.h>
-#include <signal.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
+
+#include <linux/time.h>
+#include <signal.h>
 
 __BEGIN_DECLS
 
@@ -65,7 +66,7 @@ int __FD_ISSET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
-#if defined(__BIONIC_FORTIFY) && __ANDROID_API__ >= 21
+#if defined(__BIONIC_FORTIFY) && __ANDROID_API__ >= __ANDROID_API_L__
 #define FD_CLR(fd, set) __FD_CLR_chk(fd, set, __bos(set))
 #define FD_SET(fd, set) __FD_SET_chk(fd, set, __bos(set))
 #define FD_ISSET(fd, set) __FD_ISSET_chk(fd, set, __bos(set))
