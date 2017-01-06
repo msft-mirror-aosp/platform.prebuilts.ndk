@@ -119,9 +119,9 @@ ssize_t readahead(int, off64_t, size_t) __INTRODUCED_IN(16);
 #endif /* __ANDROID_API__ >= 16 */
 
 
-#if 0
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
 int sync_file_range(int, off64_t, off64_t, unsigned int) __INTRODUCED_IN_FUTURE;
-#endif /* 0 */
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
 
 #endif
 
