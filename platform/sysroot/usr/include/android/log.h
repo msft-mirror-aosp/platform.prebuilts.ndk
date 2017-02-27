@@ -91,14 +91,22 @@ typedef enum android_LogPriority {
 /*
  * Send a simple string to the log.
  */
-int __android_log_write(int prio, const char *tag, const char *text);
+int __android_log_write(int prio, const char* tag, const char* text);
 
 /*
  * Send a formatted string to the log, used like printf(fmt,...)
  */
-int __android_log_print(int prio, const char *tag,  const char *fmt, ...)
+int __android_log_print(int prio, const char* tag,  const char* fmt, ...)
 #if defined(__GNUC__)
-    __attribute__((__format__(printf, 3, 4)))
+#ifdef __USE_MINGW_ANSI_STDIO
+#if __USE_MINGW_ANSI_STDIO
+    __attribute__ ((__format__(gnu_printf, 3, 4)))
+#else
+    __attribute__ ((__format__(printf, 3, 4)))
+#endif
+#else
+    __attribute__ ((__format__(printf, 3, 4)))
+#endif
 #endif
     ;
 
@@ -106,18 +114,38 @@ int __android_log_print(int prio, const char *tag,  const char *fmt, ...)
  * A variant of __android_log_print() that takes a va_list to list
  * additional parameters.
  */
-int __android_log_vprint(int prio, const char *tag,
-                         const char *fmt, va_list ap);
+int __android_log_vprint(int prio, const char* tag,
+                         const char* fmt, va_list ap)
+#if defined(__GNUC__)
+#ifdef __USE_MINGW_ANSI_STDIO
+#if __USE_MINGW_ANSI_STDIO
+    __attribute__ ((__format__(gnu_printf, 3, 0)))
+#else
+    __attribute__ ((__format__(printf, 3, 0)))
+#endif
+#else
+    __attribute__ ((__format__(printf, 3, 0)))
+#endif
+#endif
+    ;
 
 /*
- * Log an assertion failure and SIGTRAP the process to have a chance
- * to inspect it, if a debugger is attached. This uses the FATAL priority.
+ * Log an assertion failure and abort the process to have a chance
+ * to inspect it if a debugger is attached. This uses the FATAL priority.
  */
-void __android_log_assert(const char *cond, const char *tag,
-			  const char *fmt, ...)    
+void __android_log_assert(const char* cond, const char* tag,
+                          const char* fmt, ...)
 #if defined(__GNUC__)
-    __attribute__((__noreturn__))
-    __attribute__((__format__(printf, 3, 4)))
+    __attribute__ ((__noreturn__))
+#ifdef __USE_MINGW_ANSI_STDIO
+#if __USE_MINGW_ANSI_STDIO
+    __attribute__ ((__format__(gnu_printf, 3, 4)))
+#else
+    __attribute__ ((__format__(printf, 3, 4)))
+#endif
+#else
+    __attribute__ ((__format__(printf, 3, 4)))
+#endif
 #endif
     ;
 

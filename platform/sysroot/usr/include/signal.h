@@ -159,6 +159,11 @@ int raise(int);
 int kill(pid_t, int);
 int killpg(int, int);
 
+#if (!defined(__LP64__) && __ANDROID_API__ >= 16) || (defined(__LP64__))
+int tgkill(int tgid, int tid, int sig) __INTRODUCED_IN_32(16);
+#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 16) || (defined(__LP64__)) */
+
+
 int sigaltstack(const stack_t*, stack_t*);
 
 
