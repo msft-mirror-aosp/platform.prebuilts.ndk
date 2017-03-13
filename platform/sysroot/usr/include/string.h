@@ -116,12 +116,8 @@ char* strerror(int);
 char* strerror_l(int, locale_t) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
-#if defined(__USE_GNU)
-
-#if __ANDROID_API__ >= 23
+#if defined(__USE_GNU) && __ANDROID_API__ >= 23
 char* strerror_r(int, char*, size_t) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
 #else /* POSIX */
 int strerror_r(int, char*, size_t);
 #endif
