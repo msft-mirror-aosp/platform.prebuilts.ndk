@@ -24,12 +24,7 @@
 __BEGIN_DECLS
 
 #if defined(__clang__)
-/* clang should support alloc_size in the nearish future. */
-#if __has_attribute(alloc_size)
-#error "We should enable alloc_size for clang."
-#else
-#define __BIONIC_ALLOC_SIZE(...)
-#endif
+#define __BIONIC_ALLOC_SIZE(...) /* clang doesn't support attribute alloc_size. */
 #else
 #define __BIONIC_ALLOC_SIZE(...) __attribute__((__alloc_size__(__VA_ARGS__)))
 #endif
