@@ -107,6 +107,10 @@ def parse_args():
         '--use-current-branch', action='store_true',
         help='Do not repo start a new branch for the update.')
 
+    parser.add_argument(
+        '--include-current', metavar='CODENAME',
+        help='Do not remove android-current. Rename as android-CODENAME.')
+
     return parser.parse_args()
 
 
@@ -157,7 +161,18 @@ def main():
         rename('repo.prop', os.path.join(install_path, 'sysroot/repo.prop'))
     rename(os.path.join(install_path, 'NOTICE'),
            os.path.join(install_path, 'sysroot/NOTICE'))
-    rmtree(os.path.join(install_path, 'platforms/android-current'))
+
+    # When we don't have preview releases or betas of the platform in progress,
+    # we want to strip out unreleased API levels. During the preview/beta
+    # cycles, we want to keep them and rename "current" to the expected
+    # platform number.
+    current_platform = os.path.join(install_path, 'platforms/android-current')
+    if args.include_current is None:
+        rmtree(current_platform)
+    else:
+        codename = 'android-' + args.include_current
+        codename_platform = os.path.join(install_path, 'platforms', codename)
+        rename(current_platform, codename_platform)
 
     check_call(['git', 'add', install_path])
 
