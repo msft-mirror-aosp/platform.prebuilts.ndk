@@ -65,20 +65,36 @@ def fetch_artifact(branch, target, build, pattern):
            '--bid', build, pattern]
     check_call(cmd)
 
+    # Fetch artifact dumps crap to the working directory.
+    remove('.fetch_artifact2.dat')
+
 
 def fetch_ndk_prebuilts(branch, build):
     """Fetches a NDK platform package."""
     target = 'ndk'
     fetch_artifact(branch, target, build, 'ndk_platform.tar.bz2')
+    fetch_artifact(branch, target, build, 'repo.prop')
 
 
 def parse_args():
     """Parses and returns command line arguments."""
     parser = argparse.ArgumentParser()
 
+    download_group = parser.add_mutually_exclusive_group()
+
+    download_group.add_argument(
+        '--download', action='store_true', default=True,
+        help='Fetch artifacts from the build server. BUILD is a build number.')
+
+    download_group.add_argument(
+        '--no-download', action='store_false', dest='download',
+        help=('Do not download build artifacts. BUILD points to a local '
+              'artifact.'))
+
     parser.add_argument(
-        'build', metavar='BUILD',
-        help='Build number to pull from the build server.')
+        'build', metavar='BUILD_OR_ARTIFACT',
+        help=('Build number to pull from the build server, or a path to a '
+              'local artifact'))
 
     parser.add_argument(
         '--branch', default='aosp-master',
@@ -91,6 +107,10 @@ def parse_args():
         '--use-current-branch', action='store_true',
         help='Do not repo start a new branch for the update.')
 
+    parser.add_argument(
+        '--include-current', metavar='CODENAME',
+        help='Do not remove android-current. Rename as android-CODENAME.')
+
     return parser.parse_args()
 
 
@@ -100,11 +120,19 @@ def main():
 
     args = parse_args()
 
+    if args.download:
+        build = args.build
+        branch_name_suffix = build
+    else:
+        package = os.path.realpath(args.build)
+        branch_name_suffix = 'local'
+        logger().info('Using local artifact at {}'.format(package))
+
     os.chdir(os.path.realpath(os.path.dirname(__file__)))
 
     if not args.use_current_branch:
-        check_call(
-            ['repo', 'start', 'update-platform-{}'.format(args.build), '.'])
+        branch_name = 'update-platform-' + branch_name_suffix
+        check_call(['repo', 'start', branch_name, '.'])
 
     install_path = 'platform'
     check_call(['git', 'rm', '-r', '--ignore-unmatch', install_path])
@@ -112,13 +140,15 @@ def main():
         rmtree(install_path)
     makedirs(install_path)
 
-    fetch_ndk_prebuilts(args.branch, args.build)
-    package = 'ndk_platform.tar.bz2'
+    if args.download:
+        fetch_ndk_prebuilts(args.branch, build)
+        package = 'ndk_platform.tar.bz2'
+
     check_call(['tar', 'xf', package, '--strip-components=1', '-C',
                 install_path])
-    remove(package)
 
-    fetch_artifact(args.branch, 'ndk', args.build, 'repo.prop')
+    if args.download:
+        remove(package)
 
     # It's easier to rearrange the package here than it is in the NDK's build.
     # NOTICE and repo.prop are in the package root by convention, but we don't
@@ -127,22 +157,37 @@ def main():
     # $INSTALL_DIR/sysroot will be installed to $NDK/sysroot, but
     # $INSTALL_DIR/platforms is used as input to gen-platforms.sh. Shift the
     # repo.prop and NOTICE into the sysroot directory.
-    rename('repo.prop', os.path.join(install_path, 'sysroot/repo.prop'))
+    if args.download:
+        rename('repo.prop', os.path.join(install_path, 'sysroot/repo.prop'))
     rename(os.path.join(install_path, 'NOTICE'),
            os.path.join(install_path, 'sysroot/NOTICE'))
-    rmtree(os.path.join(install_path, 'platforms/android-current'))
+
+    # When we don't have preview releases or betas of the platform in progress,
+    # we want to strip out unreleased API levels. During the preview/beta
+    # cycles, we want to keep them and rename "current" to the expected
+    # platform number.
+    current_platform = os.path.join(install_path, 'platforms/android-current')
+    if args.include_current is None:
+        rmtree(current_platform)
+    else:
+        codename = 'android-' + args.include_current
+        codename_platform = os.path.join(install_path, 'platforms', codename)
+        rename(current_platform, codename_platform)
 
     check_call(['git', 'add', install_path])
+
+    if args.download:
+        update_msg = 'to build {}'.format(build)
+    else:
+        update_msg = 'with local artifact'
+
     message = textwrap.dedent("""\
-        Update NDK platform prebuilts to build {}.
+        Update NDK platform prebuilts {}.
 
         Test: ndk/checkbuild.py && ndk/validate.py
         Bug: {}
-        """.format(args.build, args.bug))
+        """.format(update_msg, args.bug))
     check_call(['git', 'commit', '-m', message])
-
-    # Fetch artifact dumps crap to the working directory.
-    remove('.fetch_artifact2.dat')
 
 
 if __name__ == '__main__':
