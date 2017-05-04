@@ -94,7 +94,7 @@ extern "C"
 // controls inclusion of the extension interfaces in vulkan.h.
 
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
-#include <android/native_window.h>
+typedef struct ANativeWindow ANativeWindow;
 #endif
 
 #ifdef VK_USE_PLATFORM_MIR_KHR

@@ -52,12 +52,12 @@ struct group* getgrnam(const char*);
 
 /* Note: Android has thousands and thousands of ids to iterate through. */
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-struct group* getgrent(void) __INTRODUCED_IN_FUTURE;
+#if __ANDROID_API__ >= 26
+struct group* getgrent(void) __INTRODUCED_IN(26);
 
-void setgrent(void) __INTRODUCED_IN_FUTURE;
-void endgrent(void) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+void setgrent(void) __INTRODUCED_IN(26);
+void endgrent(void) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 
 #if __ANDROID_API__ >= 24

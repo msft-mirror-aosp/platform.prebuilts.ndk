@@ -56,10 +56,10 @@ wint_t towupper_l(wint_t, locale_t) __INTRODUCED_IN(21);
 #endif
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-wint_t towctrans_l(wint_t, wctrans_t, locale_t) __INTRODUCED_IN_FUTURE;
-wctrans_t wctrans_l(const char*, locale_t) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+wint_t towctrans_l(wint_t, wctrans_t, locale_t) __INTRODUCED_IN(26);
+wctrans_t wctrans_l(const char*, locale_t) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 
 

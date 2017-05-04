@@ -66,9 +66,9 @@ float complex cacosf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex cacosl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+long double complex cacosl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 /* 7.3.5.2 The casin functions */
 
@@ -78,9 +78,9 @@ float complex casinf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex casinl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+long double complex casinl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 /* 7.3.5.1 The catan functions */
 
@@ -90,9 +90,9 @@ float complex catanf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex catanl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+long double complex catanl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 /* 7.3.5.1 The ccos functions */
 
@@ -102,9 +102,9 @@ float complex ccosf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex ccosl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+long double complex ccosl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 /* 7.3.5.1 The csin functions */
 
@@ -114,9 +114,9 @@ float complex csinf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex csinl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+long double complex csinl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 /* 7.3.5.1 The ctan functions */
 
@@ -126,9 +126,9 @@ float complex ctanf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex ctanl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+long double complex ctanl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 
 /* 7.3.6 Hyperbolic functions */
@@ -140,9 +140,9 @@ float complex cacoshf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex cacoshl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+long double complex cacoshl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 /* 7.3.6.2 The casinh functions */
 
@@ -152,9 +152,9 @@ float complex casinhf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex casinhl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+long double complex casinhl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 /* 7.3.6.3 The catanh functions */
 
@@ -164,9 +164,9 @@ float complex catanhf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex catanhl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+long double complex catanhl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 /* 7.3.6.4 The ccosh functions */
 
@@ -176,9 +176,9 @@ float complex ccoshf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex ccoshl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+long double complex ccoshl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 /* 7.3.6.5 The csinh functions */
 
@@ -188,9 +188,9 @@ float complex csinhf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex csinhl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+long double complex csinhl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 /* 7.3.6.6 The ctanh functions */
 
@@ -200,9 +200,9 @@ float complex ctanhf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex ctanhl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+long double complex ctanhl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 
 /* 7.3.7 Exponential and logarithmic functions */
@@ -214,13 +214,13 @@ float complex cexpf(float complex) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-long double complex cexpl(long double complex) __INTRODUCED_IN_FUTURE;
+#if __ANDROID_API__ >= 26
+long double complex cexpl(long double complex) __INTRODUCED_IN(26);
 /* 7.3.7.2 The clog functions */
-double complex clog(double complex) __INTRODUCED_IN_FUTURE;
-float complex clogf(float complex) __INTRODUCED_IN_FUTURE;
-long double complex clogl(long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+double complex clog(double complex) __INTRODUCED_IN(26);
+float complex clogf(float complex) __INTRODUCED_IN(26);
+long double complex clogl(long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 
 /* 7.3.8 Power and absolute-value functions */
@@ -238,11 +238,11 @@ long double cabsl(long double complex) __INTRODUCED_IN_32(21) __INTRODUCED_IN_64
 
 /* 7.3.8.2 The cpow functions */
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-double complex cpow(double complex, double complex) __INTRODUCED_IN_FUTURE;
-float complex cpowf(float complex, float complex) __INTRODUCED_IN_FUTURE;
-long double complex cpowl(long double complex, long double complex) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+double complex cpow(double complex, double complex) __INTRODUCED_IN(26);
+float complex cpowf(float complex, float complex) __INTRODUCED_IN(26);
+long double complex cpowl(long double complex, long double complex) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 /* 7.3.8.3 The csqrt functions */
 
