@@ -50,6 +50,25 @@ enum {
     WINDOW_FORMAT_RGB_565            = AHARDWAREBUFFER_FORMAT_R5G6B5_UNORM,
 };
 
+/**
+ * Transforms that can be applied to buffers as they are displayed to a window.
+ *
+ * Supported transforms are any combination of horizontal mirror, vertical
+ * mirror, and clockwise 90 degree rotation, in that order. Rotations of 180
+ * and 270 degrees are made up of those basic transforms.
+ */
+enum ANativeWindowTransform {
+    ANATIVEWINDOW_TRANSFORM_IDENTITY            = 0x00,
+    ANATIVEWINDOW_TRANSFORM_MIRROR_HORIZONTAL   = 0x01,
+    ANATIVEWINDOW_TRANSFORM_MIRROR_VERTICAL     = 0x02,
+    ANATIVEWINDOW_TRANSFORM_ROTATE_90           = 0x04,
+
+    ANATIVEWINDOW_TRANSFORM_ROTATE_180          = ANATIVEWINDOW_TRANSFORM_MIRROR_HORIZONTAL |
+                                                  ANATIVEWINDOW_TRANSFORM_MIRROR_VERTICAL,
+    ANATIVEWINDOW_TRANSFORM_ROTATE_270          = ANATIVEWINDOW_TRANSFORM_ROTATE_180 |
+                                                  ANATIVEWINDOW_TRANSFORM_ROTATE_90,
+};
+
 struct ANativeWindow;
 /**
  * {@link ANativeWindow} is opaque type that provides access to a native window.
@@ -74,7 +93,7 @@ typedef struct ANativeWindow_Buffer {
     // memory.  This may be >= width.
     int32_t stride;
 
-    // The format of the buffer.  One of WINDOW_FORMAT_*
+    // The format of the buffer.  One of AHARDWAREBUFFER_FORMAT_*
     int32_t format;
 
     // The actual bits.
@@ -108,13 +127,15 @@ int32_t ANativeWindow_getWidth(ANativeWindow* window);
 int32_t ANativeWindow_getHeight(ANativeWindow* window);
 
 /**
- * Return the current pixel format of the window surface.  Returns a
+ * Return the current pixel format (AHARDWAREBUFFER_FORMAT_*) of the window surface.  Returns a
  * negative value on error.
  */
 int32_t ANativeWindow_getFormat(ANativeWindow* window);
 
 /**
  * Change the format and size of the window buffers.
+ *
+ * format: one of AHARDWAREBUFFER_FORMAT_ constants
  *
  * The width and height control the number of pixels in the buffers, not the
  * dimensions of the window on screen.  If these are different than the
@@ -146,6 +167,19 @@ int32_t ANativeWindow_lock(ANativeWindow* window, ANativeWindow_Buffer* outBuffe
  * posting the new buffer to the display.
  */
 int32_t ANativeWindow_unlockAndPost(ANativeWindow* window);
+
+#if __ANDROID_API__ >= __ANDROID_API_O__
+
+/**
+ * Set a transform that will be applied to future buffers posted to the window.
+ *
+ * @param transform combination of {@link ANativeWindowTransform} flags
+ * @return 0 if successful
+ * @return -EINVAL if @param transform is invalid
+ */
+int32_t ANativeWindow_setBuffersTransform(ANativeWindow* window, int32_t transform);
+
+#endif // __ANDROID_API__ >= __ANDROID_API_O__
 
 #ifdef __cplusplus
 };

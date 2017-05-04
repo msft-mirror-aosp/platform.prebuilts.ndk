@@ -48,18 +48,18 @@ int utimes(const char*, const struct timeval*);
 
 #if defined(__USE_BSD)
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int futimes(int, const struct timeval[2]) __INTRODUCED_IN_FUTURE;
-int lutimes(const char*, const struct timeval[2]) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+int futimes(int, const struct timeval[2]) __INTRODUCED_IN(26);
+int lutimes(const char*, const struct timeval[2]) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 #endif
 
 #if defined(__USE_GNU)
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int futimesat(int, const char*, const struct timeval[2]) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+int futimesat(int, const char*, const struct timeval[2]) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 #endif
 
