@@ -93,10 +93,10 @@ __BEGIN_DECLS
 #define CRNCYSTR 55
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-char* nl_langinfo(nl_item) __INTRODUCED_IN_FUTURE;
-char* nl_langinfo_l(nl_item, locale_t) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+char* nl_langinfo(nl_item) __INTRODUCED_IN(26);
+char* nl_langinfo_l(nl_item, locale_t) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 
 __END_DECLS

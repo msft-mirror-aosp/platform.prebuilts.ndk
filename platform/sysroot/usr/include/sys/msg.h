@@ -42,12 +42,12 @@ typedef __kernel_ulong_t msgqnum_t;
 typedef __kernel_ulong_t msglen_t;
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int msgctl(int, int, struct msqid_ds*) __INTRODUCED_IN_FUTURE;
-int msgget(key_t, int) __INTRODUCED_IN_FUTURE;
-ssize_t msgrcv(int, void*, size_t, long, int) __INTRODUCED_IN_FUTURE;
-int msgsnd(int, const void*, size_t, int) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 26
+int msgctl(int, int, struct msqid_ds*) __INTRODUCED_IN(26);
+int msgget(key_t, int) __INTRODUCED_IN(26);
+ssize_t msgrcv(int, void*, size_t, long, int) __INTRODUCED_IN(26);
+int msgsnd(int, const void*, size_t, int) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 
 __END_DECLS

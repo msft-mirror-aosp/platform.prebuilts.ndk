@@ -85,12 +85,12 @@ struct passwd* getpwuid(uid_t);
 
 /* Note: Android has thousands and thousands of ids to iterate through */
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-struct passwd* getpwent(void) __INTRODUCED_IN_FUTURE;
+#if __ANDROID_API__ >= 26
+struct passwd* getpwent(void) __INTRODUCED_IN(26);
 
-void setpwent(void) __INTRODUCED_IN_FUTURE;
-void endpwent(void) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+void setpwent(void) __INTRODUCED_IN(26);
+void endpwent(void) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
 
 
 
