@@ -85,6 +85,15 @@ int malloc_info(int, FILE*) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
+/* mallopt options */
+#define M_DECAY_TIME -100
+
+
+#if __ANDROID_API__ >= 26
+int mallopt(int, int) __INTRODUCED_IN(26);
+#endif /* __ANDROID_API__ >= 26 */
+
+
 __END_DECLS
 
 #endif  /* LIBC_INCLUDE_MALLOC_H_ */

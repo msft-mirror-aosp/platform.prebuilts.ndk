@@ -39,9 +39,17 @@
 
 #include <linux/sem.h>
 
+__BEGIN_DECLS
+
 #define semid_ds semid64_ds
 
-__BEGIN_DECLS
+union semun {
+  int val;
+  struct semid_ds* buf;
+  unsigned short* array;
+  struct seminfo* __buf;
+  void* __pad;
+};
 
 
 #if __ANDROID_API__ >= 26
