@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,37 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_LOCKF_H_
-#define _BITS_LOCKF_H_
+#ifndef _ANDROID_LEGACY_STRINGS_INLINES_H_
+#define _ANDROID_LEGACY_STRINGS_INLINES_H_
 
+#include <strings.h>
 #include <sys/cdefs.h>
-#include <sys/types.h>
-
-#define F_ULOCK 0
-#define F_LOCK 1
-#define F_TLOCK 2
-#define F_TEST 3
 
 __BEGIN_DECLS
 
-#if defined(__USE_FILE_OFFSET64)
-
-#if __ANDROID_API__ >= 24
-int lockf(int, int, off_t) __RENAME(lockf64) __INTRODUCED_IN(24);
-#endif /* __ANDROID_API__ >= 24 */
-
-#else
-
-#if __ANDROID_API__ >= 24
-int lockf(int, int, off_t) __INTRODUCED_IN(24);
-#endif /* __ANDROID_API__ >= 24 */
-
+#if defined(__i386__) && __ANDROID_API__ < __ANDROID_API_J_MR2__
+/* Everyone except x86 had ffs since the beginning. */
+static __inline int ffs(int __n) { return __builtin_ffs(__n); }
 #endif
-
-#if __ANDROID_API__ >= 24
-int lockf64(int, int, off64_t) __INTRODUCED_IN(24);
-#endif /* __ANDROID_API__ >= 24 */
-
 
 __END_DECLS
 
