@@ -76,6 +76,20 @@ def fetch_ndk_prebuilts(branch, build):
     fetch_artifact(branch, target, build, 'repo.prop')
 
 
+def kv_arg_pair(arg):
+    """Parses a key/value argument pair."""
+    error_msg = 'Argument must be in format key=value, got ' + arg
+    try:
+        key, value = arg.split('=')
+    except ValueError:
+        raise argparse.ArgumentTypeError(error_msg)
+
+    if key == '' or value == '':
+        raise argparse.ArgumentTypeError(error_msg)
+
+    return key, value
+
+
 def parse_args():
     """Parses and returns command line arguments."""
     parser = argparse.ArgumentParser()
@@ -110,6 +124,10 @@ def parse_args():
     parser.add_argument(
         '--include-current', metavar='CODENAME',
         help='Do not remove android-current. Rename as android-CODENAME.')
+
+    parser.add_argument(
+        '--rename-codename', action='append', type=kv_arg_pair,
+        help='Rename codename platform. Example: --rename-codename O=26.')
 
     return parser.parse_args()
 
@@ -173,6 +191,19 @@ def main():
         codename = 'android-' + args.include_current
         codename_platform = os.path.join(install_path, 'platforms', codename)
         rename(current_platform, codename_platform)
+
+    for codename, new_name in args.rename_codename:
+        codename_path = os.path.join(
+            install_path, 'platforms/android-' + codename)
+        new_name_path = os.path.join(
+            install_path, 'platforms/android-' + new_name)
+
+        if os.path.exists(new_name_path):
+            raise RuntimeError(
+                'Could not rename android-{0} to android-{1} because '
+                'android-{1} already exists.'.format(codename, new_name))
+
+        rename(codename_path, new_name_path)
 
     check_call(['git', 'add', install_path])
 
