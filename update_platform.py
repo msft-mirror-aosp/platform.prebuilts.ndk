@@ -126,7 +126,7 @@ def parse_args():
         help='Do not remove android-current. Rename as android-CODENAME.')
 
     parser.add_argument(
-        '--rename-codename', action='append', type=kv_arg_pair,
+        '--rename-codename', action='append', type=kv_arg_pair, default=[],
         help='Rename codename platform. Example: --rename-codename O=26.')
 
     return parser.parse_args()
