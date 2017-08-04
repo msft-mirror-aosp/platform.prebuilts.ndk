@@ -61,24 +61,22 @@ struct statvfs64 { __STATVFS64_BODY };
 
 
 #if __ANDROID_API__ >= 19
-int statvfs(const char* __restrict _Nonnull, struct statvfs* __restrict _Nonnull)
-  __INTRODUCED_IN(19);
+int statvfs(const char*, struct statvfs*) __INTRODUCED_IN(19);
 #endif /* __ANDROID_API__ >= 19 */
 
 
 #if __ANDROID_API__ >= 21
-int statvfs64(const char* __restrict _Nonnull, struct statvfs64* __restrict _Nonnull)
-  __INTRODUCED_IN(21);
+int statvfs64(const char*, struct statvfs64*) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
 #if __ANDROID_API__ >= 19
-int fstatvfs(int, struct statvfs* _Nonnull) __INTRODUCED_IN(19);
+int fstatvfs(int, struct statvfs*) __INTRODUCED_IN(19);
 #endif /* __ANDROID_API__ >= 19 */
 
 
 #if __ANDROID_API__ >= 21
-int fstatvfs64(int, struct statvfs64* _Nonnull) __INTRODUCED_IN(21);
+int fstatvfs64(int, struct statvfs64*) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 

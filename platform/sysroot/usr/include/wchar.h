@@ -42,23 +42,6 @@
 
 __BEGIN_DECLS
 
-enum {
-    WC_TYPE_INVALID = 0,
-    WC_TYPE_ALNUM,
-    WC_TYPE_ALPHA,
-    WC_TYPE_BLANK,
-    WC_TYPE_CNTRL,
-    WC_TYPE_DIGIT,
-    WC_TYPE_GRAPH,
-    WC_TYPE_LOWER,
-    WC_TYPE_PRINT,
-    WC_TYPE_PUNCT,
-    WC_TYPE_SPACE,
-    WC_TYPE_UPPER,
-    WC_TYPE_XDIGIT,
-    WC_TYPE_MAX
-};
-
 wint_t            btowc(int);
 int               fwprintf(FILE *, const wchar_t *, ...);
 int               fwscanf(FILE *, const wchar_t *, ...);
@@ -181,9 +164,9 @@ long long wcstoll_l(const wchar_t*, wchar_t**, int, locale_t) __INTRODUCED_IN(21
 unsigned long long wcstoull_l(const wchar_t*, wchar_t**, int, locale_t) __INTRODUCED_IN(21);
 long double wcstold_l(const wchar_t*, wchar_t**, locale_t) __INTRODUCED_IN(21);
 
-int wcscoll_l(const wchar_t* _Nonnull, const wchar_t* _Nonnull, locale_t) __attribute_pure__
+int wcscoll_l(const wchar_t*, const wchar_t*, locale_t) __attribute_pure__
     __INTRODUCED_IN(21);
-size_t wcsxfrm_l(wchar_t*, const wchar_t* _Nonnull, size_t, locale_t) __INTRODUCED_IN(21);
+size_t wcsxfrm_l(wchar_t*, const wchar_t*, size_t, locale_t) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
 #endif

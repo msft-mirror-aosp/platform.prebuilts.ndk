@@ -40,8 +40,8 @@ __BEGIN_DECLS
 
 
 #if __ANDROID_API__ >= 19
-int swapon(const char* _Nonnull, int) __INTRODUCED_IN(19);
-int swapoff(const char* _Nonnull) __INTRODUCED_IN(19);
+int swapon(const char*, int) __INTRODUCED_IN(19);
+int swapoff(const char*) __INTRODUCED_IN(19);
 #endif /* __ANDROID_API__ >= 19 */
 
 

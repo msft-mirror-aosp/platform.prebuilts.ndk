@@ -137,16 +137,16 @@ struct statfs64 { __STATFS64_BODY };
 #define XENIX_SUPER_MAGIC     0x012FF7B4
 #define XFS_SUPER_MAGIC       0x58465342
 
-int statfs(const char* _Nonnull, struct statfs* _Nonnull);
+int statfs(const char*, struct statfs*);
 
 #if __ANDROID_API__ >= 21
-int statfs64(const char* _Nonnull, struct statfs64* _Nonnull) __INTRODUCED_IN(21);
+int statfs64(const char*, struct statfs64*) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
-int fstatfs(int, struct statfs* _Nonnull);
+int fstatfs(int, struct statfs*);
 
 #if __ANDROID_API__ >= 21
-int fstatfs64(int, struct statfs64* _Nonnull) __INTRODUCED_IN(21);
+int fstatfs64(int, struct statfs64*) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
