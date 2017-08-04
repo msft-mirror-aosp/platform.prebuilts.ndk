@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,24 +25,51 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _ARM_MACHINE_CPU_FEATURES_H
-#define _ARM_MACHINE_CPU_FEATURES_H
 
-/* __ARM_ARCH__ is a number corresponding to the ARM revision
- * we're going to support. Our toolchain doesn't define __ARM_ARCH__
- * so try to guess it.
- */
-#ifndef __ARM_ARCH__
-#  if defined __ARM_ARCH_7__   || defined __ARM_ARCH_7A__ || \
-        defined __ARM_ARCH_7R__  || defined __ARM_ARCH_7M__
-#    define __ARM_ARCH__ 7
-#  elif defined __ARM_ARCH_6__   || defined __ARM_ARCH_6J__ || \
-        defined __ARM_ARCH_6K__  || defined __ARM_ARCH_6Z__ || \
-        defined __ARM_ARCH_6KZ__ || defined __ARM_ARCH_6T2__
-#    define __ARM_ARCH__ 6
-#  else
-#    error Unknown or unsupported ARM architecture
-#  endif
+#ifndef _SYS_STAT_H_
+#error "Never include this file directly; instead, include <sys/stat.h>"
 #endif
 
-#endif /* _ARM_MACHINE_CPU_FEATURES_H */
+
+#if __ANDROID_API__ >= 18
+mode_t __umask_chk(mode_t) __INTRODUCED_IN(18);
+#endif /* __ANDROID_API__ >= 18 */
+
+
+#if defined(__BIONIC_FORTIFY)
+#define __umask_invalid_mode_str "'umask' called with invalid mode"
+
+#if defined(__clang__)
+
+#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
+/* Abuse enable_if to make this an overload of umask. */
+__BIONIC_FORTIFY_INLINE
+mode_t umask(mode_t mode)
+    __overloadable
+    __enable_if(1, "")
+    __clang_error_if(mode & ~0777, __umask_invalid_mode_str) {
+  return __umask_chk(mode);
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */
+
+#else /* defined(__clang__) */
+__errordecl(__umask_invalid_mode, __umask_invalid_mode_str);
+extern mode_t __umask_real(mode_t) __RENAME(umask);
+
+#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
+__BIONIC_FORTIFY_INLINE
+mode_t umask(mode_t mode) {
+  if (__builtin_constant_p(mode)) {
+    if ((mode & 0777) != mode) {
+      __umask_invalid_mode();
+    }
+    return __umask_real(mode);
+  }
+  return __umask_chk(mode);
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */
+
+#endif /* defined(__clang__) */
+#undef __umask_invalid_mode_str
+
+#endif /* defined(__BIONIC_FORTIFY) */

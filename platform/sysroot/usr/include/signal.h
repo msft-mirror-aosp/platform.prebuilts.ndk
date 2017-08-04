@@ -54,11 +54,6 @@
 
 __BEGIN_DECLS
 
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wnullability-completeness"
-#endif
-
 typedef int sig_atomic_t;
 
 /* The arm and x86 kernel header files don't define _NSIG. */
@@ -133,10 +128,10 @@ int sigismember(const sigset_t*, int) __INTRODUCED_IN(21);
 // Implemented as static inlines before 21.
 #endif
 
-int sigpending(sigset_t* _Nonnull);
+int sigpending(sigset_t*);
 int sigprocmask(int, const sigset_t*, sigset_t*);
-int sigsuspend(const sigset_t* _Nonnull);
-int sigwait(const sigset_t* _Nonnull, int* _Nonnull);
+int sigsuspend(const sigset_t*);
+int sigwait(const sigset_t*, int*);
 
 
 #if __ANDROID_API__ >= 26
@@ -179,14 +174,10 @@ int pthread_sigmask(int, const sigset_t*, sigset_t*);
 
 #if __ANDROID_API__ >= 23
 int sigqueue(pid_t, int, const union sigval) __INTRODUCED_IN(23);
-int sigtimedwait(const sigset_t* _Nonnull, siginfo_t*, const struct timespec*) __INTRODUCED_IN(23);
-int sigwaitinfo(const sigset_t* _Nonnull, siginfo_t*) __INTRODUCED_IN(23);
+int sigtimedwait(const sigset_t*, siginfo_t*, const struct timespec*) __INTRODUCED_IN(23);
+int sigwaitinfo(const sigset_t*, siginfo_t*) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
-
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
 
 __END_DECLS
 

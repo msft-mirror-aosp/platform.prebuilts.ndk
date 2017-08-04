@@ -45,12 +45,10 @@ typedef __CHAR32_TYPE__ char32_t;
 
 
 #if __ANDROID_API__ >= 21
-size_t c16rtomb(char* __restrict, char16_t, mbstate_t* __restrict) __INTRODUCED_IN(21);
-size_t c32rtomb(char* __restrict, char32_t, mbstate_t* __restrict) __INTRODUCED_IN(21);
-size_t mbrtoc16(char16_t* __restrict, const char* __restrict, size_t, mbstate_t* __restrict)
-  __INTRODUCED_IN(21);
-size_t mbrtoc32(char32_t* __restrict, const char* __restrict, size_t, mbstate_t* __restrict)
-  __INTRODUCED_IN(21);
+size_t c16rtomb(char*, char16_t, mbstate_t*) __INTRODUCED_IN(21);
+size_t c32rtomb(char*, char32_t, mbstate_t*) __INTRODUCED_IN(21);
+size_t mbrtoc16(char16_t*, const char*, size_t, mbstate_t*) __INTRODUCED_IN(21);
+size_t mbrtoc32(char32_t*, const char*, size_t, mbstate_t*) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
