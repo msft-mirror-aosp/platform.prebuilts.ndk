@@ -180,6 +180,10 @@ def main():
     rename(os.path.join(install_path, 'NOTICE'),
            os.path.join(install_path, 'sysroot/NOTICE'))
 
+    rel_platform = os.path.join(install_path, 'platforms/android-REL')
+    if os.path.exists(rel_platform):
+        rmtree(rel_platform)
+
     # When we don't have preview releases or betas of the platform in progress,
     # we want to strip out unreleased API levels. During the preview/beta
     # cycles, we want to keep them and rename "current" to the expected
