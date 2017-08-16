@@ -38,6 +38,12 @@
 
 __BEGIN_DECLS
 
+
+#if __ANDROID_API__ >= 21
+__noreturn void _Exit(int) __RENAME(_exit);
+#endif /* __ANDROID_API__ >= 21 */
+
+
 static __inline float strtof(const char* nptr, char** endptr) {
   double d = strtod(nptr, endptr);
   if (d > FLT_MAX) {
