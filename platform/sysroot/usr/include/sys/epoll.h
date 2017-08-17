@@ -53,10 +53,10 @@ __packed
 #endif
 ;
 
-int epoll_create(int);
+int epoll_create(int __size);
 
 #if __ANDROID_API__ >= 21
-int epoll_create1(int) __INTRODUCED_IN(21);
+int epoll_create1(int __flags) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
@@ -75,14 +75,14 @@ int epoll_create1(int) __INTRODUCED_IN(21);
 #undef EPOLL_CLOEXEC
 #endif
 
-int epoll_ctl(int, int, int, struct epoll_event*);
-int epoll_wait(int, struct epoll_event*, int, int);
+int epoll_ctl(int __epoll_fd, int __op, int __fd, struct epoll_event* __event);
+int epoll_wait(int __epoll_fd, struct epoll_event* __events, int __event_count, int __timeout_ms);
 
 #if __ANDROID_API__ >= 21
-int epoll_pwait(int, struct epoll_event*, int, int, const sigset_t*) __INTRODUCED_IN(21);
+int epoll_pwait(int __epoll_fd, struct epoll_event* __events, int __event_count, int __timeout_ms, const sigset_t* __mask) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
 __END_DECLS
 
-#endif  /* _SYS_EPOLL_H_ */
+#endif
