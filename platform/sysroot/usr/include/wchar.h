@@ -132,9 +132,9 @@ long wcstol(const wchar_t* __s, wchar_t** __end_ptr, int __base);
 
 #if __ANDROID_API__ >= 21
 long long wcstoll(const wchar_t* __s, wchar_t** __end_ptr, int __base) __INTRODUCED_IN(21);
-long double wcstold(const wchar_t* __s, wchar_t** __end_ptr) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
+long double wcstold(const wchar_t* __s, wchar_t** __end_ptr) __RENAME_LDBL(wcstod, 3, 21);
 unsigned long wcstoul(const wchar_t* __s, wchar_t** __end_ptr, int __base);
 
 #if __ANDROID_API__ >= 21
