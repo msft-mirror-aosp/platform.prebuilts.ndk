@@ -43,10 +43,11 @@ __BEGIN_DECLS
 
 __noreturn void abort(void);
 __noreturn void exit(int __status);
-
-#if __ANDROID_API__ >= 21
+#if __ANDROID_API__ >= __ANDROID_API_L__
 __noreturn void _Exit(int __status) __INTRODUCED_IN(21);
-#endif /* __ANDROID_API__ >= 21 */
+#else
+__noreturn void _Exit(int) __RENAME(_exit);
+#endif
 
 int atexit(void (*__fn)(void));
 
@@ -99,11 +100,7 @@ int posix_memalign(void** __memptr, size_t __alignment, size_t __size) __INTRODU
 
 
 double strtod(const char* __s, char** __end_ptr);
-
-#if __ANDROID_API__ >= 21
-long double strtold(const char* __s, char** __end_ptr) __INTRODUCED_IN(21);
-#endif /* __ANDROID_API__ >= 21 */
-
+long double strtold(const char* __s, char** __end_ptr) __RENAME_LDBL(strtod, 3, 21);
 
 
 #if __ANDROID_API__ >= 26
