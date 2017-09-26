@@ -30,22 +30,24 @@ site.addsitedir(os.path.join(os.path.dirname(__file__), '../../ndk/build/lib'))
 import build_support  # pylint: disable=import-error
 
 
-class ArgParser(argparse.ArgumentParser):
-    def __init__(self):
-        super(ArgParser, self).__init__(
-            description=inspect.getdoc(sys.modules[__name__]))
+def parse_args():
+    """Parse and return command line arguments."""
+    parser = argparse.ArgumentParser(
+        description=inspect.getdoc(sys.modules[__name__]))
 
-        self.add_argument(
-            'build', metavar='BUILD',
-            help='Build number to pull from the build server.')
+    parser.add_argument(
+        'build', metavar='BUILD',
+        help='Build number to pull from the build server.')
 
-        self.add_argument(
-            '--branch', default='aosp-gcc',
-            help='Branch to pull from the build server.')
+    parser.add_argument(
+        '--branch', default='aosp-gcc',
+        help='Branch to pull from the build server.')
 
-        self.add_argument(
-            '--use-current-branch', action='store_true',
-            help='Do not repo start a new branch for the update.')
+    parser.add_argument(
+        '--use-current-branch', action='store_true',
+        help='Do not repo start a new branch for the update.')
+
+    return parser.parse_args()
 
 
 def host_to_build_host(host):
@@ -95,6 +97,7 @@ def package_name(host, arch):
 
 
 def download_build(branch, host, arch, build_number, download_dir):
+    """Download a build from the build server."""
     url_base = 'https://android-build-uber.corp.google.com'
     path = 'builds/{branch}-{build_host}-{build_name}/{build_num}'.format(
         branch=branch,
@@ -105,17 +108,18 @@ def download_build(branch, host, arch, build_number, download_dir):
     pkg_name = package_name(host, arch)
     url = '{}/{}/{}'.format(url_base, path, pkg_name)
 
-    TIMEOUT = '60'  # In seconds.
+    timeout = '60'  # In seconds.
     out_file_path = os.path.join(download_dir, pkg_name)
     with open(out_file_path, 'w') as out_file:
         print('Downloading {} to {}'.format(url, out_file_path))
         subprocess.check_call(
-            ['sso_client', '--location', '--request_timeout', TIMEOUT, url],
+            ['sso_client', '--location', '--request_timeout', timeout, url],
             stdout=out_file)
     return host, arch, out_file_path
 
 
 def extract_package(package, host, install_dir):
+    """Extract the downloaded toolchain."""
     host_dir = os.path.join(install_dir, 'toolchains', host)
     if not os.path.exists(host_dir):
         os.makedirs(host_dir)
@@ -125,7 +129,8 @@ def extract_package(package, host, install_dir):
 
 
 def main():
-    args = ArgParser().parse_args()
+    """Program entry point."""
+    args = parse_args()
 
     os.chdir(os.path.realpath(os.path.dirname(__file__)))
 
