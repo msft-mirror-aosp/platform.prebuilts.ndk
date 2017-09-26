@@ -19,15 +19,45 @@ from __future__ import print_function
 
 import argparse
 import inspect
+import logging
 import os
-import shutil
 import site
-import subprocess
 import sys
 
 site.addsitedir(os.path.join(os.path.dirname(__file__), '../../ndk/build/lib'))
 
 import build_support  # pylint: disable=import-error
+
+
+def logger():
+    """Returns the module logger."""
+    return logging.getLogger(__name__)
+
+
+def check_call(cmd):
+    """subprocess.check_call with logging."""
+    import subprocess
+    logger().debug('check_call `%s`', ' '.join(cmd))
+    subprocess.check_call(cmd)
+
+
+def rmtree(path):
+    """shutil.rmtree with logging."""
+    import shutil
+    logger().debug('rmtree %s', path)
+    shutil.rmtree(path)
+
+
+def makedirs(path):
+    """os.makedirs with logging."""
+    logger().debug('mkdir -p %s', path)
+    os.makedirs(path)
+
+
+def remove(path):
+    """os.remove with logging."""
+    logger().debug('rm %s', path)
+    os.remove(path)
 
 
 def parse_args():
@@ -50,19 +80,6 @@ def parse_args():
     return parser.parse_args()
 
 
-def host_to_build_host(host):
-    """Gets the build host name for an NDK host tag.
-
-    The Windows builds are done from Linux.
-    """
-    return {
-        'darwin-x86_64': 'mac',
-        'linux-x86_64': 'linux',
-        'windows': 'linux',
-        'windows-x86_64': 'linux',
-    }[host]
-
-
 def build_name(host, arch):
     """Gets the release build name for an NDK host tag.
 
@@ -75,7 +92,7 @@ def build_name(host, arch):
     'win_x86'
     """
     if host == 'darwin-x86_64':
-        return arch
+        return arch + '_mac'
 
     return {
         'linux-x86_64': 'linux',
@@ -96,60 +113,53 @@ def package_name(host, arch):
     return 'gcc-{}-{}.tar.bz2'.format(arch, host)
 
 
-def download_build(branch, host, arch, build_number, download_dir):
+def fetch_artifact(branch, target, build, pattern):
+    """Fetches an artifact from the build server."""
+    fetch_artifact_path = '/google/data/ro/projects/android/fetch_artifact'
+    cmd = [fetch_artifact_path, '--branch', branch, '--target=' + target,
+           '--bid', build, pattern]
+    check_call(cmd)
+
+    # Fetch artifact dumps crap to the working directory.
+    remove('.fetch_artifact2.dat')
+
+
+def download_build(branch, host, arch, build_number):
     """Download a build from the build server."""
-    url_base = 'https://android-build-uber.corp.google.com'
-    path = 'builds/{branch}-{build_host}-{build_name}/{build_num}'.format(
-        branch=branch,
-        build_host=host_to_build_host(host),
-        build_name=build_name(host, arch),
-        build_num=build_number)
-
     pkg_name = package_name(host, arch)
-    url = '{}/{}/{}'.format(url_base, path, pkg_name)
-
-    timeout = '60'  # In seconds.
-    out_file_path = os.path.join(download_dir, pkg_name)
-    with open(out_file_path, 'w') as out_file:
-        print('Downloading {} to {}'.format(url, out_file_path))
-        subprocess.check_call(
-            ['sso_client', '--location', '--request_timeout', timeout, url],
-            stdout=out_file)
-    return host, arch, out_file_path
+    fetch_artifact(branch, build_name(host, arch), build_number, pkg_name)
+    return pkg_name
 
 
 def extract_package(package, host, install_dir):
     """Extract the downloaded toolchain."""
     host_dir = os.path.join(install_dir, 'toolchains', host)
     if not os.path.exists(host_dir):
-        os.makedirs(host_dir)
+        makedirs(host_dir)
 
     cmd = ['tar', 'xf', package, '-C', host_dir]
-    subprocess.check_call(cmd)
+    check_call(cmd)
 
 
 def main():
     """Program entry point."""
+    logging.basicConfig(level=logging.DEBUG)
+
     args = parse_args()
 
     os.chdir(os.path.realpath(os.path.dirname(__file__)))
 
     if not args.use_current_branch:
-        subprocess.check_call(
-            ['repo', 'start', 'update-gcc-{}'.format(args.build), '.'])
-
-    download_dir = '.download'
-    if os.path.isdir(download_dir):
-        shutil.rmtree(download_dir)
-    os.makedirs(download_dir)
+        check_call(['repo', 'start', 'update-gcc-{}'.format(args.build), '.'])
 
     hosts = ('darwin-x86_64', 'linux-x86_64', 'windows', 'windows-x86_64')
     packages = []
     for host in hosts:
         for arch in build_support.ALL_ARCHITECTURES:
-            package = download_build(
-                args.branch, host, arch, args.build, download_dir)
-            packages.append(package)
+            if arch.startswith('mips'):
+                continue
+            package = download_build(args.branch, host, arch, args.build)
+            packages.append((host, arch, package))
 
     install_dir = 'current'
     install_subdir = os.path.join(install_dir, 'toolchains')
@@ -158,29 +168,27 @@ def main():
         toolchain = build_support.arch_to_toolchain(arch) + '-4.9'
         toolchain_path = os.path.join(install_subdir, host, toolchain)
         if os.path.exists(toolchain_path):
-            print('Removing old {} {}...'.format(host, toolchain))
-            subprocess.check_call(
+            logger().info('Removing old %s %s...', host, toolchain)
+            check_call(
                 ['git', 'rm', '-rf', '--ignore-unmatch', toolchain_path])
 
             # Git doesn't believe in directories, so `git rm -rf` might leave
             # behind empty directories.
             if os.path.isdir(toolchain_path):
-                shutil.rmtree(toolchain_path)
+                rmtree(toolchain_path)
 
         if not os.path.exists(install_subdir):
-            os.makedirs(install_subdir)
+            makedirs(install_subdir)
 
-        print('Extracting {}...'.format(package))
+        logger().info('Extracting %s...', package)
         extract_package(package, host, install_dir)
 
-        print('Adding {} {} files to index...'.format(host, toolchain))
-        subprocess.check_call(['git', 'add', toolchain_path])
+        logger().info('Adding %s %s files to index...', host, toolchain)
+        check_call(['git', 'add', toolchain_path])
 
-    print('Committing update...')
+    logger().info('Committing update...')
     message = 'Update prebuilt GCC to build {}.'.format(args.build)
-    subprocess.check_call(['git', 'commit', '-m', message])
-
-    shutil.rmtree(download_dir)
+    check_call(['git', 'commit', '-m', message])
 
 
 if __name__ == '__main__':
