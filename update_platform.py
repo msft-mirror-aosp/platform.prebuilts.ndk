@@ -76,6 +76,40 @@ def fetch_ndk_prebuilts(branch, build):
     fetch_artifact(branch, target, build, 'repo.prop')
 
 
+def remove_unwanted_platforms(install_path, remove_platforms):
+    """Removes platforms that should not be checked in."""
+    for platform in remove_platforms:
+        platform_path = os.path.join(
+            install_path, 'platforms/android-{}'.format(platform))
+        if os.path.exists(platform_path):
+            rmtree(platform_path)
+
+    # The android-current platform is actually the future platform version (not
+    # even assigned to a codename), which should not be included in the NDK.
+    current_platform = os.path.join(install_path, 'platforms/android-current')
+    rmtree(current_platform)
+
+    rel_platform = os.path.join(install_path, 'platforms/android-REL')
+    if os.path.exists(rel_platform):
+        rmtree(rel_platform)
+
+
+def rename_codenamed_releases(install_path, rename_codenames):
+    """Rename codenamed releases."""
+    for codename, new_name in rename_codenames:
+        codename_path = os.path.join(
+            install_path, 'platforms/android-' + codename)
+        new_name_path = os.path.join(
+            install_path, 'platforms/android-' + new_name)
+
+        if os.path.exists(new_name_path):
+            raise RuntimeError(
+                'Could not rename android-{0} to android-{1} because '
+                'android-{1} already exists.'.format(codename, new_name))
+
+        rename(codename_path, new_name_path)
+
+
 def kv_arg_pair(arg):
     """Parses a key/value argument pair."""
     error_msg = 'Argument must be in format key=value, got ' + arg
@@ -122,8 +156,8 @@ def parse_args():
         help='Do not repo start a new branch for the update.')
 
     parser.add_argument(
-        '--include-current', metavar='CODENAME',
-        help='Do not remove android-current. Rename as android-CODENAME.')
+        '--remove-platform', action='append', default=[],
+        help='Remove platforms directories.')
 
     parser.add_argument(
         '--rename-codename', action='append', type=kv_arg_pair, default=[],
@@ -180,34 +214,8 @@ def main():
     rename(os.path.join(install_path, 'NOTICE'),
            os.path.join(install_path, 'sysroot/NOTICE'))
 
-    rel_platform = os.path.join(install_path, 'platforms/android-REL')
-    if os.path.exists(rel_platform):
-        rmtree(rel_platform)
-
-    # When we don't have preview releases or betas of the platform in progress,
-    # we want to strip out unreleased API levels. During the preview/beta
-    # cycles, we want to keep them and rename "current" to the expected
-    # platform number.
-    current_platform = os.path.join(install_path, 'platforms/android-current')
-    if args.include_current is None:
-        rmtree(current_platform)
-    else:
-        codename = 'android-' + args.include_current
-        codename_platform = os.path.join(install_path, 'platforms', codename)
-        rename(current_platform, codename_platform)
-
-    for codename, new_name in args.rename_codename:
-        codename_path = os.path.join(
-            install_path, 'platforms/android-' + codename)
-        new_name_path = os.path.join(
-            install_path, 'platforms/android-' + new_name)
-
-        if os.path.exists(new_name_path):
-            raise RuntimeError(
-                'Could not rename android-{0} to android-{1} because '
-                'android-{1} already exists.'.format(codename, new_name))
-
-        rename(codename_path, new_name_path)
+    remove_unwanted_platforms(install_path, args.remove_platform)
+    rename_codenamed_releases(install_path, args.rename_codename)
 
     check_call(['git', 'add', install_path])
 
