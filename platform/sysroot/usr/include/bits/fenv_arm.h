@@ -33,8 +33,8 @@
  * http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0344b/Chdfafia.html
  */
 
-#ifndef _ARM_FENV_H_
-#define _ARM_FENV_H_
+#ifndef _BITS_FENV_ARM_H_
+#define _BITS_FENV_ARM_H_
 
 #include <sys/types.h>
 
@@ -60,4 +60,4 @@ typedef __uint32_t fexcept_t;
 
 __END_DECLS
 
-#endif /* !_ARM_FENV_H_ */
+#endif
