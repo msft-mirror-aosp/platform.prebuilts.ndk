@@ -249,6 +249,11 @@ int pthread_setname_np(pthread_t __pthread, const char* __name);
 
 int pthread_setschedparam(pthread_t __pthread, int __policy, const struct sched_param* __param);
 
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
+int pthread_setschedprio(pthread_t __pthread, int __priority) __INTRODUCED_IN_FUTURE;
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+
+
 int pthread_setspecific(pthread_key_t __key, const void* __value);
 
 typedef void (*__pthread_cleanup_func_t)(void*);
