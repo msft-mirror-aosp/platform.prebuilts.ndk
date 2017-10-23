@@ -107,6 +107,11 @@ int execlp(const char* __file, const char* __arg0, ...) __attribute__((__sentine
 int execle(const char* __path, const char* __arg0, ... /*,  char* const* __envp */)
     __attribute__((__sentinel__(1)));
 
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
+int fexecve(int __fd, char* const* __argv, char* const* __envp) __INTRODUCED_IN_FUTURE;
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+
+
 int nice(int __incr);
 
 int setuid(uid_t __uid);
