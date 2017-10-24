@@ -311,6 +311,12 @@ int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
 #endif /* __ANDROID_API__ >= 26 */
 
 
+
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
+void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN_FUTURE;
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+
+
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #include <bits/fortify/unistd.h>
 #endif
