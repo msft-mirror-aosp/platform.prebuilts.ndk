@@ -14,6 +14,4 @@
 # limitations under the License.
 #
 
-LOCAL_PATH:= $(call my-dir)
-
-include $(LOCAL_PATH)/current/sources/android/cpufeatures/Android.mk
+# Intentionally empty to prevent subdir Android.mk loading
