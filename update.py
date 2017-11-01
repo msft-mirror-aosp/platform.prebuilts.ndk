@@ -141,7 +141,8 @@ def get_args():
         '--use-current-branch', action='store_true',
         help='Perform the update in the current branch. Do not repo start.')
     parser.add_argument(
-        '-v', '--verbose', action='count', help='Increase output verbosity.')
+        '-v', '--verbose', action='count', default=0,
+        help='Increase output verbosity.')
     return parser.parse_args()
 
 
