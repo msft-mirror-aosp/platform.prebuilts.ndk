@@ -85,17 +85,6 @@ def install_new_release(branch, build, install_dir):
             os.unlink(artifact)
 
 
-def symlink_gaps(first, last):
-    for api in xrange(first, last + 1):
-        if os.path.exists(api_str(api)):
-            continue
-
-        # Not all API levels have a platform directory. Make a symlink to the
-        # previous API level. For example, symlink android-10 to android-9.
-        assert api != 9
-        os.symlink(api_str(api - 1), api_str(api))
-
-
 def make_symlinks(install_dir):
     old_dir = os.getcwd()
     os.chdir(os.path.join(THIS_DIR, install_dir, 'platforms'))
@@ -115,7 +104,6 @@ def make_symlinks(install_dir):
                 os.unlink(dst)
             os.symlink(src, dst)
 
-    symlink_gaps(first_api, latest_api)
     os.chdir(old_dir)
 
 
