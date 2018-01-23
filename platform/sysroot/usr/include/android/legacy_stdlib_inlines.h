@@ -31,6 +31,22 @@
 
 #include <sys/cdefs.h>
 
+#if __ANDROID_API__ < __ANDROID_API_K__
+
+__BEGIN_DECLS
+
+static __inline int abs(int __n) { return (__n < 0) ? -__n : __n; }
+
+static __inline long labs(long __n) { return (__n < 0L) ? -__n : __n; }
+
+static __inline long long llabs(long long __n) {
+  return (__n < 0LL) ? -__n : __n;
+}
+
+__END_DECLS
+
+#endif
+
 #if __ANDROID_API__ < __ANDROID_API_L__
 
 #include <errno.h>
@@ -52,14 +68,6 @@ static __inline float strtof(const char* nptr, char** endptr) {
 }
 
 static __inline double atof(const char *nptr) { return (strtod(nptr, NULL)); }
-
-static __inline int abs(int __n) { return (__n < 0) ? -__n : __n; }
-
-static __inline long labs(long __n) { return (__n < 0L) ? -__n : __n; }
-
-static __inline long long llabs(long long __n) {
-  return (__n < 0LL) ? -__n : __n;
-}
 
 static __inline int rand(void) { return (int)lrand48(); }
 

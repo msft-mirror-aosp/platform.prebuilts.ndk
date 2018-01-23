@@ -108,12 +108,8 @@ int timer_gettime(timer_t __timer, struct itimerspec* __ts);
 int timer_getoverrun(timer_t __timer);
 
 /* Non-standard extensions that are in the BSDs and glibc. */
-
-#if __ANDROID_API__ >= 12
 time_t timelocal(struct tm* __tm) __INTRODUCED_IN(12);
 time_t timegm(struct tm* __tm) __INTRODUCED_IN(12);
-#endif /* __ANDROID_API__ >= 12 */
-
 
 __END_DECLS
 
