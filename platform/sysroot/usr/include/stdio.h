@@ -177,6 +177,7 @@ int renameat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const c
 int fseek(FILE* __fp, long __offset, int __whence);
 long ftell(FILE* __fp);
 
+/* See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
 
 #if __ANDROID_API__ >= 24
@@ -304,7 +305,28 @@ int fileno_unlocked(FILE* __fp) __INTRODUCED_IN(24);
 
 #define fropen(cookie, fn) funopen(cookie, fn, 0, 0, 0)
 #define fwopen(cookie, fn) funopen(cookie, 0, fn, 0, 0)
-#endif /* __USE_BSD */
+#endif
+
+#if defined(__USE_BSD)
+
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
+int fflush_unlocked(FILE* __fp) __INTRODUCED_IN_FUTURE;
+int fgetc_unlocked(FILE* __fp) __INTRODUCED_IN_FUTURE;
+int fputc_unlocked(int __ch, FILE* __fp) __INTRODUCED_IN_FUTURE;
+size_t fread_unlocked(void* __buf, size_t __size, size_t __count, FILE* __fp) __INTRODUCED_IN_FUTURE;
+size_t fwrite_unlocked(const void* __buf, size_t __size, size_t __count, FILE* __fp) __INTRODUCED_IN_FUTURE;
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+
+#endif
+
+#if defined(__USE_GNU)
+
+#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
+int fputs_unlocked(const char* __s, FILE* __fp) __INTRODUCED_IN_FUTURE;
+char* fgets_unlocked(char* __buf, int __size, FILE* __fp) __INTRODUCED_IN_FUTURE;
+#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+
+#endif
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #include <bits/fortify/stdio.h>

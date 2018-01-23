@@ -71,11 +71,12 @@ char* __strchr_chk(const char* __s, int __ch, size_t __n) __INTRODUCED_IN(18);
 
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
-/* The versioner doesn't handle C++ blocks yet, so manually guarded. */
+
 #if __ANDROID_API__ >= 24
 extern "C++" char* strchrnul(char* __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
 extern "C++" const char* strchrnul(const char* __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
-#endif  /* __ANDROID_API__ >= 24 */
+#endif /* __ANDROID_API__ >= 24 */
+
 #else
 
 #if __ANDROID_API__ >= 24
@@ -168,11 +169,12 @@ size_t strxfrm_l(char* __dst, const char* __src, size_t __n, locale_t __l) __INT
  * It doesn't modify its argument, and in C++ it's const-correct.
  */
 #if defined(__cplusplus)
-/* The versioner doesn't handle C++ blocks yet, so manually guarded. */
+
 #if __ANDROID_API__ >= 23
 extern "C++" char* basename(char* __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 extern "C++" const char* basename(const char* __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
-#endif  /* __ANDROID_API__ >= 23 */
+#endif /* __ANDROID_API__ >= 23 */
+
 #else
 
 #if __ANDROID_API__ >= 23

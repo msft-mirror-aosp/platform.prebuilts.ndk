@@ -29,12 +29,12 @@
 #ifndef _STDLIB_H
 #define _STDLIB_H
 
-#include <sys/cdefs.h>
-#include <xlocale.h>
-
 #include <alloca.h>
+#include <bits/wait.h>
 #include <malloc.h>
 #include <stddef.h>
+#include <sys/cdefs.h>
+#include <xlocale.h>
 
 __BEGIN_DECLS
 
@@ -220,12 +220,17 @@ size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
 #include <bits/fortify/stdlib.h>
 #endif
 
+#if __ANDROID_API__ >= __ANDROID_API_K__
+int abs(int __x) __attribute_const__ __INTRODUCED_IN(19);
+long labs(long __x) __attribute_const__ __INTRODUCED_IN(19);
+long long llabs(long long __x) __attribute_const__ __INTRODUCED_IN(19);
+#else
+// Implemented as static inlines before 19.
+#endif
+
 #if __ANDROID_API__ >= __ANDROID_API_L__
 float strtof(const char* __s, char** __end_ptr) __INTRODUCED_IN(21);
 double atof(const char* __s) __attribute_pure__ __INTRODUCED_IN(21);
-int abs(int __x) __attribute_const__ __INTRODUCED_IN(21);
-long labs(long __x) __attribute_const__ __INTRODUCED_IN(21);
-long long llabs(long long __x) __attribute_const__ __INTRODUCED_IN(21);
 int rand(void) __INTRODUCED_IN(21);
 void srand(unsigned int __seed) __INTRODUCED_IN(21);
 long random(void) __INTRODUCED_IN(21);
