@@ -7,7 +7,7 @@ OUTPUT_FORMAT("elf64-l1om", "elf64-l1om",
 	      "elf64-l1om")
 OUTPUT_ARCH(l1om)
 ENTRY(_start)
-SEARCH_DIR("=/tmp/888c5b5b08b23a85a52da4f9937cc2cd/i686-linux-android/lib");
+SEARCH_DIR("=/tmp/c7a0d6434f972ac990e83e18d29951e9/i686-linux-android/lib");
 SECTIONS
 {
   /* Read-only sections, merged into text segment: */
