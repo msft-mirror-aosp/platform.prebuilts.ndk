@@ -53,7 +53,7 @@ def get_prebuilt_host(host):
     return {
         'darwin-x86_64': 'darwin-x86',
         'linux-x86_64': 'linux-x86',
-        'windows': 'windows-x86',
+        'windows': 'windows-x86_32',
         'windows-x86_64': 'windows-x86',
     }[host]
 
