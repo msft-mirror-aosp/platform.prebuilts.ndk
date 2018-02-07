@@ -45,6 +45,11 @@ int ppoll(struct pollfd* __fds, nfds_t __count, const struct timespec* __timeout
 #endif /* __ANDROID_API__ >= 21 */
 
 
+#if __ANDROID_API__ >= 28
+int ppoll64(struct pollfd* __fds, nfds_t __count, const struct timespec* __timeout, const sigset64_t* __mask) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
+
+
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #include <bits/fortify/poll.h>
 #endif
