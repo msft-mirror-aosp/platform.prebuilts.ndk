@@ -80,6 +80,9 @@ enum {
 #define PTHREAD_EXPLICIT_SCHED 0
 #define PTHREAD_INHERIT_SCHED 1
 
+#define PTHREAD_PRIO_NONE 0
+#define PTHREAD_PRIO_INHERIT 1
+
 #define PTHREAD_PROCESS_PRIVATE 0
 #define PTHREAD_PROCESS_SHARED 1
 
@@ -157,9 +160,19 @@ int pthread_key_delete(pthread_key_t __key);
 int pthread_mutexattr_destroy(pthread_mutexattr_t* __attr);
 int pthread_mutexattr_getpshared(const pthread_mutexattr_t* __attr, int* __shared);
 int pthread_mutexattr_gettype(const pthread_mutexattr_t* __attr, int* __type);
+
+#if __ANDROID_API__ >= 28
+int pthread_mutexattr_getprotocol(const pthread_mutexattr_t* __attr, int* __protocol) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
+
 int pthread_mutexattr_init(pthread_mutexattr_t* __attr);
 int pthread_mutexattr_setpshared(pthread_mutexattr_t* __attr, int __shared);
 int pthread_mutexattr_settype(pthread_mutexattr_t* __attr, int __type);
+
+#if __ANDROID_API__ >= 28
+int pthread_mutexattr_setprotocol(pthread_mutexattr_t* __attr, int __protocol) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
+
 
 int pthread_mutex_destroy(pthread_mutex_t* __mutex);
 int pthread_mutex_init(pthread_mutex_t* __mutex, const pthread_mutexattr_t* __attr);
@@ -250,9 +263,9 @@ int pthread_setname_np(pthread_t __pthread, const char* __name);
 
 int pthread_setschedparam(pthread_t __pthread, int __policy, const struct sched_param* __param);
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int pthread_setschedprio(pthread_t __pthread, int __priority) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 28
+int pthread_setschedprio(pthread_t __pthread, int __priority) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
 
 
 int pthread_setspecific(pthread_key_t __key, const void* __value);

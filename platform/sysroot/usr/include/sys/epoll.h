@@ -67,6 +67,11 @@ int epoll_pwait(int __epoll_fd, struct epoll_event* __events, int __event_count,
 #endif /* __ANDROID_API__ >= 21 */
 
 
+#if __ANDROID_API__ >= 28
+int epoll_pwait64(int __epoll_fd, struct epoll_event* __events, int __event_count, int __timeout_ms, const sigset64_t* __mask) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
+
+
 __END_DECLS
 
 #endif
