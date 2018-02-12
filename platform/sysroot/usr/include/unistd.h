@@ -107,9 +107,9 @@ int execlp(const char* __file, const char* __arg0, ...) __attribute__((__sentine
 int execle(const char* __path, const char* __arg0, ... /*,  char* const* __envp */)
     __attribute__((__sentinel__(1)));
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int fexecve(int __fd, char* const* __argv, char* const* __envp) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 28
+int fexecve(int __fd, char* const* __argv, char* const* __envp) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
 
 
 int nice(int __incr);
@@ -132,9 +132,9 @@ int getresuid(uid_t* __ruid, uid_t* __euid, uid_t* __suid);
 int getresgid(gid_t* __rgid, gid_t* __egid, gid_t* __sgid);
 char* getlogin(void);
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int getlogin_r(char* __buffer, size_t __buffer_size) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 28
+int getlogin_r(char* __buffer, size_t __buffer_size) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
 
 
 long fpathconf(int __fd, int __name);
@@ -185,9 +185,9 @@ char* getcwd(char* __buf, size_t __size) __overloadable __RENAME_CLANG(getcwd);
 void sync(void);
 #if defined(__USE_GNU)
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int syncfs(int __fd) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 28
+int syncfs(int __fd) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
 
 #endif
 
@@ -300,9 +300,9 @@ int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
 
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 28
+void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
 
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
@@ -311,4 +311,4 @@ void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN_
 
 __END_DECLS
 
-#endif /* _UNISTD_H_ */
+#endif
