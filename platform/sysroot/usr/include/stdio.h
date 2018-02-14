@@ -309,22 +309,22 @@ int fileno_unlocked(FILE* __fp) __INTRODUCED_IN(24);
 
 #if defined(__USE_BSD)
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int fflush_unlocked(FILE* __fp) __INTRODUCED_IN_FUTURE;
-int fgetc_unlocked(FILE* __fp) __INTRODUCED_IN_FUTURE;
-int fputc_unlocked(int __ch, FILE* __fp) __INTRODUCED_IN_FUTURE;
-size_t fread_unlocked(void* __buf, size_t __size, size_t __count, FILE* __fp) __INTRODUCED_IN_FUTURE;
-size_t fwrite_unlocked(const void* __buf, size_t __size, size_t __count, FILE* __fp) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 28
+int fflush_unlocked(FILE* __fp) __INTRODUCED_IN(28);
+int fgetc_unlocked(FILE* __fp) __INTRODUCED_IN(28);
+int fputc_unlocked(int __ch, FILE* __fp) __INTRODUCED_IN(28);
+size_t fread_unlocked(void* __buf, size_t __size, size_t __count, FILE* __fp) __INTRODUCED_IN(28);
+size_t fwrite_unlocked(const void* __buf, size_t __size, size_t __count, FILE* __fp) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
 
 #endif
 
 #if defined(__USE_GNU)
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int fputs_unlocked(const char* __s, FILE* __fp) __INTRODUCED_IN_FUTURE;
-char* fgets_unlocked(char* __buf, int __size, FILE* __fp) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 28
+int fputs_unlocked(const char* __s, FILE* __fp) __INTRODUCED_IN(28);
+char* fgets_unlocked(char* __buf, int __size, FILE* __fp) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
 
 #endif
 

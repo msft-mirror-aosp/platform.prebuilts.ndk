@@ -227,7 +227,7 @@ def main():
     message = textwrap.dedent("""\
         Update NDK platform prebuilts {}.
 
-        Test: ndk/checkbuild.py && ndk/validate.py
+        Test: ndk/checkbuild.py && ndk/run_tests.py
         Bug: {}
         """.format(update_msg, args.bug))
     check_call(['git', 'commit', '-m', message])

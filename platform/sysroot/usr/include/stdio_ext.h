@@ -42,9 +42,9 @@ int __freadable(FILE* __fp) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int __freading(FILE* __fp) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 28
+int __freading(FILE* __fp) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
 
 
 #if __ANDROID_API__ >= 23
@@ -52,9 +52,9 @@ int __fwritable(FILE* __fp) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int __fwriting(FILE* __fp) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 28
+int __fwriting(FILE* __fp) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
 
 
 #if __ANDROID_API__ >= 23
