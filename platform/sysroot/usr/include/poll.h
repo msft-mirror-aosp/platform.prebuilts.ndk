@@ -38,10 +38,10 @@ __BEGIN_DECLS
 
 typedef unsigned int nfds_t;
 
-int poll(struct pollfd* __fds, nfds_t __count, int __timeout_ms) __overloadable __RENAME_CLANG(poll);
+int poll(struct pollfd* __fds, nfds_t __count, int __timeout_ms);
 
 #if __ANDROID_API__ >= 21
-int ppoll(struct pollfd* __fds, nfds_t __count, const struct timespec* __timeout, const sigset_t* __mask) __overloadable __RENAME_CLANG(ppoll) __INTRODUCED_IN(21);
+int ppoll(struct pollfd* __fds, nfds_t __count, const struct timespec* __timeout, const sigset_t* __mask) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
