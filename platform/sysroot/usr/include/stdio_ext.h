@@ -65,6 +65,12 @@ void _flushlbf(void) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
+
+#if __ANDROID_API__ >= 28
+void __fseterr(FILE* __fp) __INTRODUCED_IN(28);
+#endif /* __ANDROID_API__ >= 28 */
+
+
 #define FSETLOCKING_QUERY 0
 #define FSETLOCKING_INTERNAL 1
 #define FSETLOCKING_BYCALLER 2
