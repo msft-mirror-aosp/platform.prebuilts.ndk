@@ -69,13 +69,6 @@ def fetch_artifact(branch, target, build, pattern):
     remove('.fetch_artifact2.dat')
 
 
-def fetch_ndk_prebuilts(branch, build):
-    """Fetches a NDK platform package."""
-    target = 'ndk'
-    fetch_artifact(branch, target, build, 'ndk_platform.tar.bz2')
-    fetch_artifact(branch, target, build, 'repo.prop')
-
-
 def remove_unwanted_platforms(install_path, remove_platforms):
     """Removes platforms that should not be checked in."""
     for platform in remove_platforms:
@@ -178,7 +171,7 @@ def main():
     else:
         package = os.path.realpath(args.build)
         branch_name_suffix = 'local'
-        logger().info('Using local artifact at {}'.format(package))
+        logger().info('Using local artifact at %s', package)
 
     os.chdir(os.path.realpath(os.path.dirname(__file__)))
 
@@ -193,7 +186,7 @@ def main():
     makedirs(install_path)
 
     if args.download:
-        fetch_ndk_prebuilts(args.branch, build)
+        fetch_artifact(args.branch, 'ndk', build, 'ndk_platform.tar.bz2')
         package = 'ndk_platform.tar.bz2'
 
     check_call(['tar', 'xf', package, '--strip-components=1', '-C',
@@ -203,14 +196,11 @@ def main():
         remove(package)
 
     # It's easier to rearrange the package here than it is in the NDK's build.
-    # NOTICE and repo.prop are in the package root by convention, but we don't
-    # actually want this whole package to be the installed sysroot in the NDK.
-    # We have $INSTALL_DIR/sysroot and $INSTALL_DIR/platforms.
-    # $INSTALL_DIR/sysroot will be installed to $NDK/sysroot, but
-    # $INSTALL_DIR/platforms is used as input to gen-platforms.sh. Shift the
-    # repo.prop and NOTICE into the sysroot directory.
-    if args.download:
-        rename('repo.prop', os.path.join(install_path, 'sysroot/repo.prop'))
+    # NOTICE is in the package root by convention, but we don't actually want
+    # this whole package to be the installed sysroot in the NDK.  We have
+    # $INSTALL_DIR/sysroot and $INSTALL_DIR/platforms. $INSTALL_DIR/sysroot
+    # will be installed to $NDK/sysroot, but $INSTALL_DIR/platforms is used as
+    # input to Platforms. Shift the NOTICE into the sysroot directory.
     rename(os.path.join(install_path, 'NOTICE'),
            os.path.join(install_path, 'sysroot/NOTICE'))
 
