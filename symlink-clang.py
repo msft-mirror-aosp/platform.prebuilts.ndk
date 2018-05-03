@@ -23,7 +23,9 @@ multilib toolchains), we can just symlink clang.
 from __future__ import print_function
 
 import argparse
+import functools
 import os
+import re
 import site
 import subprocess
 
@@ -32,19 +34,53 @@ site.addsitedir(os.path.join(os.path.dirname(__file__), '../../ndk/build/lib'))
 import build_support  # pylint: disable=import-error
 
 
+@functools.total_ordering
+class ClangVersion(object):
+    def __init__(self, revision, patch):
+        self.revision = revision
+        self.patch = patch
+
+    @staticmethod
+    def from_dirname(dirname):
+        if not dirname.startswith('clang-r'):
+            raise ValueError
+
+        _, _, name = dirname.partition('clang-r')
+
+        pattern = r'^(\d+)([a-z]?)$'
+        match = re.match(pattern, name)
+        if not match:
+            raise ValueError('Expected clang name to match {}'.format(pattern))
+
+        revision = int(match.group(1))
+        patch = match.group(2)
+        return ClangVersion(revision, patch)
+
+    def __repr__(self):
+        return str(self)
+
+    def __str__(self):
+        return 'r{}{}'.format(self.revision, self.patch)
+
+    def as_tuple(self):
+        return (self.revision, self.patch)
+
+    def __eq__(self, other):
+        return self.as_tuple() == other.as_tuple()
+
+    def __lt__(self, other):
+        return self.as_tuple() < other.as_tuple()
+
+
 def get_latest_build():
     dirs = os.listdir(build_support.android_path(
         'prebuilts/clang/host/linux-x86'))
 
     clangs = []
     for dir_name in dirs:
-        if not dir_name.startswith('clang-'):
+        if not dir_name.startswith('clang-r'):
             continue
-        version_str = dir_name.partition('-')[2]
-        try:
-            clangs.append(int(version_str))
-        except ValueError:
-            pass
+        clangs.append(ClangVersion.from_dirname(dir_name))
     return str(sorted(clangs)[-1])
 
 
