@@ -35,6 +35,11 @@ def check_call(cmd):
     subprocess.check_call(cmd)
 
 
+def remove(path):
+    logger().debug('remove `%s`', path)
+    os.remove(path)
+
+
 def fetch_artifact(branch, build, pattern):
     fetch_artifact_path = '/google/data/ro/projects/android/fetch_artifact'
     cmd = [fetch_artifact_path, '--branch', branch, '--target=linux',
@@ -85,13 +90,30 @@ def install_new_release(branch, build, install_dir):
             os.unlink(artifact)
 
 
+def remove_unneeded_files(install_dir):
+    for path, _dirs, files in os.walk(os.path.join(install_dir, 'platforms')):
+        for file_name in files:
+            if file_name.endswith('.so'):
+                file_path = os.path.join(path, file_name)
+                remove(file_path)
+
+    for path, _dirs, files in os.walk(os.path.join(install_dir, 'sources')):
+        for file_name in files:
+            if file_name == 'Android.bp':
+                file_path = os.path.join(path, file_name)
+                remove(file_path)
+
+    remove_stls = ['gabi++', 'gnu-libstdc++', 'stlport']
+    for stl in remove_stls:
+        shutil.rmtree(os.path.join(install_dir, 'sources/cxx-stl', stl))
+
+
 def make_symlinks(install_dir):
     old_dir = os.getcwd()
     os.chdir(os.path.join(THIS_DIR, install_dir, 'platforms'))
 
     first_api = 9
     first_lp64_api = 21
-    latest_api = 23
 
     for api in xrange(first_api, first_lp64_api):
         if not os.path.exists(api_str(api)):
@@ -150,6 +172,7 @@ def main():
         start_branch(args.build)
     remove_old_release(install_dir)
     install_new_release(args.branch, args.build, install_dir)
+    remove_unneeded_files(install_dir)
     make_symlinks(install_dir)
     commit(args.branch, args.build, install_dir)
 
