@@ -6,7 +6,7 @@
 OUTPUT_FORMAT("a.out-i386-linux", "a.out-i386-linux",
 	      "a.out-i386-linux")
 OUTPUT_ARCH(i386)
-SEARCH_DIR("=/tmp/27fc917e9c8e6f1ffe72de84af6e13cb/i686-linux-androidaout/lib");
+SEARCH_DIR("=/tmp/e687c32fa026beaf957331262ebfd667/i686-linux-androidaout/lib");
 PROVIDE (__stack = 0);
 SECTIONS
 {
