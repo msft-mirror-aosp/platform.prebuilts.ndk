@@ -7,7 +7,7 @@ OUTPUT_FORMAT("elf32-x86-64", "elf32-x86-64",
 	      "elf32-x86-64")
 OUTPUT_ARCH(i386:x64-32)
 ENTRY(_start)
-SEARCH_DIR("=/tmp/b3aa1e616db2a7110f9930104f54a530/x86_64-linux-android/libx32"); SEARCH_DIR("=/usr/local/libx32"); SEARCH_DIR("=/libx32"); SEARCH_DIR("=/usr/libx32"); SEARCH_DIR("=/tmp/b3aa1e616db2a7110f9930104f54a530/x86_64-linux-android/lib"); SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib");
+SEARCH_DIR("=/tmp/f2ca280c740e156510785ca194789d17/x86_64-linux-android/libx32"); SEARCH_DIR("=/usr/local/libx32"); SEARCH_DIR("=/libx32"); SEARCH_DIR("=/usr/libx32"); SEARCH_DIR("=/tmp/f2ca280c740e156510785ca194789d17/x86_64-linux-android/lib"); SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib");
 SECTIONS
 {
   /* Read-only sections, merged into text segment: */
