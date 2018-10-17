@@ -2,7 +2,7 @@
 
     It has been auto-edited by fixincludes from:
 
-	"/tmp/e9e735a3b749c4ae39720ab085e0160c/sysroot/usr/include/asm/posix_types.h"
+	"/tmp/fd918ee4f6e82fa2c4e290d34650470b/sysroot/usr/include/asm/posix_types.h"
 
     This had to be done to correct non-standard usages in the
     original, manufacturer supplied header file.  */

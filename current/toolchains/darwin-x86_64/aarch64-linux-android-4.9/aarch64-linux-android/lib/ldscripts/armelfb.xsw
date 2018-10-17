@@ -7,7 +7,7 @@ OUTPUT_FORMAT("elf32-bigarm", "elf32-bigarm",
 	      "elf32-littlearm")
 OUTPUT_ARCH(arm)
 ENTRY(_start)
-SEARCH_DIR("=/tmp/190f5c861fbad605381f0f41bc477b30/aarch64-linux-android/lib");
+SEARCH_DIR("=/tmp/128e6f164bf061cee0ac56189fe57469/aarch64-linux-android/lib");
 SECTIONS
 {
   /* Read-only sections, merged into text segment: */
