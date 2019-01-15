@@ -2,56 +2,6 @@
 // DO NOT EDIT
 
 ndk_prebuilt_object {
-    name: "ndk_crtbegin_dynamic.14",
-    sdk_version: "14",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtbegin_so.14",
-    sdk_version: "14",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtbegin_static.14",
-    sdk_version: "14",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtend_android.14",
-    sdk_version: "14",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtend_so.14",
-    sdk_version: "14",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtbegin_dynamic.15",
-    sdk_version: "15",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtbegin_so.15",
-    sdk_version: "15",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtbegin_static.15",
-    sdk_version: "15",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtend_android.15",
-    sdk_version: "15",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtend_so.15",
-    sdk_version: "15",
-}
-
-ndk_prebuilt_object {
     name: "ndk_crtbegin_dynamic.16",
     sdk_version: "16",
 }
@@ -301,4 +251,29 @@ ndk_prebuilt_object {
     sdk_version: "27",
 }
 
-build = ["cpufeatures.bp", "stl.bp"]
+ndk_prebuilt_object {
+    name: "ndk_crtbegin_dynamic.28",
+    sdk_version: "28",
+}
+
+ndk_prebuilt_object {
+    name: "ndk_crtbegin_so.28",
+    sdk_version: "28",
+}
+
+ndk_prebuilt_object {
+    name: "ndk_crtbegin_static.28",
+    sdk_version: "28",
+}
+
+ndk_prebuilt_object {
+    name: "ndk_crtend_android.28",
+    sdk_version: "28",
+}
+
+ndk_prebuilt_object {
+    name: "ndk_crtend_so.28",
+    sdk_version: "28",
+}
+
+build = ["android_native_app_glue.bp", "cpufeatures.bp", "stl.bp"]

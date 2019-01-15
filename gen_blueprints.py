@@ -84,7 +84,7 @@ def main():
         bpfile.write('\n')
         bpfile.write('\n\n'.join(blueprints))
         bpfile.write('\n\n')
-        bpfile.write('build = ["cpufeatures.bp", "stl.bp"]')
+        bpfile.write('build = ["android_native_app_glue.bp", "cpufeatures.bp", "stl.bp"]')
 
 
 if __name__ == '__main__':
