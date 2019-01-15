@@ -103,10 +103,6 @@ def remove_unneeded_files(install_dir):
                 file_path = os.path.join(path, file_name)
                 remove(file_path)
 
-    remove_stls = ['gabi++', 'gnu-libstdc++', 'stlport']
-    for stl in remove_stls:
-        shutil.rmtree(os.path.join(install_dir, 'sources/cxx-stl', stl))
-
 
 def make_symlinks(install_dir):
     old_dir = os.getcwd()
