@@ -169,6 +169,14 @@ void psignal(int __signal, const char* __msg) __INTRODUCED_IN(17);
 
 
 int pthread_kill(pthread_t __pthread, int __signal);
+#if defined(__USE_GNU)
+
+#if __ANDROID_API__ >= 29
+int pthread_sigqueue(pthread_t __pthread, int __signal, const union sigval __value) __INTRODUCED_IN(29);
+#endif /* __ANDROID_API__ >= 29 */
+
+#endif
+
 int pthread_sigmask(int __how, const sigset_t* __new_set, sigset_t* __old_set);
 
 #if __ANDROID_API__ >= 28
