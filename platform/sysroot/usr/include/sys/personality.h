@@ -26,14 +26,26 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_PERSONALITY_H_
-#define _SYS_PERSONALITY_H_
+#pragma once
+
+/**
+ * @file sys/personality.h
+ * @brief The personality() function.
+ */
 
 #include <sys/cdefs.h>
 #include <linux/personality.h>
 
 __BEGIN_DECLS
 
+/**
+ * [personality(2)](http://man7.org/linux/man-pages/man2/personality.2.html) sets the calling
+ * process' personality.
+ *
+ * Returns the previous persona on success, and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 15.
+ */
 
 #if __ANDROID_API__ >= 15
 int personality(unsigned int __persona) __INTRODUCED_IN(15);
@@ -41,5 +53,3 @@ int personality(unsigned int __persona) __INTRODUCED_IN(15);
 
 
 __END_DECLS
-
-#endif
