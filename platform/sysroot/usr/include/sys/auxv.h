@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_AUXV_H_
-#define _SYS_AUXV_H_
+#pragma once
+
+/**
+ * @file sys/auxv.h
+ * @brief The getauxval() function.
+ */
 
 #include <sys/cdefs.h>
 
@@ -35,6 +39,15 @@
 
 __BEGIN_DECLS
 
+/**
+ * [getauxval(3)](http://man7.org/linux/man-pages/man2/personality.2.html) returns values from
+ * the ELF auxiliary vector passed by the kernel.
+ *
+ * Returns the corresponding value on success,
+ * and returns 0 and sets `errno` to `ENOENT` on failure.
+ *
+ * Available since API level 18.
+ */
 
 #if __ANDROID_API__ >= 18
 unsigned long int getauxval(unsigned long int __type) __INTRODUCED_IN(18);
@@ -42,5 +55,3 @@ unsigned long int getauxval(unsigned long int __type) __INTRODUCED_IN(18);
 
 
 __END_DECLS
-
-#endif
