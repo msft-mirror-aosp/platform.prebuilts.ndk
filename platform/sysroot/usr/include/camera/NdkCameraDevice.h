@@ -34,10 +34,10 @@
  */
 #include <sys/cdefs.h>
 
-#include <android/native_window.h>
 #include "NdkCameraError.h"
 #include "NdkCaptureRequest.h"
 #include "NdkCameraCaptureSession.h"
+#include "NdkCameraWindowType.h"
 
 #ifndef _NDK_CAMERA_DEVICE_H
 #define _NDK_CAMERA_DEVICE_H
@@ -345,7 +345,7 @@ void            ACaptureSessionOutputContainer_free(ACaptureSessionOutputContain
  * @see ACaptureSessionOutputContainer_add
  */
 camera_status_t ACaptureSessionOutput_create(
-        ANativeWindow* anw, /*out*/ACaptureSessionOutput** output) __INTRODUCED_IN(24);
+        ACameraWindowType* anw, /*out*/ACaptureSessionOutput** output) __INTRODUCED_IN(24);
 
 /**
  * Free a ACaptureSessionOutput object.
@@ -694,7 +694,7 @@ camera_status_t ACameraDevice_createCaptureSession(
  * @see ACaptureSessionOutputContainer_add
  */
 camera_status_t ACaptureSessionSharedOutput_create(
-        ANativeWindow* anw, /*out*/ACaptureSessionOutput** output) __INTRODUCED_IN(28);
+        ACameraWindowType* anw, /*out*/ACaptureSessionOutput** output) __INTRODUCED_IN(28);
 
 /**
  * Add a native window to shared ACaptureSessionOutput.
@@ -712,7 +712,7 @@ camera_status_t ACaptureSessionSharedOutput_create(
  *             ACaptureSessionOutput.</li></ul>
  */
 camera_status_t ACaptureSessionSharedOutput_add(ACaptureSessionOutput *output,
-        ANativeWindow *anw) __INTRODUCED_IN(28);
+        ACameraWindowType *anw) __INTRODUCED_IN(28);
 
 /**
  * Remove a native window from shared ACaptureSessionOutput.
@@ -728,7 +728,7 @@ camera_status_t ACaptureSessionSharedOutput_add(ACaptureSessionOutput *output,
  *             ACaptureSessionOutput.</li></ul>
  */
 camera_status_t ACaptureSessionSharedOutput_remove(ACaptureSessionOutput *output,
-        ANativeWindow* anw) __INTRODUCED_IN(28);
+        ACameraWindowType* anw) __INTRODUCED_IN(28);
 
 /**
  * Create a new camera capture session similar to {@link ACameraDevice_createCaptureSession}. This
@@ -764,6 +764,36 @@ camera_status_t ACameraDevice_createCaptureSessionWithSessionParameters(
         /*out*/ACameraCaptureSession** session) __INTRODUCED_IN(28);
 
 #endif /* __ANDROID_API__ >= 28 */
+
+#if __ANDROID_API__ >= 29
+
+/**
+ * Create a ACaptureSessionOutput object used for streaming from a physical
+ * camera as part of a logical camera device.
+ *
+ * <p>The ACaptureSessionOutput is used in {@link ACaptureSessionOutputContainer_add} method to add
+ * an output {@link ANativeWindow} to ACaptureSessionOutputContainer. Use
+ * {@link ACaptureSessionOutput_free} to free the object and its memory after application no longer
+ * needs the {@link ACaptureSessionOutput}.</p>
+ *
+ * @param anw the {@link ANativeWindow} to be associated with the {@link ACaptureSessionOutput}
+ * @param physicalId the Id of the physical camera this output is associated
+ *                  with.
+ * @param output the output {@link ACaptureSessionOutput} will be stored here if the
+ *                  method call succeeds.
+ *
+ * @return <ul>
+ *         <li>{@link ACAMERA_OK} if the method call succeeds. The created container will be
+ *                                filled in the output argument.</li>
+ *         <li>{@link ACAMERA_ERROR_INVALID_PARAMETER} if anw, physicalId or output is NULL.</li></ul>
+ *
+ * @see ACaptureSessionOutputContainer_add
+ */
+camera_status_t ACaptureSessionPhysicalOutput_create(
+        ACameraWindowType* anw, const char* physicalId,
+        /*out*/ACaptureSessionOutput** output) __INTRODUCED_IN(29);
+
+#endif /* __ANDROID_API__ >= 29 */
 
 __END_DECLS
 

@@ -194,6 +194,8 @@ enum AHardwareBuffer_UsageFlags {
 
     /// The buffer will be read from by the GPU as a texture.
     AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE      = 1UL << 8,
+    /// The buffer will be written to by the GPU as a framebuffer attachment.
+    AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER        = 1UL << 9,
     /**
      * The buffer will be written to by the GPU as a framebuffer
      * attachment.
@@ -201,9 +203,21 @@ enum AHardwareBuffer_UsageFlags {
      * Note that the name of this flag is somewhat misleading: it does
      * not imply that the buffer contains a color format. A buffer with
      * depth or stencil format that will be used as a framebuffer
-     * attachment should also have this flag.
+     * attachment should also have this flag. Use the equivalent flag
+     * AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER to avoid this confusion.
      */
-    AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT       = 1UL << 9,
+    AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT       = AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER,
+    /**
+     * The buffer will be used as a composer HAL overlay layer.
+     *
+     * This flag is currently only needed when using ASurfaceTransaction_setBuffer
+     * to set a buffer. In all other cases, the framework adds this flag
+     * internally to buffers that could be presented in a composer overlay.
+     * ASurfaceTransaction_setBuffer is special because it uses buffers allocated
+     * directly through AHardwareBuffer_allocate instead of buffers allocated
+     * by the framework.
+     */
+    AHARDWAREBUFFER_USAGE_COMPOSER_OVERLAY       = 1ULL << 11,
     /**
      * The buffer is protected from direct CPU access or being read by
      * non-secure hardware, such as video encoders.
@@ -309,7 +323,7 @@ int AHardwareBuffer_allocate(const AHardwareBuffer_Desc* desc,
         AHardwareBuffer** outBuffer) __INTRODUCED_IN(26);
 /**
  * Acquire a reference on the given AHardwareBuffer object.
- *
+ * 
  * This prevents the object from being deleted until the last reference
  * is removed.
  */
@@ -416,6 +430,29 @@ int AHardwareBuffer_sendHandleToUnixSocket(const AHardwareBuffer* buffer, int so
 int AHardwareBuffer_recvHandleFromUnixSocket(int socketFd, AHardwareBuffer** outBuffer) __INTRODUCED_IN(26);
 
 #endif // __ANDROID_API__ >= 26
+
+#if __ANDROID_API__ >= 29
+
+/**
+ * Test whether the given format and usage flag combination is
+ * allocatable.
+ *
+ * If this function returns true, it means that a buffer with the given
+ * description can be allocated on this implementation, unless resource
+ * exhaustion occurs. If this function returns false, it means that the
+ * allocation of the given description will never succeed.
+ *
+ * The return value of this function may depend on all fields in the
+ * description, except stride, which is always ignored. For example,
+ * some implementations have implementation-defined limits on texture
+ * size and layer count.
+ *
+ * \return 1 if the format and usage flag combination is allocatable,
+ *     0 otherwise.
+ */
+int AHardwareBuffer_isSupported(const AHardwareBuffer_Desc* desc) __INTRODUCED_IN(29);
+
+#endif // __ANDROID_API__ >= 29
 
 __END_DECLS
 
