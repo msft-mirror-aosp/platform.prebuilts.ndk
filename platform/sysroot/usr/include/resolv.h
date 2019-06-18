@@ -61,9 +61,9 @@ int res_search(const char* __name, int __class, int __type, u_char* __answer, in
 
 #define res_randomid __res_randomid
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-u_int __res_randomid(void) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 29
+u_int __res_randomid(void) __INTRODUCED_IN(29);
+#endif /* __ANDROID_API__ >= 29 */
 
 
 __END_DECLS

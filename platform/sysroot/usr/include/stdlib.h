@@ -203,9 +203,9 @@ lldiv_t lldiv(long long __numerator, long long __denominator) __attribute_const_
  * Returns the number of samples written to `__averages` (at most 3), and returns -1 on failure.
  */
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int getloadavg(double __averages[], int __n) __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
+#if __ANDROID_API__ >= 29
+int getloadavg(double __averages[], int __n) __INTRODUCED_IN(29);
+#endif /* __ANDROID_API__ >= 29 */
 
 
 /* BSD compatibility. */

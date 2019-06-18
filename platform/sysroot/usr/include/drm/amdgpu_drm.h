@@ -158,11 +158,12 @@ union drm_amdgpu_vm {
   struct drm_amdgpu_vm_out out;
 };
 #define AMDGPU_SCHED_OP_PROCESS_PRIORITY_OVERRIDE 1
+#define AMDGPU_SCHED_OP_CONTEXT_PRIORITY_OVERRIDE 2
 struct drm_amdgpu_sched_in {
   __u32 op;
   __u32 fd;
   __s32 priority;
-  __u32 flags;
+  __u32 ctx_id;
 };
 union drm_amdgpu_sched {
   struct drm_amdgpu_sched_in in;
@@ -195,6 +196,12 @@ struct drm_amdgpu_gem_userptr {
 #define AMDGPU_TILING_NUM_BANKS_MASK 0x3
 #define AMDGPU_TILING_SWIZZLE_MODE_SHIFT 0
 #define AMDGPU_TILING_SWIZZLE_MODE_MASK 0x1f
+#define AMDGPU_TILING_DCC_OFFSET_256B_SHIFT 5
+#define AMDGPU_TILING_DCC_OFFSET_256B_MASK 0xFFFFFF
+#define AMDGPU_TILING_DCC_PITCH_MAX_SHIFT 29
+#define AMDGPU_TILING_DCC_PITCH_MAX_MASK 0x3FFF
+#define AMDGPU_TILING_DCC_INDEPENDENT_64B_SHIFT 43
+#define AMDGPU_TILING_DCC_INDEPENDENT_64B_MASK 0x1
 #define AMDGPU_TILING_SET(field,value) (((__u64) (value) & AMDGPU_TILING_ ##field ##_MASK) << AMDGPU_TILING_ ##field ##_SHIFT)
 #define AMDGPU_TILING_GET(value,field) (((__u64) (value) >> AMDGPU_TILING_ ##field ##_SHIFT) & AMDGPU_TILING_ ##field ##_MASK)
 #define AMDGPU_GEM_METADATA_OP_SET_METADATA 1
@@ -317,6 +324,7 @@ struct drm_amdgpu_gem_va {
 #define AMDGPU_CHUNK_ID_SYNCOBJ_IN 0x04
 #define AMDGPU_CHUNK_ID_SYNCOBJ_OUT 0x05
 #define AMDGPU_CHUNK_ID_BO_HANDLES 0x06
+#define AMDGPU_CHUNK_ID_SCHEDULED_DEPENDENCIES 0x07
 struct drm_amdgpu_cs_chunk {
   __u32 chunk_id;
   __u32 length_dw;
@@ -340,6 +348,7 @@ union drm_amdgpu_cs {
 #define AMDGPU_IB_FLAG_PREAMBLE (1 << 1)
 #define AMDGPU_IB_FLAG_PREEMPT (1 << 2)
 #define AMDGPU_IB_FLAG_TC_WB_NOT_INVALIDATE (1 << 3)
+#define AMDGPU_IB_FLAG_RESET_GDS_MAX_WAVE_ID (1 << 4)
 struct drm_amdgpu_cs_chunk_ib {
   __u32 _pad;
   __u32 flags;
