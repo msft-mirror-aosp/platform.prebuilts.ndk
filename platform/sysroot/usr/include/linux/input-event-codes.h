@@ -389,10 +389,12 @@
 #define KEY_TITLE 0x171
 #define KEY_SUBTITLE 0x172
 #define KEY_ANGLE 0x173
-#define KEY_ZOOM 0x174
+#define KEY_FULL_SCREEN 0x174
+#define KEY_ZOOM KEY_FULL_SCREEN
 #define KEY_MODE 0x175
 #define KEY_KEYBOARD 0x176
-#define KEY_SCREEN 0x177
+#define KEY_ASPECT_RATIO 0x177
+#define KEY_SCREEN KEY_ASPECT_RATIO
 #define KEY_PC 0x178
 #define KEY_TV 0x179
 #define KEY_TV2 0x17a
@@ -623,6 +625,8 @@
 #define REL_WHEEL 0x08
 #define REL_MISC 0x09
 #define REL_RESERVED 0x0a
+#define REL_WHEEL_HI_RES 0x0b
+#define REL_HWHEEL_HI_RES 0x0c
 #define REL_MAX 0x0f
 #define REL_CNT (REL_MAX + 1)
 #define ABS_X 0x00

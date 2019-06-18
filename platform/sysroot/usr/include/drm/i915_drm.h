@@ -281,6 +281,9 @@ typedef struct drm_i915_irq_emit {
 typedef struct drm_i915_irq_wait {
   int irq_seq;
 } drm_i915_irq_wait_t;
+#define I915_GEM_PPGTT_NONE 0
+#define I915_GEM_PPGTT_ALIASING 1
+#define I915_GEM_PPGTT_FULL 2
 #define I915_PARAM_IRQ_ACTIVE 1
 #define I915_PARAM_ALLOW_BATCHBUFFER 2
 #define I915_PARAM_LAST_DISPATCH 3
@@ -700,7 +703,18 @@ struct drm_i915_gem_context_param {
 #define I915_CONTEXT_MAX_USER_PRIORITY 1023
 #define I915_CONTEXT_DEFAULT_PRIORITY 0
 #define I915_CONTEXT_MIN_USER_PRIORITY - 1023
+#define I915_CONTEXT_PARAM_SSEU 0x7
   __u64 value;
+};
+struct drm_i915_gem_context_param_sseu {
+  __u16 engine_class;
+  __u16 engine_instance;
+  __u32 flags;
+  __u64 slice_mask;
+  __u64 subslice_mask;
+  __u16 min_eus_per_subslice;
+  __u16 max_eus_per_subslice;
+  __u32 rsvd;
 };
 enum drm_i915_oa_format {
   I915_OA_FORMAT_A13 = 1,

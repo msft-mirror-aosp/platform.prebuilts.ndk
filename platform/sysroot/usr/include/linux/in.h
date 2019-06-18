@@ -201,7 +201,7 @@ struct sockaddr_in {
 #define IN_CLASSD(a) ((((long int) (a)) & 0xf0000000) == 0xe0000000)
 #define IN_MULTICAST(a) IN_CLASSD(a)
 #define IN_MULTICAST_NET 0xe0000000
-#define IN_BADCLASS(a) (((long int) (a)) == (long int)0xffffffff)
+#define IN_BADCLASS(a) (((long int) (a)) == (long int) 0xffffffff)
 #define IN_EXPERIMENTAL(a) IN_BADCLASS((a))
 #define IN_CLASSE(a) ((((long int) (a)) & 0xf0000000) == 0xf0000000)
 #define IN_CLASSE_NET 0xffffffff
@@ -215,6 +215,7 @@ struct sockaddr_in {
 #define INADDR_UNSPEC_GROUP 0xe0000000U
 #define INADDR_ALLHOSTS_GROUP 0xe0000001U
 #define INADDR_ALLRTRS_GROUP 0xe0000002U
+#define INADDR_ALLSNOOPERS_GROUP 0xe000006aU
 #define INADDR_MAX_LOCAL_GROUP 0xe00000ffU
 #endif
 #include <asm/byteorder.h>
