@@ -121,7 +121,7 @@ def main():
         subprocess.check_call(
             ['repo', 'start', 'update-clang-{}'.format(build), '.'])
 
-    hosts = ('darwin-x86_64', 'linux-x86_64', 'windows', 'windows-x86_64')
+    hosts = ('darwin-x86_64', 'linux-x86_64', 'windows-x86_64')
     for host in hosts:
         install_path = build_support.android_path(
             'prebuilts/ndk/current/toolchains', host, 'llvm')

@@ -88,15 +88,14 @@ def build_name(host, arch):
     >>> build_name('darwin-x86_64', 'arm')
     'arm'
 
-    >>> build_name('windows', 'x86')
-    'win_x86'
+    >>> build_name('windows-x86_64', 'x86')
+    'win64_x86'
     """
     if host == 'darwin-x86_64':
         return arch + '_mac'
 
     return {
         'linux-x86_64': 'linux',
-        'windows': 'win',
         'windows-x86_64': 'win64',
     }[host] + '_' + arch
 
@@ -107,8 +106,8 @@ def package_name(host, arch):
     >>> package_name('linux-x86_64', 'arm')
     'gcc-arm-linux-x86_64.tar.bz2'
 
-    >>> package_name('windows', 'x86')
-    'gcc-x86-windows.tar.bz2'
+    >>> package_name('windows-x86_64', 'x86')
+    'gcc-x86-windows-x86_64.tar.bz2'
     """
     return 'gcc-{}-{}.tar.bz2'.format(arch, host)
 
@@ -152,7 +151,7 @@ def main():
     if not args.use_current_branch:
         check_call(['repo', 'start', 'update-gcc-{}'.format(args.build), '.'])
 
-    hosts = ('darwin-x86_64', 'linux-x86_64', 'windows', 'windows-x86_64')
+    hosts = ('darwin-x86_64', 'linux-x86_64', 'windows-x86_64')
     packages = []
     for host in hosts:
         for arch in build_support.ALL_ARCHITECTURES:
