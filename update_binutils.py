@@ -150,7 +150,7 @@ def main():
         check_call(
             ['repo', 'start', 'update-binutils-{}'.format(args.build), '.'])
 
-    hosts = ('darwin', 'linux', 'win', 'win64')
+    hosts = ('darwin', 'linux', 'win64')
     packages = []
     for host in hosts:
         for arch in ndk.abis.ALL_ARCHITECTURES:
