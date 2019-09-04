@@ -205,4 +205,12 @@ enum android_fdsan_error_level android_fdsan_set_error_level(enum android_fdsan_
 #endif /* __ANDROID_API__ >= 29 */
 
 
+/*
+ * Set the error level to the global setting if available, or a default value.
+ */
+
+#if __ANDROID_API__ >= 30
+enum android_fdsan_error_level android_fdsan_set_error_level_from_property(enum android_fdsan_error_level default_level) __INTRODUCED_IN(30) __attribute__((__weak__));
+#endif /* __ANDROID_API__ >= 30 */
+
 __END_DECLS
