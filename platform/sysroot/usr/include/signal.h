@@ -153,11 +153,7 @@ sighandler_t sigset(int __signal, sighandler_t __handler)
 int raise(int __signal);
 int kill(pid_t __pid, int __signal);
 int killpg(int __pgrp, int __signal);
-
-#if (!defined(__LP64__) && __ANDROID_API__ >= 16) || (defined(__LP64__))
-int tgkill(int __tgid, int __tid, int __signal) __INTRODUCED_IN_32(16);
-#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 16) || (defined(__LP64__)) */
-
+int tgkill(int __tgid, int __tid, int __signal);
 
 int sigaltstack(const stack_t* __new_signal_stack, stack_t* __old_signal_stack);
 
