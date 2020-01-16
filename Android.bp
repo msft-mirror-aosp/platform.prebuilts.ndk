@@ -276,29 +276,4 @@ ndk_prebuilt_object {
     sdk_version: "28",
 }
 
-ndk_prebuilt_object {
-    name: "ndk_crtbegin_dynamic.29",
-    sdk_version: "29",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtbegin_so.29",
-    sdk_version: "29",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtbegin_static.29",
-    sdk_version: "29",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtend_android.29",
-    sdk_version: "29",
-}
-
-ndk_prebuilt_object {
-    name: "ndk_crtend_so.29",
-    sdk_version: "29",
-}
-
 build = ["android_native_app_glue.bp", "cpufeatures.bp", "stl.bp"]
