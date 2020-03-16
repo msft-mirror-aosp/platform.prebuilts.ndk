@@ -6,7 +6,7 @@
 OUTPUT_FORMAT("a.out-i386-linux", "a.out-i386-linux",
 	      "a.out-i386-linux")
 OUTPUT_ARCH(i386)
-SEARCH_DIR("=/buildbot/src/android/binutils/out/binutils/linux/x86/install/binutils-x86-linux/i686-linux-androidaout/lib");
+SEARCH_DIR("=/usr/local/google/buildbot/src/android/binutils/out/binutils/linux/x86/install/binutils-x86-linux/i686-linux-androidaout/lib");
 PROVIDE (__stack = 0);
 SECTIONS
 {
