@@ -118,7 +118,10 @@ def fetch_artifact(branch, target, build, pattern):
     check_call(cmd)
 
     # Fetch artifact dumps crap to the working directory.
-    remove('.fetch_artifact2.dat')
+    try:
+        remove('.fetch_artifact2.dat')
+    except FileNotFoundError:
+        pass
 
 
 def download_build(branch, host, arch, build_number):
