@@ -7,7 +7,7 @@ OUTPUT_FORMAT("elf64-bigaarch64", "elf64-bigaarch64",
 	      "elf64-littleaarch64")
 OUTPUT_ARCH(aarch64)
 ENTRY(_start)
-SEARCH_DIR("=/usr/local/google/buildbot/src/android/binutils/out/binutils/win64/arm64/install/binutils-arm64-win64/aarch64-linux-android/lib");
+SEARCH_DIR("=/buildbot/src/android/binutils/out/binutils/win64/arm64/install/binutils-arm64-win64/aarch64-linux-android/lib");
 SECTIONS
 {
   /* Read-only sections, merged into text segment: */
