@@ -7,7 +7,7 @@ OUTPUT_FORMAT("elf64-k1om", "elf64-k1om",
 	      "elf64-k1om")
 OUTPUT_ARCH(k1om)
 ENTRY(_start)
-SEARCH_DIR("=/buildbot/src/android/binutils/out/binutils/linux/x86/install/binutils-x86-linux/i686-linux-android/lib");
+SEARCH_DIR("=/usr/local/google/buildbot/src/android/binutils/out/binutils/linux/x86/install/binutils-x86-linux/i686-linux-android/lib");
 SECTIONS
 {
   /* Read-only sections, merged into text segment: */
