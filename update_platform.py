@@ -65,9 +65,6 @@ def fetch_artifact(branch, target, build, pattern):
            '--bid', build, pattern]
     check_call(cmd)
 
-    # Fetch artifact dumps crap to the working directory.
-    remove('.fetch_artifact2.dat')
-
 
 def remove_unwanted_platforms(install_path, remove_platforms):
     """Removes platforms that should not be checked in."""
