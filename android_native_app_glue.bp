@@ -20,9 +20,4 @@ cc_library_static {
     cflags: ["-Wall", "-Werror", "-Wno-unused-parameter"],
     sdk_version: "minimum",
     export_include_dirs: ["current/sources/android/native_app_glue"],
-    target: {
-        platform: {
-            shared_libs: ["libnativewindow"],
-        },
-    },
 }
