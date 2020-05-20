@@ -113,6 +113,12 @@ enum {
   TCP_SEND_QUEUE,
   TCP_QUEUES_NR,
 };
+enum tcp_fastopen_client_fail {
+  TFO_STATUS_UNSPEC,
+  TFO_COOKIE_UNAVAILABLE,
+  TFO_DATA_NOT_ACKED,
+  TFO_SYN_RETRANSMITTED,
+};
 #define TCPI_OPT_TIMESTAMPS 1
 #define TCPI_OPT_SACK 2
 #define TCPI_OPT_WSCALE 4
@@ -139,7 +145,7 @@ struct tcp_info {
   __u8 tcpi_backoff;
   __u8 tcpi_options;
   __u8 tcpi_snd_wscale : 4, tcpi_rcv_wscale : 4;
-  __u8 tcpi_delivery_rate_app_limited : 1;
+  __u8 tcpi_delivery_rate_app_limited : 1, tcpi_fastopen_client_fail : 2;
   __u32 tcpi_rto;
   __u32 tcpi_ato;
   __u32 tcpi_snd_mss;
@@ -184,6 +190,8 @@ struct tcp_info {
   __u64 tcpi_bytes_retrans;
   __u32 tcpi_dsack_dups;
   __u32 tcpi_reord_seen;
+  __u32 tcpi_rcv_ooopack;
+  __u32 tcpi_snd_wnd;
 };
 enum {
   TCP_NLA_PAD,
@@ -209,15 +217,17 @@ enum {
   TCP_NLA_DSACK_DUPS,
   TCP_NLA_REORD_SEEN,
   TCP_NLA_SRTT,
+  TCP_NLA_TIMEOUT_REHASH,
 };
 #define TCP_MD5SIG_MAXKEYLEN 80
-#define TCP_MD5SIG_FLAG_PREFIX 1
+#define TCP_MD5SIG_FLAG_PREFIX 0x1
+#define TCP_MD5SIG_FLAG_IFINDEX 0x2
 struct tcp_md5sig {
   struct sockaddr_storage tcpm_addr;
   __u8 tcpm_flags;
   __u8 tcpm_prefixlen;
   __u16 tcpm_keylen;
-  __u32 __tcpm_pad;
+  int tcpm_ifindex;
   __u8 tcpm_key[TCP_MD5SIG_MAXKEYLEN];
 };
 struct tcp_diag_md5sig {

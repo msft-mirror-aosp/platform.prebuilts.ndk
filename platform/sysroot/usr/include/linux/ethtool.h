@@ -103,10 +103,14 @@ struct ethtool_tunable {
 #define DOWNSHIFT_DEV_DISABLE 0
 #define ETHTOOL_PHY_FAST_LINK_DOWN_ON 0
 #define ETHTOOL_PHY_FAST_LINK_DOWN_OFF 0xff
+#define ETHTOOL_PHY_EDPD_DFLT_TX_MSECS 0xffff
+#define ETHTOOL_PHY_EDPD_NO_TX 0xfffe
+#define ETHTOOL_PHY_EDPD_DISABLE 0
 enum phy_tunable_id {
   ETHTOOL_PHY_ID_UNSPEC,
   ETHTOOL_PHY_DOWNSHIFT,
   ETHTOOL_PHY_FAST_LINK_DOWN,
+  ETHTOOL_PHY_EDPD,
   __ETHTOOL_PHY_TUNABLE_COUNT,
 };
 struct ethtool_regs {
@@ -203,6 +207,10 @@ enum ethtool_stringset {
   ETH_SS_TUNABLES,
   ETH_SS_PHY_STATS,
   ETH_SS_PHY_TUNABLES,
+  ETH_SS_LINK_MODES,
+  ETH_SS_MSG_CLASSES,
+  ETH_SS_WOL_MODES,
+  ETH_SS_COUNT
 };
 struct ethtool_gstrings {
   __u32 cmd;
@@ -606,6 +614,11 @@ enum ethtool_link_mode_bit_indices {
   ETHTOOL_LINK_MODE_200000baseCR4_Full_BIT = 66,
   ETHTOOL_LINK_MODE_100baseT1_Full_BIT = 67,
   ETHTOOL_LINK_MODE_1000baseT1_Full_BIT = 68,
+  ETHTOOL_LINK_MODE_400000baseKR8_Full_BIT = 69,
+  ETHTOOL_LINK_MODE_400000baseSR8_Full_BIT = 70,
+  ETHTOOL_LINK_MODE_400000baseLR8_ER8_FR8_Full_BIT = 71,
+  ETHTOOL_LINK_MODE_400000baseDR8_Full_BIT = 72,
+  ETHTOOL_LINK_MODE_400000baseCR8_Full_BIT = 73,
   __ETHTOOL_LINK_MODE_MASK_NBITS
 };
 #define __ETHTOOL_LINK_MODE_LEGACY_MASK(base_name) (1UL << (ETHTOOL_LINK_MODE_ ##base_name ##_BIT))
@@ -685,6 +698,7 @@ enum ethtool_link_mode_bit_indices {
 #define SPEED_56000 56000
 #define SPEED_100000 100000
 #define SPEED_200000 200000
+#define SPEED_400000 400000
 #define SPEED_UNKNOWN - 1
 #define DUPLEX_HALF 0x00
 #define DUPLEX_FULL 0x01
@@ -716,6 +730,7 @@ enum ethtool_link_mode_bit_indices {
 #define WAKE_MAGIC (1 << 5)
 #define WAKE_MAGICSECURE (1 << 6)
 #define WAKE_FILTER (1 << 7)
+#define WOL_MODE_COUNT 8
 #define TCP_V4_FLOW 0x01
 #define UDP_V4_FLOW 0x02
 #define SCTP_V4_FLOW 0x03

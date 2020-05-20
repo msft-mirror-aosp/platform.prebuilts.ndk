@@ -70,6 +70,7 @@ struct ovs_vport_stats {
 };
 #define OVS_DP_F_UNALIGNED (1 << 0)
 #define OVS_DP_F_VPORT_PIDS (1 << 1)
+#define OVS_DP_F_TC_RECIRC_SHARING (1 << 2)
 #define OVSP_LOCAL ((__u32) 0)
 #define OVS_PACKET_FAMILY "ovs_packet"
 #define OVS_PACKET_VERSION 0x1
@@ -91,6 +92,7 @@ enum ovs_packet_attr {
   OVS_PACKET_ATTR_PROBE,
   OVS_PACKET_ATTR_MRU,
   OVS_PACKET_ATTR_LEN,
+  OVS_PACKET_ATTR_HASH,
   __OVS_PACKET_ATTR_MAX
 };
 #define OVS_PACKET_ATTR_MAX (__OVS_PACKET_ATTR_MAX - 1)
@@ -364,6 +366,12 @@ struct ovs_action_push_mpls {
   __be32 mpls_lse;
   __be16 mpls_ethertype;
 };
+struct ovs_action_add_mpls {
+  __be32 mpls_lse;
+  __be16 mpls_ethertype;
+  __u16 tun_flags;
+};
+#define OVS_MPLS_L3_TUNNEL_FLAG_MASK (1 << 0)
 struct ovs_action_push_vlan {
   __be16 vlan_tpid;
   __be16 vlan_tci;
@@ -437,6 +445,7 @@ enum ovs_action_attr {
   OVS_ACTION_ATTR_METER,
   OVS_ACTION_ATTR_CLONE,
   OVS_ACTION_ATTR_CHECK_PKT_LEN,
+  OVS_ACTION_ATTR_ADD_MPLS,
   __OVS_ACTION_ATTR_MAX,
 };
 #define OVS_ACTION_ATTR_MAX (__OVS_ACTION_ATTR_MAX - 1)

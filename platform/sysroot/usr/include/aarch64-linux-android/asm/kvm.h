@@ -103,7 +103,8 @@ struct kvm_vcpu_events {
   struct {
     __u8 serror_pending;
     __u8 serror_has_esr;
-    __u8 pad[6];
+    __u8 ext_dabt_pending;
+    __u8 pad[5];
     __u64 serror_esr;
   } exception;
   __u32 reserved[12];
@@ -136,8 +137,8 @@ struct kvm_vcpu_events {
 #define KVM_REG_ARM_PTIMER_CVAL ARM64_SYS_REG(3, 3, 14, 2, 2)
 #define KVM_REG_ARM_PTIMER_CNT ARM64_SYS_REG(3, 3, 14, 0, 1)
 #define KVM_REG_ARM_TIMER_CTL ARM64_SYS_REG(3, 3, 14, 3, 1)
-#define KVM_REG_ARM_TIMER_CNT ARM64_SYS_REG(3, 3, 14, 3, 2)
 #define KVM_REG_ARM_TIMER_CVAL ARM64_SYS_REG(3, 3, 14, 0, 2)
+#define KVM_REG_ARM_TIMER_CNT ARM64_SYS_REG(3, 3, 14, 3, 2)
 #define KVM_REG_ARM_FW (0x0014 << KVM_REG_ARM_COPROC_SHIFT)
 #define KVM_REG_ARM_FW_REG(r) (KVM_REG_ARM64 | KVM_REG_SIZE_U64 | KVM_REG_ARM_FW | ((r) & 0xffff))
 #define KVM_REG_ARM_PSCI_VERSION KVM_REG_ARM_FW_REG(0)
@@ -196,8 +197,12 @@ struct kvm_vcpu_events {
 #define KVM_ARM_VCPU_TIMER_CTRL 1
 #define KVM_ARM_VCPU_TIMER_IRQ_VTIMER 0
 #define KVM_ARM_VCPU_TIMER_IRQ_PTIMER 1
+#define KVM_ARM_VCPU_PVTIME_CTRL 2
+#define KVM_ARM_VCPU_PVTIME_IPA 0
+#define KVM_ARM_IRQ_VCPU2_SHIFT 28
+#define KVM_ARM_IRQ_VCPU2_MASK 0xf
 #define KVM_ARM_IRQ_TYPE_SHIFT 24
-#define KVM_ARM_IRQ_TYPE_MASK 0xff
+#define KVM_ARM_IRQ_TYPE_MASK 0xf
 #define KVM_ARM_IRQ_VCPU_SHIFT 16
 #define KVM_ARM_IRQ_VCPU_MASK 0xff
 #define KVM_ARM_IRQ_NUM_SHIFT 0

@@ -710,6 +710,7 @@ enum {
   TCA_PIE_BETA,
   TCA_PIE_ECN,
   TCA_PIE_BYTEMODE,
+  TCA_PIE_DQ_RATE_ESTIMATOR,
   __TCA_PIE_MAX
 };
 #define TCA_PIE_MAX (__TCA_PIE_MAX - 1)
@@ -717,11 +718,40 @@ struct tc_pie_xstats {
   __u64 prob;
   __u32 delay;
   __u32 avg_dq_rate;
+  __u32 dq_rate_estimating;
   __u32 packets_in;
   __u32 dropped;
   __u32 overlimit;
   __u32 maxq;
   __u32 ecn_mark;
+};
+enum {
+  TCA_FQ_PIE_UNSPEC,
+  TCA_FQ_PIE_LIMIT,
+  TCA_FQ_PIE_FLOWS,
+  TCA_FQ_PIE_TARGET,
+  TCA_FQ_PIE_TUPDATE,
+  TCA_FQ_PIE_ALPHA,
+  TCA_FQ_PIE_BETA,
+  TCA_FQ_PIE_QUANTUM,
+  TCA_FQ_PIE_MEMORY_LIMIT,
+  TCA_FQ_PIE_ECN_PROB,
+  TCA_FQ_PIE_ECN,
+  TCA_FQ_PIE_BYTEMODE,
+  TCA_FQ_PIE_DQ_RATE_ESTIMATOR,
+  __TCA_FQ_PIE_MAX
+};
+#define TCA_FQ_PIE_MAX (__TCA_FQ_PIE_MAX - 1)
+struct tc_fq_pie_xstats {
+  __u32 packets_in;
+  __u32 dropped;
+  __u32 overlimit;
+  __u32 overmemory;
+  __u32 ecn_mark;
+  __u32 new_flow_count;
+  __u32 new_flows_len;
+  __u32 old_flows_len;
+  __u32 memory_usage;
 };
 struct tc_cbs_qopt {
   __u8 offload;
@@ -877,7 +907,8 @@ enum {
   __TCA_TAPRIO_SCHED_MAX,
 };
 #define TCA_TAPRIO_SCHED_MAX (__TCA_TAPRIO_SCHED_MAX - 1)
-#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST 0x1
+#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST BIT(0)
+#define TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD BIT(1)
 enum {
   TCA_TAPRIO_ATTR_UNSPEC,
   TCA_TAPRIO_ATTR_PRIOMAP,
@@ -894,4 +925,16 @@ enum {
   __TCA_TAPRIO_ATTR_MAX,
 };
 #define TCA_TAPRIO_ATTR_MAX (__TCA_TAPRIO_ATTR_MAX - 1)
+#define TCQ_ETS_MAX_BANDS 16
+enum {
+  TCA_ETS_UNSPEC,
+  TCA_ETS_NBANDS,
+  TCA_ETS_NSTRICT,
+  TCA_ETS_QUANTA,
+  TCA_ETS_QUANTA_BAND,
+  TCA_ETS_PRIOMAP,
+  TCA_ETS_PRIOMAP_BAND,
+  __TCA_ETS_MAX,
+};
+#define TCA_ETS_MAX (__TCA_ETS_MAX - 1)
 #endif

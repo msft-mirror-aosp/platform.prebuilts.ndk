@@ -110,6 +110,9 @@ __BEGIN_DECLS
 /** Names the "R" API level (30), for comparison against `__ANDROID_API__`. */
 #define __ANDROID_API_R__ 30
 
+/** Names the "S" API level (31), for comparison against `__ANDROID_API__`. */
+#define __ANDROID_API_S__ 31
+
 /**
  * Returns the `targetSdkVersion` of the caller, or `__ANDROID_API_FUTURE__`
  * if there is no known target SDK version (for code not running in the
@@ -128,7 +131,7 @@ int android_get_application_target_sdk_version() __INTRODUCED_IN(24);
 #endif /* __ANDROID_API__ >= 24 */
 
 
-#if __ANDROID_API__ < __ANDROID_API_Q__
+#if __ANDROID_API__ < 29
 
 // android_get_device_api_level is a static inline before API level 29.
 #define __BIONIC_GET_DEVICE_API_LEVEL_INLINE static __inline

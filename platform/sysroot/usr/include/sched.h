@@ -54,10 +54,9 @@ int sched_rr_get_interval(pid_t __pid, struct timespec* __quantum);
 #if defined(__USE_GNU)
 
 
-#if (defined(__LP64__)) || (defined(__mips__)) || (defined(__arm__)) || (defined(__i386__) && __ANDROID_API__ >= 17)
-int clone(int (*__fn)(void*), void* __child_stack, int __flags, void* __arg, ...)
-    __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12) __INTRODUCED_IN_X86(17);
-#endif /* (defined(__LP64__)) || (defined(__mips__)) || (defined(__arm__)) || (defined(__i386__) && __ANDROID_API__ >= 17) */
+#if (defined(__LP64__)) || (defined(__arm__)) || (defined(__i386__) && __ANDROID_API__ >= 17)
+int clone(int (*__fn)(void*), void* __child_stack, int __flags, void* __arg, ...) __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_X86(17);
+#endif /* (defined(__LP64__)) || (defined(__arm__)) || (defined(__i386__) && __ANDROID_API__ >= 17) */
 
 
 #if __ANDROID_API__ >= 17
