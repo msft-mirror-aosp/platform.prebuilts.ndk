@@ -70,6 +70,7 @@ extern "C" {
 #define AMDGPU_GEM_CREATE_VM_ALWAYS_VALID (1 << 6)
 #define AMDGPU_GEM_CREATE_EXPLICIT_SYNC (1 << 7)
 #define AMDGPU_GEM_CREATE_MQD_GFX9 (1 << 8)
+#define AMDGPU_GEM_CREATE_VRAM_WIPE_ON_RELEASE (1 << 9)
 struct drm_amdgpu_gem_create_in {
   __u64 bo_size;
   __u64 alignment;
@@ -300,6 +301,7 @@ struct drm_amdgpu_gem_op {
 #define AMDGPU_VM_MTYPE_WC (2 << 5)
 #define AMDGPU_VM_MTYPE_CC (3 << 5)
 #define AMDGPU_VM_MTYPE_UC (4 << 5)
+#define AMDGPU_VM_MTYPE_RW (5 << 5)
 struct drm_amdgpu_gem_va {
   __u32 handle;
   __u32 _pad;
@@ -426,6 +428,7 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_FW_GFX_RLC_RESTORE_LIST_SRM_MEM 0x11
 #define AMDGPU_INFO_FW_DMCU 0x12
 #define AMDGPU_INFO_FW_TA 0x13
+#define AMDGPU_INFO_FW_DMCUB 0x14
 #define AMDGPU_INFO_NUM_BYTES_MOVED 0x0f
 #define AMDGPU_INFO_VRAM_USAGE 0x10
 #define AMDGPU_INFO_GTT_USAGE 0x11
@@ -596,6 +599,7 @@ struct drm_amdgpu_info_device {
   __u64 high_va_offset;
   __u64 high_va_max;
   __u32 pa_sc_tile_steering_override;
+  __u64 tcc_disabled_mask;
 };
 struct drm_amdgpu_info_hw_ip {
   __u32 hw_ip_version_major;
