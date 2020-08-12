@@ -91,38 +91,10 @@ def install_new_release(branch, build, install_dir):
 
 
 def remove_unneeded_files(install_dir):
-    for path, _dirs, files in os.walk(os.path.join(install_dir, 'platforms')):
-        for file_name in files:
-            if file_name.endswith('.so'):
-                file_path = os.path.join(path, file_name)
-                remove(file_path)
-
-    for path, _dirs, files in os.walk(os.path.join(install_dir, 'sources')):
-        for file_name in files:
-            if file_name == 'Android.bp':
-                file_path = os.path.join(path, file_name)
-                remove(file_path)
-
-
-def make_symlinks(install_dir):
-    old_dir = os.getcwd()
-    os.chdir(os.path.join(THIS_DIR, install_dir, 'platforms'))
-
-    first_api = 9
-    first_lp64_api = 21
-
-    for api in xrange(first_api, first_lp64_api):
-        if not os.path.exists(api_str(api)):
-            continue
-
-        for arch in ('arch-arm64', 'arch-mips64', 'arch-x86_64'):
-            src = os.path.join('..', api_str(first_lp64_api), arch)
-            dst = os.path.join(api_str(api), arch)
-            if os.path.islink(dst):
-                os.unlink(dst)
-            os.symlink(src, dst)
-
-    os.chdir(old_dir)
+    shutil.rmtree(os.path.join(install_dir, 'platforms'))
+    shutil.rmtree(os.path.join(install_dir, 'sources/third_party'))
+    shutil.rmtree(os.path.join(install_dir, 'sources/android/renderscript'))
+    shutil.rmtree(os.path.join(install_dir, 'sources/android/ndk_helper'))
 
 
 def commit(branch, build, install_dir):
@@ -131,7 +103,11 @@ def commit(branch, build, install_dir):
     message = textwrap.dedent("""\
         Update NDK prebuilts to build {build}.
 
-        Taken from branch {branch}.""").format(branch=branch, build=build)
+        Taken from branch {branch}.
+
+        Bug: None
+        Test: treehugger
+        """).format(branch=branch, build=build)
     check_call(['git', 'commit', '-m', message])
 
 
@@ -169,7 +145,6 @@ def main():
     remove_old_release(install_dir)
     install_new_release(args.branch, args.build, install_dir)
     remove_unneeded_files(install_dir)
-    make_symlinks(install_dir)
     commit(args.branch, args.build, install_dir)
 
 
