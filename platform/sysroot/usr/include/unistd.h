@@ -365,11 +365,9 @@ int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
 #endif /* __ANDROID_API__ >= 26 */
 
 
-
 #if __ANDROID_API__ >= 28
 void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
+#endif
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #define _UNISTD_H_
@@ -378,3 +376,5 @@ void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN(
 #endif
 
 __END_DECLS
+
+#include <android/legacy_unistd_inlines.h>

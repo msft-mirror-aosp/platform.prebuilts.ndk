@@ -43,6 +43,7 @@
  */
 
 #include <android/hardware_buffer.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/cdefs.h>
@@ -5441,11 +5442,14 @@ typedef enum {
      * The inputs and outputs of the two referenced models must agree with the
      * signature of this operation. That is, if the operation has (3 + n) inputs
      * and m outputs, both models must have n inputs and m outputs with the same
-     * types as the corresponding operation inputs and outputs.
+     * types, ranks (if specified), dimensions (if specified), scales,
+     * zeroPoints, and other operand parameters as the corresponding operation
+     * inputs and outputs.
      *
      * Inputs:
      * * 0: A value of type {@link ANEURALNETWORKS_TENSOR_BOOL8} and shape [1]
      *      that determines which of the two referenced models to execute.
+     *      The operand must have fully specified dimensions.
      * * 1: A {@link ANEURALNETWORKS_MODEL} reference to the model to be
      *      executed if the condition is true.
      * * 2: A {@link ANEURALNETWORKS_MODEL} reference to the model to be
@@ -5510,13 +5514,16 @@ typedef enum {
      * Inputs:
      * * 0: A {@link ANEURALNETWORKS_MODEL} reference to the condition
      *      model. The model must have (m + k + n) inputs with
-     *      the same types as the corresponding inputs of the WHILE operation
-     *      and exactly one output of {@link ANEURALNETWORKS_TENSOR_BOOL8}
-     *      and shape [1].
+     *      the same types, ranks (if specified), dimensions (if specified),
+     *      scales, zeroPoints, and other operand parameters as the
+     *      corresponding inputs of the WHILE operation and exactly one output
+     *      of {@link ANEURALNETWORKS_TENSOR_BOOL8} and shape [1].
+     *      The output operand must have fully specified dimensions.
      * * 1: A {@link ANEURALNETWORKS_MODEL} reference to the body model.
      *      The model must have (m + k + n) inputs and (m + k) outputs with
-     *      the same types as the corresponding inputs and outputs of the WHILE
-     *      operation.
+     *      the same types, ranks (if specified), dimensions (if specified),
+     *      scales, zeroPoints, and other operand parameters as the
+     *      corresponding inputs and outputs of the WHILE operation.
      * * (m inputs): Initial values for input-output operands.
      * * (k inputs): Initial values for state-only operands.
      * * (n inputs): Values for input-only operands.
@@ -6162,7 +6169,9 @@ typedef struct ANeuralNetworksBurst ANeuralNetworksBurst;
  *
  * If a tensor operand's type is not fully specified, the dimensions
  * of the operand are deduced from the operand types and values of the
- * operation for which that operand is an output.
+ * operation for which that operand is an output or from the corresponding
+ * {@link ANEURALNETWORKS_IF} or {@link ANEURALNETWORKS_WHILE} operation input
+ * operand type in the case of referenced model input operands.
  *
  * <p>In the following situations, a tensor operand type must be fully
  * specified:<ul>
@@ -6171,10 +6180,10 @@ typedef struct ANeuralNetworksBurst ANeuralNetworksBurst;
  *         non-nullptr buffer) or
  *         {@link ANeuralNetworksModel_setOperandValueFromMemory}.</li>
  *     <li>The operand is a model input (see
- *         {@link ANeuralNetworksModel_identifyInputsAndOutputs}).  A
- *         fully specified tensor operand type must either be provided
- *         to {@link ANeuralNetworksModel_addOperand}; or it must be
- *         provided to the corresponding
+ *         {@link ANeuralNetworksModel_identifyInputsAndOutputs}) of the main
+ *         model within a compilation.  A fully specified tensor operand type
+ *         must either be provided to {@link ANeuralNetworksModel_addOperand};
+ *         or it must be provided to the corresponding
  *         {@link ANeuralNetworksExecution_setInput}, or
  *         {@link ANeuralNetworksExecution_setInputFromMemory}.
  *         EXCEPTION: If the input is optional and omitted
@@ -6182,9 +6191,9 @@ typedef struct ANeuralNetworksBurst ANeuralNetworksBurst;
  *         {@link ANeuralNetworksExecution_setInput}) then it need
  *         not have a fully specified tensor operand type.</li>
  *     <li>The operand is a model output (see
- *         {@link ANeuralNetworksModel_identifyInputsAndOutputs})
- *         and is to be used with
- *         {@link ANeuralNetworksExecution_startComputeWithDependencies}.
+ *         {@link ANeuralNetworksModel_identifyInputsAndOutputs}) of the main
+ *         model within a compilation and is to be used with {@link
+ *         ANeuralNetworksExecution_startComputeWithDependencies}.
  *         A fully specified tensor operand type must either be provided
  *         to {@link ANeuralNetworksModel_addOperand}; or it must be
  *         provided to the corresponding
@@ -6222,11 +6231,21 @@ typedef struct ANeuralNetworksOperandType {
     const uint32_t* dimensions;
 
     /**
-     * These two fields are only used for quantized tensors.
-     * They must be zero for all other types.
-     * The dequantized value of each entry is (value - zeroPoint) * scale.
+     * The quantization scale.
+     *
+     * Must be 0 when not applicable to an operand type.
+     *
+     * See {@link OperandCode}.
      */
     float scale;
+
+    /**
+     * The quantization zero point.
+     *
+     * Must be 0 when not applicable to an operand type.
+     *
+     * See {@link OperandCode}.
+     */
     int32_t zeroPoint;
 } ANeuralNetworksOperandType;
 
