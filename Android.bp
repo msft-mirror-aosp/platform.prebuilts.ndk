@@ -33,6 +33,7 @@ ndk_prebuilt_static_stl {
             enabled: true,
         },
     },
+    min_sdk_version: "16",
 }
 
 ndk_prebuilt_static_stl {
