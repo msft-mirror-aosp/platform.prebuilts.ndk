@@ -18,89 +18,92 @@
 import argparse
 import logging
 import os
+from pathlib import Path
+import shutil
+import subprocess
 import textwrap
+from typing import Dict, Iterable, Sequence, Tuple
 
 
-def logger():
+def logger() -> logging.Logger:
     """Returns the module logger."""
     return logging.getLogger(__name__)
 
 
-def check_call(cmd):
+def check_call(cmd: Sequence[str]) -> None:
     """subprocess.check_call with logging."""
-    import subprocess
     logger().debug('check_call `%s`', ' '.join(cmd))
     subprocess.check_call(cmd)
 
 
-def rmtree(path):
+def rmtree(path: Path) -> None:
     """shutil.rmtree with logging."""
-    import shutil
     logger().debug('rmtree %s', path)
-    shutil.rmtree(path)
+    shutil.rmtree(str(path))
 
 
-def makedirs(path):
+def makedirs(path: Path) -> None:
     """os.makedirs with logging."""
     logger().debug('mkdir -p %s', path)
-    os.makedirs(path)
+    path.mkdir(parents=True, exist_ok=True)
 
 
-def remove(path):
+def remove(path: Path) -> None:
     """os.remove with logging."""
     logger().debug('rm %s', path)
-    os.remove(path)
+    path.unlink()
 
 
-def rename(src, dst):
+def rename(src: Path, dst: Path) -> None:
     """os.rename with logging."""
     logger().debug('mv %s %s', src, dst)
-    os.rename(src, dst)
+    src.rename(dst)
 
 
-def fetch_artifact(branch, target, build, pattern):
+def fetch_artifact(branch: str, target: str, build: str, pattern: str) -> None:
     """Fetches an artifact from the build server."""
     fetch_artifact_path = '/google/data/ro/projects/android/fetch_artifact'
-    cmd = [fetch_artifact_path, '--branch', branch, '--target=' + target,
-           '--bid', build, pattern]
+    cmd = [
+        fetch_artifact_path, '--branch', branch, '--target=' + target, '--bid',
+        build, pattern
+    ]
     check_call(cmd)
 
 
-def remove_unwanted_platforms(install_path, remove_platforms):
+def remove_unwanted_platforms(install_path: Path,
+                              remove_platforms: Iterable[str]) -> None:
     """Removes platforms that should not be checked in."""
     for platform in remove_platforms:
-        platform_path = os.path.join(
-            install_path, 'platforms/android-{}'.format(platform))
-        if os.path.exists(platform_path):
+        platform_path = install_path / f'platforms/android-{platform}'
+        if platform_path.exists():
             rmtree(platform_path)
 
     # The android-current platform is actually the future platform version (not
     # even assigned to a codename), which should not be included in the NDK.
-    current_platform = os.path.join(install_path, 'platforms/android-current')
+    current_platform = install_path / 'platforms/android-current'
     rmtree(current_platform)
 
-    rel_platform = os.path.join(install_path, 'platforms/android-REL')
-    if os.path.exists(rel_platform):
+    rel_platform = install_path / 'platforms/android-REL'
+    if rel_platform.exists():
         rmtree(rel_platform)
 
 
-def rename_codenamed_releases(install_path, rename_codenames):
+def rename_codenamed_releases(install_path: Path,
+                              rename_codenames: Dict[str, str]) -> None:
     """Rename codenamed releases."""
-    for codename, new_name in rename_codenames:
-        codename_path = os.path.join(
-            install_path, 'platforms/android-' + codename)
-        new_name_path = os.path.join(
-            install_path, 'platforms/android-' + new_name)
+    for codename, new_name in rename_codenames.items():
+        codename_path = install_path / f'platforms/android-{codename}'
+        new_name_path = install_path / f'platforms/android-{new_name}'
 
-        if os.path.exists(new_name_path):
+        if new_name_path.exists():
             raise RuntimeError(
-                'Could not rename android-{0} to android-{1} because '
-                'android-{1} already exists.'.format(codename, new_name))
+                f'Could not rename android-{codename} to android-{new_name} '
+                f'because android-{new_name} already exists.')
 
         rename(codename_path, new_name_path)
 
 
-def kv_arg_pair(arg):
+def kv_arg_pair(arg: str) -> Tuple[str, str]:
     """Parses a key/value argument pair."""
     error_msg = 'Argument must be in format key=value, got ' + arg
     try:
@@ -114,49 +117,60 @@ def kv_arg_pair(arg):
     return key, value
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     """Parses and returns command line arguments."""
     parser = argparse.ArgumentParser()
 
     download_group = parser.add_mutually_exclusive_group()
 
     download_group.add_argument(
-        '--download', action='store_true', default=True,
+        '--download',
+        action='store_true',
+        default=True,
         help='Fetch artifacts from the build server. BUILD is a build number.')
 
     download_group.add_argument(
-        '--no-download', action='store_false', dest='download',
+        '--no-download',
+        action='store_false',
+        dest='download',
         help=('Do not download build artifacts. BUILD points to a local '
               'artifact.'))
 
     parser.add_argument(
-        'build', metavar='BUILD_OR_ARTIFACT',
+        'build',
+        metavar='BUILD_OR_ARTIFACT',
         help=('Build number to pull from the build server, or a path to a '
               'local artifact'))
 
-    parser.add_argument(
-        '--branch', default='aosp-master',
-        help='Branch to pull from the build server.')
+    parser.add_argument('--branch',
+                        default='aosp-master',
+                        help='Branch to pull from the build server.')
+
+    parser.add_argument('-b',
+                        '--bug',
+                        default='None',
+                        help='Bug URL for commit message.')
+
+    parser.add_argument('--use-current-branch',
+                        action='store_true',
+                        help='Do not repo start a new branch for the update.')
+
+    parser.add_argument('--remove-platform',
+                        action='append',
+                        default=[],
+                        help='Remove platforms directories.')
 
     parser.add_argument(
-        '-b', '--bug', default='None', help='Bug URL for commit message.')
-
-    parser.add_argument(
-        '--use-current-branch', action='store_true',
-        help='Do not repo start a new branch for the update.')
-
-    parser.add_argument(
-        '--remove-platform', action='append', default=[],
-        help='Remove platforms directories.')
-
-    parser.add_argument(
-        '--rename-codename', action='append', type=kv_arg_pair, default=[],
+        '--rename-codename',
+        action='append',
+        type=kv_arg_pair,
+        default=[],
         help='Rename codename platform. Example: --rename-codename O=26.')
 
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     """Program entry point."""
     logging.basicConfig(level=logging.DEBUG)
 
@@ -166,7 +180,7 @@ def main():
         build = args.build
         branch_name_suffix = build
     else:
-        package = os.path.realpath(args.build)
+        package = Path(args.build)
         branch_name_suffix = 'local'
         logger().info('Using local artifact at %s', package)
 
@@ -176,18 +190,20 @@ def main():
         branch_name = 'update-platform-' + branch_name_suffix
         check_call(['repo', 'start', branch_name, '.'])
 
-    install_path = 'platform'
-    check_call(['git', 'rm', '-r', '--ignore-unmatch', install_path])
-    if os.path.exists(install_path):
+    install_path = Path('platform')
+    check_call(['git', 'rm', '-r', '--ignore-unmatch', str(install_path)])
+    if install_path.exists():
         rmtree(install_path)
     makedirs(install_path)
 
     if args.download:
         fetch_artifact(args.branch, 'ndk', build, 'ndk_platform.tar.bz2')
-        package = 'ndk_platform.tar.bz2'
+        package = Path('ndk_platform.tar.bz2')
 
-    check_call(['tar', 'xf', package, '--strip-components=1', '-C',
-                install_path])
+    check_call([
+        'tar', 'xf', str(package), '--strip-components=1', '-C',
+        str(install_path)
+    ])
 
     if args.download:
         remove(package)
@@ -198,25 +214,24 @@ def main():
     # $INSTALL_DIR/sysroot and $INSTALL_DIR/platforms. $INSTALL_DIR/sysroot
     # will be installed to $NDK/sysroot, but $INSTALL_DIR/platforms is used as
     # input to Platforms. Shift the NOTICE into the sysroot directory.
-    rename(os.path.join(install_path, 'NOTICE'),
-           os.path.join(install_path, 'sysroot/NOTICE'))
+    rename(install_path / 'NOTICE', install_path / 'sysroot/NOTICE')
 
     remove_unwanted_platforms(install_path, args.remove_platform)
-    rename_codenamed_releases(install_path, args.rename_codename)
+    rename_codenamed_releases(install_path, dict(args.rename_codename))
 
-    check_call(['git', 'add', install_path])
+    check_call(['git', 'add', str(install_path)])
 
     if args.download:
-        update_msg = 'to build {}'.format(build)
+        update_msg = f'to build {build}'
     else:
         update_msg = 'with local artifact'
 
-    message = textwrap.dedent("""\
-        Update NDK platform prebuilts {}.
+    message = textwrap.dedent(f"""\
+        Update NDK platform prebuilts {update_msg}.
 
         Test: ndk/checkbuild.py && ndk/run_tests.py
-        Bug: {}
-        """.format(update_msg, args.bug))
+        Bug: {args.bug}
+        """)
     check_call(['git', 'commit', '-m', message])
 
 
