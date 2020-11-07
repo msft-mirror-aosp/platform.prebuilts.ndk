@@ -21,6 +21,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import textwrap
 from typing import Dict, Iterable, Sequence, Tuple
 
@@ -101,6 +102,25 @@ def rename_codenamed_releases(install_path: Path,
                 f'because android-{new_name} already exists.')
 
         rename(codename_path, new_name_path)
+
+
+def verify_no_codenames(install_path: Path) -> None:
+    """Checks for codenamed releases and raises an error if any are found."""
+    codenames = set()
+    for release in install_path.glob('platforms/android-*'):
+        name = release.name
+        _, version = name.split('-', maxsplit=1)
+        try:
+            int(version)
+        except ValueError:
+            codenames.add(release)
+    if codenames:
+        codename_lines = '\n'.join(str(c) for c in codenames)
+        sys.exit(
+            'Found unhandled codenamed releases in the sysroot. Clang '
+            'requires numeric releases, so codenamed releases must either be '
+            'removed using --remove-platform or renamed using '
+            f'--rename-codename. Found codenames:\n{codename_lines}')
 
 
 def kv_arg_pair(arg: str) -> Tuple[str, str]:
@@ -218,6 +238,7 @@ def main() -> None:
 
     remove_unwanted_platforms(install_path, args.remove_platform)
     rename_codenamed_releases(install_path, dict(args.rename_codename))
+    verify_no_codenames(install_path)
 
     check_call(['git', 'add', str(install_path)])
 
