@@ -21,6 +21,7 @@ ndk_prebuilt_static_stl {
 
 ndk_prebuilt_static_stl {
     name: "ndk_libc++abi",
+    min_sdk_version: "16",
 }
 
 // The LLVM libunwind unwinder. This unwinder is only used for arm32.
@@ -32,6 +33,7 @@ ndk_prebuilt_static_stl {
             enabled: true,
         },
     },
+    min_sdk_version: "16",
 }
 
 ndk_prebuilt_static_stl {
@@ -43,7 +45,8 @@ ndk_prebuilt_static_stl {
                 "current/sources/android/support/include",
             ],
         },
-    }
+    },
+    min_sdk_version: "16",
 }
 
 ndk_prebuilt_shared_stl {
