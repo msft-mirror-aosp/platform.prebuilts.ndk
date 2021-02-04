@@ -96,7 +96,7 @@ struct lconv {
   char int_n_sign_posn;
 };
 
-struct lconv* localeconv(void) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
+struct lconv* localeconv(void) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
 
 
 #if __ANDROID_API__ >= 21
