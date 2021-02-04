@@ -816,7 +816,7 @@ typedef enum acamera_metadata_tag {
      * </ul></p>
      *
      * <p>This control is only effective if ACAMERA_CONTROL_MODE is AUTO.</p>
-     * <p>When set to the ON mode, the camera device's auto-white balance
+     * <p>When set to the AUTO mode, the camera device's auto-white balance
      * routine is enabled, overriding the application's selected
      * ACAMERA_COLOR_CORRECTION_TRANSFORM, ACAMERA_COLOR_CORRECTION_GAINS and
      * ACAMERA_COLOR_CORRECTION_MODE. Note that when ACAMERA_CONTROL_AE_MODE
@@ -1890,10 +1890,8 @@ typedef enum acamera_metadata_tag {
      *   <li>ACaptureRequest</li>
      * </ul></p>
      *
-     * <p>Instead of using ACAMERA_SCALER_CROP_REGION with dual purposes of crop and zoom, the
-     * application can now choose to use this tag to specify the desired zoom level. The
-     * ACAMERA_SCALER_CROP_REGION can still be used to specify the horizontal or vertical
-     * crop to achieve aspect ratios different than the native camera sensor.</p>
+     * <p>Instead of using ACAMERA_SCALER_CROP_REGION for zoom, the application can now choose to
+     * use this tag to specify the desired zoom level.</p>
      * <p>By using this control, the application gains a simpler way to control zoom, which can
      * be a combination of optical and digital zoom. For example, a multi-camera system may
      * contain more than one lens with different focal lengths, and the user can use optical
@@ -1959,7 +1957,10 @@ typedef enum acamera_metadata_tag {
      * explicitly set ACAMERA_CONTROL_ZOOM_RATIO, its value defaults to 1.0.</p>
      * <p>One limitation of controlling zoom using zoomRatio is that the ACAMERA_SCALER_CROP_REGION
      * must only be used for letterboxing or pillarboxing of the sensor active array, and no
-     * FREEFORM cropping can be used with ACAMERA_CONTROL_ZOOM_RATIO other than 1.0.</p>
+     * FREEFORM cropping can be used with ACAMERA_CONTROL_ZOOM_RATIO other than 1.0. If
+     * ACAMERA_CONTROL_ZOOM_RATIO is not 1.0, and ACAMERA_SCALER_CROP_REGION is set to be
+     * windowboxing, the camera framework will override the ACAMERA_SCALER_CROP_REGION to be
+     * the active array.</p>
      *
      * @see ACAMERA_CONTROL_AE_REGIONS
      * @see ACAMERA_CONTROL_ZOOM_RATIO
@@ -3413,16 +3414,24 @@ typedef enum acamera_metadata_tag {
      * respectively.</p>
      * <p>The camera device may adjust the crop region to account for rounding and other hardware
      * requirements; the final crop region used will be included in the output capture result.</p>
+     * <p>The camera sensor output aspect ratio depends on factors such as output stream
+     * combination and ACAMERA_CONTROL_AE_TARGET_FPS_RANGE, and shouldn't be adjusted by using
+     * this control. And the camera device will treat different camera sensor output sizes
+     * (potentially with in-sensor crop) as the same crop of
+     * ACAMERA_SENSOR_INFO_ACTIVE_ARRAY_SIZE. As a result, the application shouldn't assume the
+     * maximum crop region always maps to the same aspect ratio or field of view for the
+     * sensor output.</p>
      * <p>Starting from API level 30, it's strongly recommended to use ACAMERA_CONTROL_ZOOM_RATIO
      * to take advantage of better support for zoom with logical multi-camera. The benefits
      * include better precision with optical-digital zoom combination, and ability to do
      * zoom-out from 1.0x. When using ACAMERA_CONTROL_ZOOM_RATIO for zoom, the crop region in
-     * the capture request must be either letterboxing or pillarboxing (but not both). The
+     * the capture request should be left as the default activeArray size. The
      * coordinate system is post-zoom, meaning that the activeArraySize or
      * preCorrectionActiveArraySize covers the camera device's field of view "after" zoom.  See
      * ACAMERA_CONTROL_ZOOM_RATIO for details.</p>
      * <p>The data representation is int[4], which maps to (left, top, width, height).</p>
      *
+     * @see ACAMERA_CONTROL_AE_TARGET_FPS_RANGE
      * @see ACAMERA_CONTROL_ZOOM_RATIO
      * @see ACAMERA_DISTORTION_CORRECTION_MODE
      * @see ACAMERA_SCALER_AVAILABLE_MAX_DIGITAL_ZOOM
@@ -3645,7 +3654,9 @@ typedef enum acamera_metadata_tag {
      * </ol>
      * </li>
      * <li>Setting ACAMERA_CONTROL_ZOOM_RATIO to values different than 1.0 and
-     * ACAMERA_SCALER_CROP_REGION to be windowboxing at the same time is undefined behavior.</li>
+     * ACAMERA_SCALER_CROP_REGION to be windowboxing at the same time are not supported. In this
+     * case, the camera framework will override the ACAMERA_SCALER_CROP_REGION to be the active
+     * array.</li>
      * </ul>
      * <p>LEGACY capability devices will only support CENTER_ONLY cropping.</p>
      *
@@ -3730,6 +3741,108 @@ typedef enum acamera_metadata_tag {
     ACAMERA_SCALER_AVAILABLE_RECOMMENDED_INPUT_OUTPUT_FORMATS_MAP = 
                                                                 // int32
             ACAMERA_SCALER_START + 15,
+    /**
+     * <p>List of rotate-and-crop modes for ACAMERA_SCALER_ROTATE_AND_CROP that are supported by this camera device.</p>
+     *
+     * @see ACAMERA_SCALER_ROTATE_AND_CROP
+     *
+     * <p>Type: byte[n]</p>
+     *
+     * <p>This tag may appear in:
+     * <ul>
+     *   <li>ACameraMetadata from ACameraManager_getCameraCharacteristics</li>
+     * </ul></p>
+     *
+     * <p>This entry lists the valid modes for ACAMERA_SCALER_ROTATE_AND_CROP for this camera device.</p>
+     * <p>Starting with API level 30, all devices will list at least <code>ROTATE_AND_CROP_NONE</code>.
+     * Devices with support for rotate-and-crop will additionally list at least
+     * <code>ROTATE_AND_CROP_AUTO</code> and <code>ROTATE_AND_CROP_90</code>.</p>
+     *
+     * @see ACAMERA_SCALER_ROTATE_AND_CROP
+     */
+    ACAMERA_SCALER_AVAILABLE_ROTATE_AND_CROP_MODES =            // byte[n]
+            ACAMERA_SCALER_START + 16,
+    /**
+     * <p>Whether a rotation-and-crop operation is applied to processed
+     * outputs from the camera.</p>
+     *
+     * <p>Type: byte (acamera_metadata_enum_android_scaler_rotate_and_crop_t)</p>
+     *
+     * <p>This tag may appear in:
+     * <ul>
+     *   <li>ACameraMetadata from ACameraCaptureSession_captureCallback_result callbacks</li>
+     *   <li>ACaptureRequest</li>
+     * </ul></p>
+     *
+     * <p>This control is primarily intended to help camera applications with no support for
+     * multi-window modes to work correctly on devices where multi-window scenarios are
+     * unavoidable, such as foldables or other devices with variable display geometry or more
+     * free-form window placement (such as laptops, which often place portrait-orientation apps
+     * in landscape with pillarboxing).</p>
+     * <p>If supported, the default value is <code>ROTATE_AND_CROP_AUTO</code>, which allows the camera API
+     * to enable backwards-compatibility support for applications that do not support resizing
+     * / multi-window modes, when the device is in fact in a multi-window mode (such as inset
+     * portrait on laptops, or on a foldable device in some fold states).  In addition,
+     * <code>ROTATE_AND_CROP_NONE</code> and <code>ROTATE_AND_CROP_90</code> will always be available if this control
+     * is supported by the device.  If not supported, devices API level 30 or higher will always
+     * list only <code>ROTATE_AND_CROP_NONE</code>.</p>
+     * <p>When <code>CROP_AUTO</code> is in use, and the camera API activates backward-compatibility mode,
+     * several metadata fields will also be parsed differently to ensure that coordinates are
+     * correctly handled for features like drawing face detection boxes or passing in
+     * tap-to-focus coordinates.  The camera API will convert positions in the active array
+     * coordinate system to/from the cropped-and-rotated coordinate system to make the
+     * operation transparent for applications.  The following controls are affected:</p>
+     * <ul>
+     * <li>ACAMERA_CONTROL_AE_REGIONS</li>
+     * <li>ACAMERA_CONTROL_AF_REGIONS</li>
+     * <li>ACAMERA_CONTROL_AWB_REGIONS</li>
+     * <li>android.statistics.faces</li>
+     * </ul>
+     * <p>Capture results will contain the actual value selected by the API;
+     * <code>ROTATE_AND_CROP_AUTO</code> will never be seen in a capture result.</p>
+     * <p>Applications can also select their preferred cropping mode, either to opt out of the
+     * backwards-compatibility treatment, or to use the cropping feature themselves as needed.
+     * In this case, no coordinate translation will be done automatically, and all controls
+     * will continue to use the normal active array coordinates.</p>
+     * <p>Cropping and rotating is done after the application of digital zoom (via either
+     * ACAMERA_SCALER_CROP_REGION or ACAMERA_CONTROL_ZOOM_RATIO), but before each individual
+     * output is further cropped and scaled. It only affects processed outputs such as
+     * YUV, PRIVATE, and JPEG.  It has no effect on RAW outputs.</p>
+     * <p>When <code>CROP_90</code> or <code>CROP_270</code> are selected, there is a significant loss to the field of
+     * view. For example, with a 4:3 aspect ratio output of 1600x1200, <code>CROP_90</code> will still
+     * produce 1600x1200 output, but these buffers are cropped from a vertical 3:4 slice at the
+     * center of the 4:3 area, then rotated to be 4:3, and then upscaled to 1600x1200.  Only
+     * 56.25% of the original FOV is still visible.  In general, for an aspect ratio of <code>w:h</code>,
+     * the crop and rotate operation leaves <code>(h/w)^2</code> of the field of view visible. For 16:9,
+     * this is ~31.6%.</p>
+     * <p>As a visual example, the figure below shows the effect of <code>ROTATE_AND_CROP_90</code> on the
+     * outputs for the following parameters:</p>
+     * <ul>
+     * <li>Sensor active array: <code>2000x1500</code></li>
+     * <li>Crop region: top-left: <code>(500, 375)</code>, size: <code>(1000, 750)</code> (4:3 aspect ratio)</li>
+     * <li>Output streams: YUV <code>640x480</code> and YUV <code>1280x720</code></li>
+     * <li><code>ROTATE_AND_CROP_90</code></li>
+     * </ul>
+     * <p><img alt="Effect of ROTATE_AND_CROP_90" src="../images/camera2/metadata/android.scaler.rotateAndCrop/crop-region-rotate-90-43-ratio.png" /></p>
+     * <p>With these settings, the regions of the active array covered by the output streams are:</p>
+     * <ul>
+     * <li>640x480 stream crop: top-left: <code>(219, 375)</code>, size: <code>(562, 750)</code></li>
+     * <li>1280x720 stream crop: top-left: <code>(289, 375)</code>, size: <code>(422, 750)</code></li>
+     * </ul>
+     * <p>Since the buffers are rotated, the buffers as seen by the application are:</p>
+     * <ul>
+     * <li>640x480 stream: top-left: <code>(781, 375)</code> on active array, size: <code>(640, 480)</code>, downscaled 1.17x from sensor pixels</li>
+     * <li>1280x720 stream: top-left: <code>(711, 375)</code> on active array, size: <code>(1280, 720)</code>, upscaled 1.71x from sensor pixels</li>
+     * </ul>
+     *
+     * @see ACAMERA_CONTROL_AE_REGIONS
+     * @see ACAMERA_CONTROL_AF_REGIONS
+     * @see ACAMERA_CONTROL_AWB_REGIONS
+     * @see ACAMERA_CONTROL_ZOOM_RATIO
+     * @see ACAMERA_SCALER_CROP_REGION
+     */
+    ACAMERA_SCALER_ROTATE_AND_CROP =                            // byte (acamera_metadata_enum_android_scaler_rotate_and_crop_t)
+            ACAMERA_SCALER_START + 17,
     ACAMERA_SCALER_END,
 
     /**
@@ -4773,7 +4886,7 @@ typedef enum acamera_metadata_tag {
      * rectangle, and cropping to the rectangle given in ACAMERA_SENSOR_INFO_ACTIVE_ARRAY_SIZE.</p>
      * <p>E.g. to calculate position of a pixel, (x,y), in a processed YUV output image with the
      * dimensions in ACAMERA_SENSOR_INFO_ACTIVE_ARRAY_SIZE given the position of a pixel,
-     * (x', y'), in the raw pixel array with dimensions give in
+     * (x', y'), in the raw pixel array with dimensions given in
      * ACAMERA_SENSOR_INFO_PIXEL_ARRAY_SIZE:</p>
      * <ol>
      * <li>Choose a pixel (x', y') within the active array region of the raw buffer given in
@@ -8292,6 +8405,51 @@ typedef enum acamera_metadata_enum_acamera_scaler_available_recommended_stream_c
 
 } acamera_metadata_enum_android_scaler_available_recommended_stream_configurations_t;
 
+// ACAMERA_SCALER_ROTATE_AND_CROP
+typedef enum acamera_metadata_enum_acamera_scaler_rotate_and_crop {
+    /**
+     * <p>No rotate and crop is applied. Processed outputs are in the sensor orientation.</p>
+     */
+    ACAMERA_SCALER_ROTATE_AND_CROP_NONE                              = 0,
+
+    /**
+     * <p>Processed images are rotated by 90 degrees clockwise, and then cropped
+     * to the original aspect ratio.</p>
+     */
+    ACAMERA_SCALER_ROTATE_AND_CROP_90                                = 1,
+
+    /**
+     * <p>Processed images are rotated by 180 degrees.  Since the aspect ratio does not
+     * change, no cropping is performed.</p>
+     */
+    ACAMERA_SCALER_ROTATE_AND_CROP_180                               = 2,
+
+    /**
+     * <p>Processed images are rotated by 270 degrees clockwise, and then cropped
+     * to the original aspect ratio.</p>
+     */
+    ACAMERA_SCALER_ROTATE_AND_CROP_270                               = 3,
+
+    /**
+     * <p>The camera API automatically selects the best concrete value for
+     * rotate-and-crop based on the application's support for resizability and the current
+     * multi-window mode.</p>
+     * <p>If the application does not support resizing but the display mode for its main
+     * Activity is not in a typical orientation, the camera API will set <code>ROTATE_AND_CROP_90</code>
+     * or some other supported rotation value, depending on device configuration,
+     * to ensure preview and captured images are correctly shown to the user. Otherwise,
+     * <code>ROTATE_AND_CROP_NONE</code> will be selected.</p>
+     * <p>When a value other than NONE is selected, several metadata fields will also be parsed
+     * differently to ensure that coordinates are correctly handled for features like drawing
+     * face detection boxes or passing in tap-to-focus coordinates.  The camera API will
+     * convert positions in the active array coordinate system to/from the cropped-and-rotated
+     * coordinate system to make the operation transparent for applications.</p>
+     * <p>No coordinate mapping will be done when the application selects a non-AUTO mode.</p>
+     */
+    ACAMERA_SCALER_ROTATE_AND_CROP_AUTO                              = 4,
+
+} acamera_metadata_enum_android_scaler_rotate_and_crop_t;
+
 
 // ACAMERA_SENSOR_REFERENCE_ILLUMINANT1
 typedef enum acamera_metadata_enum_acamera_sensor_reference_illuminant1 {
@@ -8364,10 +8522,10 @@ typedef enum acamera_metadata_enum_acamera_sensor_test_pattern_mode {
      * respective color channel provided in
      * ACAMERA_SENSOR_TEST_PATTERN_DATA.</p>
      * <p>For example:</p>
-     * <pre><code>android.testPatternData = [0, 0xFFFFFFFF, 0xFFFFFFFF, 0]
+     * <pre><code>android.control.testPatternData = [0, 0xFFFFFFFF, 0xFFFFFFFF, 0]
      * </code></pre>
      * <p>All green pixels are 100% green. All red/blue pixels are black.</p>
-     * <pre><code>android.testPatternData = [0xFFFFFFFF, 0, 0xFFFFFFFF, 0]
+     * <pre><code>android.control.testPatternData = [0xFFFFFFFF, 0, 0xFFFFFFFF, 0]
      * </code></pre>
      * <p>All red pixels are 100% red. Only the odd green pixels
      * are 100% green. All blue pixels are 100% black.</p>
