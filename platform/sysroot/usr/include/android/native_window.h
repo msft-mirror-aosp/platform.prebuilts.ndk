@@ -34,6 +34,7 @@
 #define ANDROID_NATIVE_WINDOW_H
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <sys/cdefs.h>
 
 #include <android/data_space.h>
@@ -185,8 +186,6 @@ int32_t ANativeWindow_lock(ANativeWindow* window, ANativeWindow_Buffer* outBuffe
  */
 int32_t ANativeWindow_unlockAndPost(ANativeWindow* window);
 
-#if __ANDROID_API__ >= 26
-
 /**
  * Set a transform that will be applied to future buffers posted to the window.
  *
@@ -196,10 +195,6 @@ int32_t ANativeWindow_unlockAndPost(ANativeWindow* window);
  * \return 0 for success, or -EINVAL if \p transform is invalid
  */
 int32_t ANativeWindow_setBuffersTransform(ANativeWindow* window, int32_t transform) __INTRODUCED_IN(26);
-
-#endif // __ANDROID_API__ >= 26
-
-#if __ANDROID_API__ >= 28
 
 /**
  * All buffers queued after this call will be associated with the dataSpace
@@ -229,10 +224,6 @@ int32_t ANativeWindow_setBuffersDataSpace(ANativeWindow* window, int32_t dataSpa
  */
 int32_t ANativeWindow_getBuffersDataSpace(ANativeWindow* window) __INTRODUCED_IN(28);
 
-#endif // __ANDROID_API__ >= 28
-
-#if __ANDROID_API__ >= 30
-
 /** Compatibility value for ANativeWindow_setFrameRate. */
 enum ANativeWindow_FrameRateCompatibility {
     /**
@@ -256,6 +247,27 @@ enum ANativeWindow_FrameRateCompatibility {
 };
 
 /**
+ * Same as ANativeWindow_setFrameRateWithSeamlessness(window, frameRate, compatibility, true).
+ *
+ * See ANativeWindow_setFrameRateWithSeamlessness().
+ *
+ * Available since API level 30.
+ */
+int32_t ANativeWindow_setFrameRate(ANativeWindow* window, float frameRate, int8_t compatibility)
+        __INTRODUCED_IN(30);
+
+/**
+ * Provides a hint to the window that buffers should be preallocated ahead of
+ * time. Note that the window implementation is not guaranteed to preallocate
+ * any buffers, for instance if an implementation disallows allocation of new
+ * buffers, or if there is insufficient memory in the system to preallocate
+ * additional buffers
+ *
+ * Available since API level 30.
+ */
+void ANativeWindow_tryAllocateBuffers(ANativeWindow* window) __INTRODUCED_IN(30);
+
+/**
  * Sets the intended frame rate for this window.
  *
  * On devices that are capable of running the display at different refresh
@@ -271,7 +283,7 @@ enum ANativeWindow_FrameRateCompatibility {
  * this ANativeWindow is consumed by something other than the system compositor,
  * e.g. a media codec, this call has no effect.
  *
- * Available since API level 30.
+ * Available since API level 31.
  *
  * \param frameRate The intended frame rate of this window, in frames per
  * second. 0 is a special value that indicates the app will accept the system's
@@ -284,24 +296,17 @@ enum ANativeWindow_FrameRateCompatibility {
  * compatibility value may influence the system's choice of display refresh
  * rate. See the ANATIVEWINDOW_FRAME_RATE_COMPATIBILITY_* values for more info.
  *
+ * \param shouldBeSeamless Whether display refresh rate transitions should be seamless. A
+ * seamless transition is one that doesn't have any visual interruptions, such as a black
+ * screen for a second or two. True indicates that any frame rate changes caused by this
+ * request should be seamless. False indicates that non-seamless refresh rates are also
+ * acceptable.
+ *
  * \return 0 for success, -EINVAL if the window, frame rate, or compatibility
  * value are invalid.
  */
-int32_t ANativeWindow_setFrameRate(ANativeWindow* window, float frameRate, int8_t compatibility)
-        __INTRODUCED_IN(30);
-
-/**
- * Provides a hint to the window that buffers should be preallocated ahead of
- * time. Note that the window implementation is not guaranteed to preallocate
- * any buffers, for instance if an implementation disallows allocation of new
- * buffers, or if there is insufficient memory in the system to preallocate
- * additional buffers
- *
- * Available since API level 30.
- */
-void ANativeWindow_tryAllocateBuffers(ANativeWindow* window);
-
-#endif // __ANDROID_API__ >= 30
+int32_t ANativeWindow_setFrameRateWithSeamlessness(ANativeWindow* window, float frameRate,
+        int8_t compatibility, bool shouldBeSeamless) __INTRODUCED_IN(31);
 
 #ifdef __cplusplus
 };

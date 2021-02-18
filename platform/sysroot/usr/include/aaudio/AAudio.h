@@ -65,7 +65,7 @@ enum {
 
     /**
      * This format uses the int16_t data type.
-     * The maximum range of the data is -32768 to 32767.
+     * The maximum range of the data is -32768 (0x8000) to 32767 (0x7FFF).
      */
     AAUDIO_FORMAT_PCM_I16,
 
@@ -77,7 +77,31 @@ enum {
      * See also 'floatData' at
      * https://developer.android.com/reference/android/media/AudioTrack#write(float[],%20int,%20int,%20int)
      */
-    AAUDIO_FORMAT_PCM_FLOAT
+    AAUDIO_FORMAT_PCM_FLOAT,
+
+    /**
+     * This format uses 24-bit samples packed into 3 bytes.
+     * The bytes are in the native endian order.
+     * The maximum range of the data is -8388608 (0x800000)
+     * to 8388607 (0x7FFFFF).
+     *
+     * Note that the lower precision bits may be ignored by the device.
+     *
+     * Available since API level 31.
+     */
+    AAUDIO_FORMAT_PCM_I24_PACKED,
+
+    /**
+     * This format uses 32-bit samples stored in an int32_t data type.
+     * The maximum range of the data is -2147483648 (0x80000000)
+     * to 2147483647 (0x7FFFFFFF).
+     *
+     * Note that the lower precision bits may be ignored by the device.
+     *
+     * Available since API level 31.
+     */
+    AAUDIO_FORMAT_PCM_I32
+
 };
 typedef int32_t aaudio_format_t;
 
@@ -689,7 +713,7 @@ AAUDIO_API void AAudioStreamBuilder_setPerformanceMode(AAudioStreamBuilder* buil
         aaudio_performance_mode_t mode) __INTRODUCED_IN(26);
 
 /**
- * Set the intended use case for the stream.
+ * Set the intended use case for the output stream.
  *
  * The AAudio system will use this information to optimize the
  * behavior of the stream.
@@ -706,7 +730,7 @@ AAUDIO_API void AAudioStreamBuilder_setUsage(AAudioStreamBuilder* builder,
         aaudio_usage_t usage) __INTRODUCED_IN(28);
 
 /**
- * Set the type of audio data that the stream will carry.
+ * Set the type of audio data that the output stream will carry.
  *
  * The AAudio system will use this information to optimize the
  * behavior of the stream.
@@ -896,8 +920,9 @@ typedef aaudio_data_callback_result_t (*AAudioStream_dataCallback)(
  * It will stop being called after AAudioStream_requestPause() or
  * AAudioStream_requestStop() is called.
  *
- * This callback function will be called on a real-time thread owned by AAudio. See
- * {@link #AAudioStream_dataCallback} for more information.
+ * This callback function will be called on a real-time thread owned by AAudio.
+ * The low latency streams may have callback threads with higher priority than normal streams.
+ * See {@link #AAudioStream_dataCallback} for more information.
  *
  * Note that the AAudio callbacks will never be called simultaneously from multiple threads.
  *
