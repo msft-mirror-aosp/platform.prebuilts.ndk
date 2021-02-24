@@ -57,6 +57,9 @@ ifneq ($(LIBCXX_FORCE_REBUILD),true) # Using prebuilt
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := libc++abi
+LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0 SPDX-license-identifier-BSD SPDX-license-identifier-MIT SPDX-license-identifier-NCSA
+LOCAL_LICENSE_CONDITIONS := notice
+LOCAL_NOTICE_FILE := $(LOCAL_PATH)/LICENSE.TXT $(LOCAL_PATH)/NOTICE
 LOCAL_SRC_FILES := ../llvm-libc++/libs/$(TARGET_ARCH_ABI)/$(LOCAL_MODULE)$(TARGET_LIB_EXTENSION)
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/include
 
@@ -74,6 +77,9 @@ else # Building
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := libc++abi
+LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0 SPDX-license-identifier-BSD SPDX-license-identifier-MIT SPDX-license-identifier-NCSA
+LOCAL_LICENSE_CONDITIONS := notice
+LOCAL_NOTICE_FILE := $(LOCAL_PATH)/LICENSE.TXT $(LOCAL_PATH)/NOTICE
 LOCAL_SRC_FILES := $(libcxxabi_src_files)
 LOCAL_C_INCLUDES := $(libcxxabi_includes)
 LOCAL_CPPFLAGS := $(libcxxabi_cppflags)
