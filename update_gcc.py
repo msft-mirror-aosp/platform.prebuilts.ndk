@@ -80,36 +80,30 @@ def parse_args():
     return parser.parse_args()
 
 
-def build_name(host, arch):
+def build_name(arch):
     """Gets the release build name for an NDK host tag.
 
     The builds are named by a short identifier like "linux" or "win64".
 
-    >>> build_name('darwin-x86_64', 'arm')
-    'arm'
+    >>> build_name('arm')
+    'linux_arm'
 
-    >>> build_name('windows-x86_64', 'x86')
-    'win64_x86'
+    >>> build_name('x86')
+    'linux_x86'
     """
-    if host == 'darwin-x86_64':
-        return arch + '_mac'
-
-    return {
-        'linux-x86_64': 'linux',
-        'windows-x86_64': 'win64',
-    }[host] + '_' + arch
+    return f'linux_{arch}'
 
 
-def package_name(host, arch):
+def package_name(arch):
     """Returns the file name for a given package configuration.
 
-    >>> package_name('linux-x86_64', 'arm')
+    >>> package_name('arm')
     'gcc-arm-linux-x86_64.tar.bz2'
 
-    >>> package_name('windows-x86_64', 'x86')
-    'gcc-x86-windows-x86_64.tar.bz2'
+    >>> package_name('x86')
+    'gcc-x86-linux-x86_64.tar.bz2'
     """
-    return 'gcc-{}-{}.tar.bz2'.format(arch, host)
+    return f'gcc-{arch}-linux-x86_64.tar.bz2'
 
 
 def fetch_artifact(branch, target, build, pattern):
@@ -119,20 +113,25 @@ def fetch_artifact(branch, target, build, pattern):
            '--bid', build, pattern]
     check_call(cmd)
 
-    # Fetch artifact dumps crap to the working directory.
-    remove('.fetch_artifact2.dat')
+    # Old versions of fetch_artifact dump crap to the working directory.
+    try:
+        remove('.fetch_artifact2.dat')
+    except FileNotFoundError:
+        # But the current version of fetch_artifact doesn't create it. Be
+        # tolerant of it in case that behavior returns.
+        pass
 
 
-def download_build(branch, host, arch, build_number):
+def download_build(branch, arch, build_number):
     """Download a build from the build server."""
-    pkg_name = package_name(host, arch)
-    fetch_artifact(branch, build_name(host, arch), build_number, pkg_name)
+    pkg_name = package_name(arch)
+    fetch_artifact(branch, build_name(arch), build_number, pkg_name)
     return pkg_name
 
 
-def extract_package(package, host, install_dir):
+def extract_package(package, install_dir):
     """Extract the downloaded toolchain."""
-    host_dir = os.path.join(install_dir, 'toolchains', host)
+    host_dir = os.path.join(install_dir, 'toolchains/linux-x86_64')
     if not os.path.exists(host_dir):
         makedirs(host_dir)
 
@@ -151,23 +150,20 @@ def main():
     if not args.use_current_branch:
         check_call(['repo', 'start', 'update-gcc-{}'.format(args.build), '.'])
 
-    hosts = ('darwin-x86_64', 'linux-x86_64', 'windows-x86_64')
     packages = []
-    for host in hosts:
-        for arch in build_support.ALL_ARCHITECTURES:
-            if arch.startswith('mips'):
-                continue
-            package = download_build(args.branch, host, arch, args.build)
-            packages.append((host, arch, package))
+    for arch in build_support.ALL_ARCHITECTURES:
+        package = download_build(args.branch, arch, args.build)
+        packages.append((arch, package))
 
     install_dir = 'current'
     install_subdir = os.path.join(install_dir, 'toolchains')
 
-    for host, arch, package in packages:
+    for arch, package in packages:
         toolchain = build_support.arch_to_toolchain(arch) + '-4.9'
-        toolchain_path = os.path.join(install_subdir, host, toolchain)
+        toolchain_path = os.path.join(install_subdir, 'linux-x86_64',
+                                      toolchain)
         if os.path.exists(toolchain_path):
-            logger().info('Removing old %s %s...', host, toolchain)
+            logger().info('Removing old %s...', toolchain)
             check_call(
                 ['git', 'rm', '-rf', '--ignore-unmatch', toolchain_path])
 
@@ -180,9 +176,9 @@ def main():
             makedirs(install_subdir)
 
         logger().info('Extracting %s...', package)
-        extract_package(package, host, install_dir)
+        extract_package(package, install_dir)
 
-        logger().info('Adding %s %s files to index...', host, toolchain)
+        logger().info('Adding %s files to index...', toolchain)
         check_call(['git', 'add', toolchain_path])
 
     logger().info('Committing update...')

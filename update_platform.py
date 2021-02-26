@@ -26,6 +26,9 @@ import textwrap
 from typing import Dict, Iterable, Sequence, Tuple
 
 
+THIS_DIR = Path(__file__).resolve().parent
+
+
 def logger() -> logging.Logger:
     """Returns the module logger."""
     return logging.getLogger(__name__)
@@ -123,6 +126,33 @@ def verify_no_codenames(install_path: Path) -> None:
             f'--rename-codename. Found codenames:\n{codename_lines}')
 
 
+def in_pore_tree() -> bool:
+    """Returns True if the tree is using pore instead of repo."""
+    top = THIS_DIR.parent.parent
+    return (top / '.pore').exists()
+
+
+def pore_path() -> Path:
+    """Returns the command to run for repo."""
+    pore = shutil.which('pore')
+    if pore is None:
+        raise RuntimeError('Could not find pore in PATH.')
+    return Path(pore)
+
+
+def start_branch(name: str) -> None:
+    """Starts a branch in the project."""
+    pore = in_pore_tree()
+    if pore:
+        args = [str(pore_path())]
+    else:
+        args = ['repo']
+    args.extend(['start', name])
+    if not pore:
+        args.append('.')
+    check_call(args)
+
+
 def kv_arg_pair(arg: str) -> Tuple[str, str]:
     """Parses a key/value argument pair."""
     error_msg = 'Argument must be in format key=value, got ' + arg
@@ -207,8 +237,7 @@ def main() -> None:
     os.chdir(os.path.realpath(os.path.dirname(__file__)))
 
     if not args.use_current_branch:
-        branch_name = 'update-platform-' + branch_name_suffix
-        check_call(['repo', 'start', branch_name, '.'])
+        start_branch(f'update-platform-{branch_name_suffix}')
 
     install_path = Path('platform')
     check_call(['git', 'rm', '-r', '--ignore-unmatch', str(install_path)])
