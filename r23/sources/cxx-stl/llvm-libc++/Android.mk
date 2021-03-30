@@ -92,9 +92,6 @@ libcxxabi_c_includes := $(LOCAL_PATH)/../llvm-libc++abi/include
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := c++_static
-LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0
-LOCAL_LICENSE_CONDITIONS := notice
-LOCAL_NOTICE_FILE := $(LOCAL_PATH)/../../../../NOTICE
 LOCAL_SRC_FILES := libs/$(TARGET_ARCH_ABI)/lib$(LOCAL_MODULE)$(TARGET_LIB_EXTENSION)
 LOCAL_EXPORT_C_INCLUDES := $(libcxx_export_includes)
 LOCAL_STATIC_LIBRARIES := libc++abi
@@ -115,9 +112,6 @@ include $(PREBUILT_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := c++_shared
-LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0
-LOCAL_LICENSE_CONDITIONS := notice
-LOCAL_NOTICE_FILE := $(LOCAL_PATH)/../../../../NOTICE
 LOCAL_SRC_FILES := libs/$(TARGET_ARCH_ABI)/lib$(LOCAL_MODULE)$(TARGET_SONAME_EXTENSION)
 LOCAL_EXPORT_C_INCLUDES := \
     $(libcxx_export_includes) \
@@ -146,9 +140,6 @@ $(call ndk_log,Rebuilding libc++ libraries from sources)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := c++_static
-LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0
-LOCAL_LICENSE_CONDITIONS := notice
-LOCAL_NOTICE_FILE := $(LOCAL_PATH)/../../../../NOTICE
 LOCAL_SRC_FILES := $(libcxx_sources)
 LOCAL_C_INCLUDES := $(libcxx_includes)
 LOCAL_CPPFLAGS := $(libcxx_cxxflags) -ffunction-sections -fdata-sections
@@ -169,9 +160,6 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := c++_shared
-LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0
-LOCAL_LICENSE_CONDITIONS := notice
-LOCAL_NOTICE_FILE := $(LOCAL_PATH)/../../../../NOTICE
 LOCAL_STRIP_MODE := none
 LOCAL_SRC_FILES := $(libcxx_sources)
 LOCAL_C_INCLUDES := $(libcxx_includes)

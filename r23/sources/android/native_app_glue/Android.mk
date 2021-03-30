@@ -3,9 +3,6 @@ LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE:= android_native_app_glue
-LOCAL_LICENSE_KINDS:= SPDX-license-identifier-Apache-2.0
-LOCAL_LICENSE_CONDITIONS:= notice
-LOCAL_NOTICE_FILE:= $(LOCAL_PATH)/NOTICE
 LOCAL_SRC_FILES:= android_native_app_glue.c
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 LOCAL_EXPORT_LDLIBS := -llog -landroid

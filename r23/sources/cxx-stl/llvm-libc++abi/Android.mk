@@ -45,13 +45,14 @@ libcxxabi_cflags := -D__STDC_FORMAT_MACROS
 libcxxabi_cppflags := -std=c++11 -Wno-unknown-attributes -DHAS_THREAD_LOCAL
 libcxxabi_cppflags += -DLIBCXXABI_USE_LLVM_UNWINDER=1
 
+ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
+    libcxxabi_cppflags += -mbranch-protection=standard
+endif
+
 ifneq ($(LIBCXX_FORCE_REBUILD),true) # Using prebuilt
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := libc++abi
-LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0 SPDX-license-identifier-BSD SPDX-license-identifier-MIT SPDX-license-identifier-NCSA
-LOCAL_LICENSE_CONDITIONS := notice
-LOCAL_NOTICE_FILE := $(LOCAL_PATH)/LICENSE.TXT $(LOCAL_PATH)/NOTICE
 LOCAL_SRC_FILES := ../llvm-libc++/libs/$(TARGET_ARCH_ABI)/$(LOCAL_MODULE)$(TARGET_LIB_EXTENSION)
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/include
 
@@ -67,9 +68,6 @@ else # Building
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := libc++abi
-LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0 SPDX-license-identifier-BSD SPDX-license-identifier-MIT SPDX-license-identifier-NCSA
-LOCAL_LICENSE_CONDITIONS := notice
-LOCAL_NOTICE_FILE := $(LOCAL_PATH)/LICENSE.TXT $(LOCAL_PATH)/NOTICE
 LOCAL_SRC_FILES := $(libcxxabi_src_files)
 LOCAL_C_INCLUDES := $(libcxxabi_includes)
 LOCAL_CPPFLAGS := $(libcxxabi_cppflags)
@@ -99,9 +97,6 @@ endif # Prebuilt/building
 # is linked statically even if a shared library dependency exports an unwinder.
 include $(CLEAR_VARS)
 LOCAL_MODULE := libunwind
-LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0 SPDX-license-identifier-BSD SPDX-license-identifier-MIT SPDX-license-identifier-NCSA
-LOCAL_LICENSE_CONDITIONS := notice
-LOCAL_NOTICE_FILE := $(LOCAL_PATH)/LICENSE.TXT $(LOCAL_PATH)/NOTICE
 LOCAL_SRC_FILES := $(NDK_TOOLCHAIN_LIB_DIR)/$(TARGET_TOOLCHAIN_ARCH_LIB_DIR)/libunwind.a
 include $(PREBUILT_STATIC_LIBRARY)
 
