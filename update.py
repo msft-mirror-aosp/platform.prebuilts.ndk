@@ -69,6 +69,11 @@ def remove_old_release(install_dir):
         shutil.rmtree(install_dir)
 
 
+LIBUNWIND_GLOB = (
+    'toolchains/llvm/prebuilt/*/lib64/clang/*/lib/linux/*/libunwind.a'
+)
+
+
 def unzip_single_directory(artifact, destination):
     # Use cwd so that we can use rename without having to worry about crossing
     # file systems.
@@ -83,6 +88,7 @@ def unzip_single_directory(artifact, destination):
             '*/sources/android/support/*',
             '*/sources/cxx-stl/*',
             '*/source.properties',
+            os.path.join('*', LIBUNWIND_GLOB),
         ]
         check_call(cmd)
 
@@ -92,6 +98,23 @@ def unzip_single_directory(artifact, destination):
         for child in os.listdir(ndk_dir):
             os.rename(os.path.join(ndk_dir, child),
                       os.path.join(destination, child))
+
+
+def relocate_libunwind(install_dir):
+    unwinds = glob.glob(os.path.join(install_dir, LIBUNWIND_GLOB))
+    dest_base = os.path.join(install_dir, 'sources/cxx-stl/llvm-libc++/libs')
+    for libunwind in unwinds:
+        arch = os.path.basename(os.path.dirname(libunwind))
+        abi = {
+            'arm': 'armeabi-v7a',
+            'aarch64': 'arm64-v8a',
+            'i386': 'x86',
+            'x86_64': 'x86_64',
+        }[arch]
+        dest_dir = os.path.join(dest_base, abi)
+        dest = os.path.join(dest_dir, 'libunwind.a')
+        logger().info('Relocating %s to %s', libunwind, dest)
+        os.rename(libunwind, dest)
 
 
 def install_new_release(branch, build, install_dir):
@@ -108,6 +131,7 @@ def install_new_release(branch, build, install_dir):
 
         logger().info('Extracting release')
         unzip_single_directory(artifact, install_dir)
+        relocate_libunwind(install_dir)
     finally:
         for artifact in artifacts:
             os.unlink(artifact)
