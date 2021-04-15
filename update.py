@@ -20,6 +20,7 @@ import logging
 import os
 import shutil
 import subprocess
+from tempfile import TemporaryDirectory
 import textwrap
 
 
@@ -68,33 +69,72 @@ def remove_old_release(install_dir):
         shutil.rmtree(install_dir)
 
 
+LIBUNWIND_GLOB = (
+    'toolchains/llvm/prebuilt/*/lib64/clang/*/lib/linux/*/libunwind.a'
+)
+
+
+def unzip_single_directory(artifact, destination):
+    # Use cwd so that we can use rename without having to worry about crossing
+    # file systems.
+    with TemporaryDirectory(dir=os.getcwd()) as temp_dir:
+        cmd = [
+            'unzip',
+            artifact,
+            '-d',
+            temp_dir,
+            '*/sources/android/cpufeatures/*',
+            '*/sources/android/native_app_glue/*',
+            '*/sources/android/support/*',
+            '*/sources/cxx-stl/*',
+            '*/source.properties',
+            os.path.join('*', LIBUNWIND_GLOB),
+        ]
+        check_call(cmd)
+
+        dirs = os.listdir(temp_dir)
+        assert len(dirs) == 1
+        ndk_dir = os.path.join(temp_dir, dirs[0])
+        for child in os.listdir(ndk_dir):
+            os.rename(os.path.join(ndk_dir, child),
+                      os.path.join(destination, child))
+
+
+def relocate_libunwind(install_dir):
+    unwinds = glob.glob(os.path.join(install_dir, LIBUNWIND_GLOB))
+    dest_base = os.path.join(install_dir, 'sources/cxx-stl/llvm-libc++/libs')
+    for libunwind in unwinds:
+        arch = os.path.basename(os.path.dirname(libunwind))
+        abi = {
+            'arm': 'armeabi-v7a',
+            'aarch64': 'arm64-v8a',
+            'i386': 'x86',
+            'x86_64': 'x86_64',
+        }[arch]
+        dest_dir = os.path.join(dest_base, abi)
+        dest = os.path.join(dest_dir, 'libunwind.a')
+        logger().info('Relocating %s to %s', libunwind, dest)
+        os.rename(libunwind, dest)
+
+
 def install_new_release(branch, build, install_dir):
     os.makedirs(install_dir)
 
-    artifact_pattern = 'android-ndk-*.tar.bz2'
+    artifact_pattern = 'android-ndk-*.zip'
     logger().info('Fetching %s from %s (artifacts matching %s)', build, branch,
                   artifact_pattern)
     fetch_artifact(branch, build, artifact_pattern)
-    artifacts = glob.glob('android-ndk-*.tar.bz2')
+    artifacts = glob.glob('android-ndk-*.zip')
     try:
         assert len(artifacts) == 1
         artifact = artifacts[0]
 
         logger().info('Extracting release')
-        cmd = ['tar', 'xf', artifact, '-C', install_dir, '--wildcards',
-               '--strip-components=1', '*/platforms', '*/sources',
-               '*/source.properties']
-        check_call(cmd)
+        unzip_single_directory(artifact, install_dir)
+        relocate_libunwind(install_dir)
     finally:
         for artifact in artifacts:
             os.unlink(artifact)
-
-
-def remove_unneeded_files(install_dir):
-    shutil.rmtree(os.path.join(install_dir, 'platforms'))
-    shutil.rmtree(os.path.join(install_dir, 'sources/third_party'))
-    shutil.rmtree(os.path.join(install_dir, 'sources/android/renderscript'))
-    shutil.rmtree(os.path.join(install_dir, 'sources/android/ndk_helper'))
 
 
 def commit(branch, build, install_dir):
@@ -144,7 +184,6 @@ def main():
         start_branch(args.build)
     remove_old_release(install_dir)
     install_new_release(args.branch, args.build, install_dir)
-    remove_unneeded_files(install_dir)
     commit(args.branch, args.build, install_dir)
 
 
