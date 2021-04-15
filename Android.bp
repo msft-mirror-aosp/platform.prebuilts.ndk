@@ -57,15 +57,8 @@ ndk_prebuilt_static_stl {
     min_sdk_version: "16",
 }
 
-// The LLVM libunwind unwinder. This unwinder is only used for arm32.
 ndk_prebuilt_static_stl {
     name: "ndk_libunwind",
-    enabled: false,
-    arch: {
-        arm: {
-            enabled: true,
-        },
-    },
     min_sdk_version: "16",
 }
 
