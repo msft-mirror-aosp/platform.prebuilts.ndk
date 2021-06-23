@@ -133,6 +133,9 @@ typedef struct ASurfaceTransactionStats ASurfaceTransactionStats;
  * ASurfaceTransaction_OnComplete callback can be used to be notified when a frame
  * including the updates in a transaction was presented.
  *
+ * Buffers which are replaced or removed from the scene in the transaction invoking
+ * this callback may be reused after this point.
+ *
  * \param context Optional context provided by the client that is passed into
  * the callback.
  *
@@ -147,6 +150,35 @@ typedef struct ASurfaceTransactionStats ASurfaceTransactionStats;
 typedef void (*ASurfaceTransaction_OnComplete)(void* context, ASurfaceTransactionStats* stats)
                                                __INTRODUCED_IN(29);
 
+
+/**
+ * The ASurfaceTransaction_OnCommit callback is invoked when transaction is applied and the updates
+ * are ready to be presented. This callback will be invoked before the
+ * ASurfaceTransaction_OnComplete callback.
+ *
+ * This callback does not mean buffers have been released! It simply means that any new
+ * transactions applied will not overwrite the transaction for which we are receiving
+ * a callback and instead will be included in the next frame. If you are trying to avoid
+ * dropping frames (overwriting transactions), and unable to use timestamps (Which provide
+ * a more efficient solution), then this method provides a method to pace your transaction
+ * application.
+ *
+ * \param context Optional context provided by the client that is passed into the callback.
+ *
+ * \param stats Opaque handle that can be passed to ASurfaceTransactionStats functions to query
+ * information about the transaction. The handle is only valid during the callback.
+ * Present and release fences are not available for this callback. Querying them using
+ * ASurfaceTransactionStats_getPresentFenceFd and ASurfaceTransactionStats_getPreviousReleaseFenceFd
+ * will result in failure.
+ *
+ * THREADING
+ * The transaction committed callback can be invoked on any thread.
+ *
+ * Available since API level 31.
+ */
+typedef void (*ASurfaceTransaction_OnCommit)(void* context, ASurfaceTransactionStats* stats)
+                                               __INTRODUCED_IN(31);
+
 /**
  * Returns the timestamp of when the frame was latched by the framework. Once a frame is
  * latched by the framework, it is presented at the following hardware vsync.
@@ -160,6 +192,8 @@ int64_t ASurfaceTransactionStats_getLatchTime(ASurfaceTransactionStats* surface_
  * Returns a sync fence that signals when the transaction has been presented.
  * The recipient of the callback takes ownership of the fence and is responsible for closing
  * it. If a device does not support present fences, a -1 will be returned.
+ *
+ * This query is not valid for ASurfaceTransaction_OnCommit callback.
  *
  * Available since API level 29.
  */
@@ -218,6 +252,8 @@ int64_t ASurfaceTransactionStats_getAcquireTime(ASurfaceTransactionStats* surfac
  * The client must ensure that all pending refs on a buffer are released before attempting to reuse
  * this buffer, otherwise synchronization errors may occur.
  *
+ * This query is not valid for ASurfaceTransaction_OnCommit callback.
+ *
  * Available since API level 29.
  */
 int ASurfaceTransactionStats_getPreviousReleaseFenceFd(
@@ -234,6 +270,16 @@ int ASurfaceTransactionStats_getPreviousReleaseFenceFd(
  */
 void ASurfaceTransaction_setOnComplete(ASurfaceTransaction* transaction, void* context,
                                        ASurfaceTransaction_OnComplete func) __INTRODUCED_IN(29);
+
+/**
+ * Sets the callback that will be invoked when the updates from this transaction are applied and are
+ * ready to be presented. This callback will be invoked before the ASurfaceTransaction_OnComplete
+ * callback.
+ *
+ * Available since API level 31.
+ */
+void ASurfaceTransaction_setOnCommit(ASurfaceTransaction* transaction, void* context,
+                                    ASurfaceTransaction_OnCommit func) __INTRODUCED_IN(31);
 
 /**
  * Reparents the \a surface_control from its old parent to the \a new_parent surface control.
@@ -322,6 +368,11 @@ void ASurfaceTransaction_setColor(ASurfaceTransaction* transaction,
  * enum.
  *
  * Available since API level 29.
+ *
+ * @deprecated Use setCrop, setPosition, setBufferTransform, and setScale instead. Those functions
+ * provide well defined behavior and allows for more control by the apps. It also allows the caller
+ * to set different properties at different times, instead of having to specify all the desired
+ * properties at once.
  */
 void ASurfaceTransaction_setGeometry(ASurfaceTransaction* transaction,
                                      ASurfaceControl* surface_control, const ARect& source,
@@ -329,38 +380,52 @@ void ASurfaceTransaction_setGeometry(ASurfaceTransaction* transaction,
                                      __INTRODUCED_IN(29);
 
 /**
- * \param source The sub-rect within the buffer's content to be rendered inside the surface's area
- * The surface's source rect is clipped by the bounds of its current buffer. The source rect's width
- * and height must be > 0.
+ * Bounds the surface and its children to the bounds specified. The crop and buffer size will be
+ * used to determine the bounds of the surface. If no crop is specified and the surface has no
+ * buffer, the surface bounds is only constrained by the size of its parent bounds.
+ *
+ * \param crop The bounds of the crop to apply.
  *
  * Available since API level 31.
  */
-void ASurfaceTransaction_setSourceRect(ASurfaceTransaction* transaction,
-                                       ASurfaceControl* surface_control, const ARect& source)
+void ASurfaceTransaction_setCrop(ASurfaceTransaction* transaction,
+                                       ASurfaceControl* surface_control, const ARect& crop)
                                        __INTRODUCED_IN(31);
 
 /**
- * \param destination Specifies the rect in the parent's space where this surface will be drawn. The
- * post source rect bounds are scaled to fit the destination rect. The surface's destination rect is
- * clipped by the bounds of its parent. The destination rect's width and height must be > 0.
+ * Specifies the position in the parent's space where the surface will be drawn.
+ *
+ * \param x The x position to render the surface.
+ * \param y The y position to render the surface.
  *
  * Available since API level 31.
  */
 void ASurfaceTransaction_setPosition(ASurfaceTransaction* transaction,
-                                     ASurfaceControl* surface_control, const ARect& destination)
+                                     ASurfaceControl* surface_control, int32_t x, int32_t y)
                                      __INTRODUCED_IN(31);
 
 /**
  * \param transform The transform applied after the source rect is applied to the buffer. This
- * parameter should be set to 0 for no transform. To specify a transfrom use the
+ * parameter should be set to 0 for no transform. To specify a transform use the
  * NATIVE_WINDOW_TRANSFORM_* enum.
  *
  * Available since API level 31.
  */
-void ASurfaceTransaction_setTransform(ASurfaceTransaction* transaction,
+void ASurfaceTransaction_setBufferTransform(ASurfaceTransaction* transaction,
                                       ASurfaceControl* surface_control, int32_t transform)
                                       __INTRODUCED_IN(31);
 
+/**
+ * Sets an x and y scale of a surface with (0, 0) as the centerpoint of the scale.
+ *
+ * \param xScale The scale in the x direction. Must be greater than 0.
+ * \param yScale The scale in the y direction. Must be greater than 0.
+ *
+ * Available since API level 31.
+ */
+void ASurfaceTransaction_setScale(ASurfaceTransaction* transaction,
+                                      ASurfaceControl* surface_control, float xScale, float yScale)
+                                      __INTRODUCED_IN(31);
 /**
  * Parameter for ASurfaceTransaction_setBufferTransparency().
  */
@@ -476,6 +541,9 @@ void ASurfaceTransaction_setFrameRate(ASurfaceTransaction* transaction,
  * callback timings, and changes to the time interval at which the system releases buffers back to
  * the application.
  *
+ * You can register for changes in the refresh rate using
+ * \a AChoreographer_registerRefreshRateCallback.
+ *
  * \param frameRate is the intended frame rate of this surface, in frames per second. 0 is a special
  * value that indicates the app will accept the system's choice for the display frame rate, which is
  * the default behavior if this function isn't called. The frameRate param does <em>not</em> need to
@@ -484,11 +552,12 @@ void ASurfaceTransaction_setFrameRate(ASurfaceTransaction* transaction,
  *
  * \param compatibility The frame rate compatibility of this surface. The compatibility value may
  * influence the system's choice of display frame rate. To specify a compatibility use the
- * ANATIVEWINDOW_FRAME_RATE_COMPATIBILITY_* enum.
+ * ANATIVEWINDOW_FRAME_RATE_COMPATIBILITY_* enum. This parameter is ignored when frameRate is 0.
  *
- * \param changeFrameRateStrategy Whether display refresh rate transitions should be seamless.
- * A seamless transition is one that doesn't have any visual interruptions, such as a black
- * screen for a second or two. See the ANATIVEWINDOW_CHANGE_FRAME_RATE_* values.
+ * \param changeFrameRateStrategy Whether display refresh rate transitions caused by this
+ * surface should be seamless. A seamless transition is one that doesn't have any visual
+ * interruptions, such as a black screen for a second or two. See the
+ * ANATIVEWINDOW_CHANGE_FRAME_RATE_* values. This parameter is ignored when frameRate is 0.
  *
  * Available since API level 31.
  */
