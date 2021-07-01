@@ -70,13 +70,6 @@ ndk_prebuilt_static_stl {
 ndk_prebuilt_shared_stl {
     name: "ndk_libc++_shared",
     export_include_dirs: libcxx_includes,
-    multilib: {
-        lib32: {
-            export_include_dirs: [
-                "current/sources/android/support/include",
-            ],
-        },
-    }
 }
 
 cc_library_static {
