@@ -5761,6 +5761,18 @@ typedef enum {
     /**
      * Pads a tensor with mirrored values.
      *
+     * This operator specifies one of two padding modes: REFLECT or SYMMETRIC.
+     * In the case of REFLECT mode, the mirroring excludes the border element
+     * on the padding side.
+     * In the case of SYMMETRIC mode, the mirroring includes the border element
+     * on the padding side.
+     *
+     * For example, if the input is the 1-D tensor `[1, 2, 3]` and the padding
+     * is `[0, 2]` (i.e., pad no elements before the first (and only) dimension,
+     * and two elements after the first (and only) dimension), then:
+     *     - REFLECT mode produces the output `[1, 2, 3, 2, 1]`
+     *     - SYMMETRIC mode produces the output `[1, 2, 3, 3, 2]`
+     *
      * Supported tensor {@link OperandCode}:
      * * {@link ANEURALNETWORKS_TENSOR_FLOAT16}
      * * {@link ANEURALNETWORKS_TENSOR_FLOAT32}
@@ -5779,6 +5791,11 @@ typedef enum {
      *      front of dimension i.
      *      padding[i, 1] specifies the number of elements to be padded after the
      *      end of dimension i.
+     *      Each padding value must be nonnegative.
+     *      In the case of REFLECT mode, each padding value must be less than the
+     *      corresponding dimension.
+     *      In the case of SYMMETRIC mode, each padding value must be less than or
+     *      equal to the corresponding dimension.
      * * 2: An {@link ANEURALNETWORKS_INT32} scalar, specifying the mode.
      *      Options are 0:REFLECT and 1:SYMMETRIC.
      *
@@ -5817,7 +5834,7 @@ typedef enum {
      *      must be in the range [0, n).
      *
      * Outputs:
-     * * 0: The reversed tensor.
+     * * 0: The reversed tensor of the same shape as the input tensor.
      *      For {@link ANEURALNETWORKS_TENSOR_QUANT8_ASYMM} and
      *      {@link ANEURALNETWORKS_TENSOR_QUANT8_ASYMM_SIGNED} tensors,
      *      the scales and zeroPoint must be the same as input0.
