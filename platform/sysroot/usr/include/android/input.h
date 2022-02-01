@@ -169,6 +169,9 @@ enum {
 
     /** Drag event */
     AINPUT_EVENT_TYPE_DRAG = 5,
+
+    /** TouchMode event */
+    AINPUT_EVENT_TYPE_TOUCH_MODE = 6,
 };
 
 /**
@@ -1381,6 +1384,17 @@ int32_t AInputQueue_preDispatchEvent(AInputQueue* queue, AInputEvent* event);
  * This must be called after receiving an event with AInputQueue_get_event().
  */
 void AInputQueue_finishEvent(AInputQueue* queue, AInputEvent* event, int handled);
+
+/**
+ * Returns the AInputQueue* object associated with the supplied Java InputQueue
+ * object. The returned native object holds a weak reference to the Java object,
+ * and is only valid as long as the Java object has not yet been disposed. You
+ * should ensure that there is a strong reference to the Java object and that it
+ * has not been disposed before using the returned object.
+ *
+ * Available since API level 33.
+ */
+AInputQueue* AInputQueue_fromJava(JNIEnv* env, jobject inputQueue) __INTRODUCED_IN(33);
 
 #ifdef __cplusplus
 }
