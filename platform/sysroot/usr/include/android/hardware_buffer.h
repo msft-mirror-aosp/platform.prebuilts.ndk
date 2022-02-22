@@ -158,6 +158,13 @@ enum AHardwareBuffer_Format {
      * cube-maps or multi-layered textures.
      */
     AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420             = 0x23,
+
+    /**
+     * Corresponding formats:
+     *   Vulkan: VK_FORMAT_R8_UNORM
+     *   OpenGL ES: GR_GL_R8
+     */
+    AHARDWAREBUFFER_FORMAT_R8_UNORM                 = 0x38,
 };
 
 /**
@@ -555,6 +562,7 @@ int AHardwareBuffer_lockAndGetInfo(AHardwareBuffer* _Nonnull buffer, uint64_t us
                                    void* _Nullable* _Nonnull outVirtualAddress,
                                    int32_t* _Nonnull outBytesPerPixel,
                                    int32_t* _Nonnull outBytesPerStride) __INTRODUCED_IN(29);
+
 
 /**
  * Get the system wide unique id for an AHardwareBuffer.
