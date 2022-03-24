@@ -41,10 +41,22 @@ def remove(path):
     os.remove(path)
 
 
-def fetch_artifact(branch, build, pattern):
-    fetch_artifact_path = '/google/data/ro/projects/android/fetch_artifact'
-    cmd = [fetch_artifact_path, '--branch', branch, '--target=linux',
-           '--bid', build, pattern]
+def fetch_artifact(branch: str, build: str, pattern: str) -> None:
+    """Fetches an artifact from the build server.
+
+    Use OAuth2 authentication and the gLinux android-fetch-artifact package,
+    which work with both on-corp and off-corp workstations."""
+    fetch_artifact_path = shutil.which('fetch_artifact')
+    if fetch_artifact_path is None:
+        raise RuntimeError(
+            'error: cannot find fetch_artifact in PATH. Install it using:\n'
+            '  sudo glinux-add-repo android\n'
+            '  sudo apt update\n'
+            '  sudo apt install android-fetch-artifact\n')
+    cmd = [
+        fetch_artifact_path, '--use_oauth2', '--branch', branch,
+        '--target=linux', '--bid', build, pattern
+    ]
     check_call(cmd)
 
 
