@@ -89,6 +89,13 @@ def remove_old_release(install_dir: Path) -> None:
 
 
 LIBUNWIND_GLOB = "toolchains/llvm/prebuilt/*/lib64/clang/*/lib/linux/*/libunwind.a"
+LIBCXX_SHARED_GLOB = (
+    "toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/*/libc++_shared.so"
+)
+LIBCXX_STATIC_GLOB = (
+    "toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/*/libc++_static.a"
+)
+LIBCXXABI_GLOB = "toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/*/libc++abi.a"
 
 
 def unzip_single_directory(artifact: Path, destination: Path) -> None:
@@ -106,6 +113,9 @@ def unzip_single_directory(artifact: Path, destination: Path) -> None:
             "*/sources/cxx-stl/*",
             "*/source.properties",
             os.path.join("*", LIBUNWIND_GLOB),
+            os.path.join("*", LIBCXX_SHARED_GLOB),
+            os.path.join("*", LIBCXX_STATIC_GLOB),
+            os.path.join("*", LIBCXXABI_GLOB),
         ]
         check_call(cmd)
 
@@ -114,6 +124,32 @@ def unzip_single_directory(artifact: Path, destination: Path) -> None:
         ndk_dir = Path(temp_dir) / dirs[0]
         for child in ndk_dir.iterdir():
             child.rename(destination / child.name)
+
+
+def relocate_libcxx(install_dir: Path) -> None:
+    """Copies the libc++ libraries from the toolchain to sources.
+
+    New versions of the NDK have removed the libraries in the sources directory because
+    they are duplicates and they aren't needed in typical builds. Soong still expects to
+    find them in that directory though. We could fix Soong, but since this whole
+    directory should be dead soon we'll just fix-up the install for now.
+    """
+    dest_base = install_dir / "sources/cxx-stl/llvm-libc++/libs"
+    for glob in {LIBCXX_SHARED_GLOB, LIBCXX_STATIC_GLOB, LIBCXXABI_GLOB}:
+        file_name = Path(glob).name
+        for file_path in install_dir.glob(glob):
+            triple = file_path.parent.name
+            abi = {
+                "arm-linux-androideabi": "armeabi-v7a",
+                "aarch64-linux-android": "arm64-v8a",
+                "i686-linux-android": "x86",
+                "x86_64-linux-android": "x86_64",
+            }[triple]
+            dest_dir = dest_base / abi
+            dest_dir.mkdir(parents=True, exist_ok=True)
+            dest = dest_dir / file_name
+            logger().info("Relocating %s to %s", file_path, dest)
+            file_path.rename(dest)
 
 
 def relocate_libunwind(install_dir: Path) -> None:
@@ -152,6 +188,7 @@ def install_new_release(branch: str, build: str, install_dir: Path) -> None:
 
         logger().info("Extracting release")
         unzip_single_directory(artifact, install_dir)
+        relocate_libcxx(install_dir)
         relocate_libunwind(install_dir)
         delete_android_mks(install_dir)
     finally:
