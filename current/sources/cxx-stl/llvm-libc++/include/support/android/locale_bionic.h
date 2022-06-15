@@ -25,15 +25,21 @@ extern "C" {
 
 #if defined(__ANDROID__)
 
-#include <android/api-level.h>
 #if __ANDROID_API__ < 21
 #include <support/xlocale/__posix_l_fallback.h>
 #endif
+
+// HACK: Not in upstream NDK or libc++.
+// Upstream now supports using ToT libc++ with old NDKs, but as such it is now
+// *only* compatible with the NDK. That will need to be fixed both for the
+// platorm and for the NDK-in-platform use case since neither has
+// android/ndk-version.h.
 
 // If we do not have this header, we are in a platform build rather than an NDK
 // build, which will always be at least as new as the ToT NDK, in which case we
 // don't need any of the inlines below since libc provides them.
 #if __has_include(<android/ndk-version.h>)
+#include <android/api-level.h>
 #include <android/ndk-version.h>
 // In NDK versions later than 16, locale-aware functions are provided by
 // legacy_stdlib_inlines.h

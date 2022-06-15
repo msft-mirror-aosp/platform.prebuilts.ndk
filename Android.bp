@@ -38,10 +38,10 @@ libcxx_includes =  [
 
 ndk_prebuilt_static_stl {
     name: "ndk_libandroid_support",
-    min_sdk_version: "33",
-    export_include_dirs: [
-        "current/sources/android/support/include",
-    ],
+    // libandroid_support headers are exported by libc++ rather than by
+    // libandroid_support itself because it's the only way we can enforce the
+    // correct ordering of the includes (libc++ first, libandroid_support
+    // second).
     arch: {
         arm64: {
             enabled: false,
@@ -65,12 +65,26 @@ ndk_prebuilt_static_stl {
 ndk_prebuilt_static_stl {
     name: "ndk_libc++_static",
     export_include_dirs: libcxx_includes,
+    multilib: {
+        lib32: {
+            export_include_dirs: [
+                "current/sources/android/support/include",
+            ],
+        },
+    },
     min_sdk_version: "16",
 }
 
 ndk_prebuilt_shared_stl {
     name: "ndk_libc++_shared",
     export_include_dirs: libcxx_includes,
+    multilib: {
+        lib32: {
+            export_include_dirs: [
+                "current/sources/android/support/include",
+            ],
+        },
+    }
 }
 
 cc_library_static {
