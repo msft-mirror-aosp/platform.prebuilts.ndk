@@ -38,6 +38,7 @@ libcxx_includes =  [
 
 ndk_prebuilt_static_stl {
     name: "ndk_libandroid_support",
+    min_sdk_version: "33",
     export_include_dirs: [
         "current/sources/android/support/include",
     ],
