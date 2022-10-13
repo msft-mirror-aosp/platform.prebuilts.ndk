@@ -158,10 +158,10 @@ int pthread_cond_timedwait(pthread_cond_t* __cond, pthread_mutex_t* __mutex, con
  * function.
  */
 
-#if (!defined(__LP64__)) || (defined(__LP64__) && __ANDROID_API__ >= 28)
+#if (!defined(__LP64__)) || (defined(__LP64__))
 int pthread_cond_timedwait_monotonic_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex,
                                         const struct timespec* __timeout) __INTRODUCED_IN_64(28);
-#endif /* (!defined(__LP64__)) || (defined(__LP64__) && __ANDROID_API__ >= 28) */
+#endif /* (!defined(__LP64__)) || (defined(__LP64__)) */
 
 int pthread_cond_wait(pthread_cond_t* __cond, pthread_mutex_t* __mutex);
 
