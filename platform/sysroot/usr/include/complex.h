@@ -226,9 +226,9 @@ float cabsf(float complex __z) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if (!defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__LP64__) && __ANDROID_API__ >= 23)
+#if (!defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__LP64__))
 long double cabsl(long double complex __z) __INTRODUCED_IN_32(21) __INTRODUCED_IN_64(23) /*__RENAME_LDBL(cabs)*/;
-#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__LP64__) && __ANDROID_API__ >= 23) */
+#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__LP64__)) */
 
 /* 7.3.8.2 The cpow functions */
 
@@ -246,9 +246,9 @@ float complex csqrtf(float complex __z) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if (!defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__LP64__) && __ANDROID_API__ >= 23)
+#if (!defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__LP64__))
 long double complex csqrtl(long double complex __z) __INTRODUCED_IN_32(21) __INTRODUCED_IN_64(23) /*__RENAME_LDBL(csqrt)*/;
-#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__LP64__) && __ANDROID_API__ >= 23) */
+#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__LP64__)) */
 
 
 /* 7.3.9 Manipulation functions */
@@ -272,9 +272,9 @@ float complex cprojf(float complex __z) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
-#if (!defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__LP64__) && __ANDROID_API__ >= 23)
+#if (!defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__LP64__))
 long double complex cprojl(long double complex __z) __INTRODUCED_IN_32(21) __INTRODUCED_IN_64(23) /*__RENAME_LDBL(cproj)*/;
-#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__LP64__) && __ANDROID_API__ >= 23) */
+#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 21) || (defined(__LP64__)) */
 
 /* 7.3.9.5 The creal functions */
 
