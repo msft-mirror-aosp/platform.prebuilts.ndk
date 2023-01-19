@@ -41,6 +41,7 @@ __BEGIN_DECLS
 #define RLIM_SAVED_MAX RLIM_INFINITY
 
 typedef unsigned long rlim_t;
+typedef unsigned long long rlim64_t;
 
 int getrlimit(int __resource, struct rlimit* __limit);
 int setrlimit(int __resource, const struct rlimit* __limit);
@@ -58,9 +59,9 @@ int setpriority(int __which, id_t __who, int __priority);
 int getrusage(int __who, struct rusage* __usage);
 
 
-#if (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__LP64__))
+#if (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__aarch64__)) || (defined(__riscv) && __ANDROID_API__ >= 21) || (defined(__x86_64__))
 int prlimit(pid_t __pid, int __resource, const struct rlimit* __new_limit, struct rlimit* __old_limit) __INTRODUCED_IN_32(24) __INTRODUCED_IN_64(21);
-#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__LP64__)) */
+#endif /* (!defined(__LP64__) && __ANDROID_API__ >= 24) || (defined(__aarch64__)) || (defined(__riscv) && __ANDROID_API__ >= 21) || (defined(__x86_64__)) */
 
 
 #if __ANDROID_API__ >= 21
