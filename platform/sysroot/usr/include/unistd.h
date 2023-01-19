@@ -369,10 +369,10 @@ int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
  * [copy_file_range(2)](https://man7.org/linux/man-pages/man2/copy_file_range.2.html) copies
  * a range of data from one file descriptor to another.
  *
- * Returns the number of bytes copied on success, and returns -1 and sets  errno
- * on failure.
- *
  * Available since API level 34.
+ *
+ * Returns the number of bytes copied on success, and returns -1 and sets
+ * `errno` on failure.
  */
 
 #if __ANDROID_API__ >= 34
