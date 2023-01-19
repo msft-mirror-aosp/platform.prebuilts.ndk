@@ -71,6 +71,7 @@ struct rtnl_link_stats64 {
   __u64 rx_compressed;
   __u64 tx_compressed;
   __u64 rx_nohandler;
+  __u64 rx_otherhost_dropped;
 };
 struct rtnl_hw_stats64 {
   __u64 rx_packets;
@@ -162,6 +163,9 @@ enum {
   IFLA_PARENT_DEV_NAME,
   IFLA_PARENT_DEV_BUS_NAME,
   IFLA_GRO_MAX_SIZE,
+  IFLA_TSO_MAX_SIZE,
+  IFLA_TSO_MAX_SEGS,
+  IFLA_ALLMULTI,
   __IFLA_MAX
 };
 #define IFLA_MAX (__IFLA_MAX - 1)
@@ -408,6 +412,7 @@ enum {
   IFLA_XFRM_UNSPEC,
   IFLA_XFRM_LINK,
   IFLA_XFRM_IF_ID,
+  IFLA_XFRM_COLLECT_METADATA,
   __IFLA_XFRM_MAX
 };
 #define IFLA_XFRM_MAX (__IFLA_XFRM_MAX - 1)
@@ -636,6 +641,7 @@ enum {
   IFLA_BOND_SLAVE_AD_AGGREGATOR_ID,
   IFLA_BOND_SLAVE_AD_ACTOR_OPER_PORT_STATE,
   IFLA_BOND_SLAVE_AD_PARTNER_OPER_PORT_STATE,
+  IFLA_BOND_SLAVE_PRIO,
   __IFLA_BOND_SLAVE_MAX,
 };
 #define IFLA_BOND_SLAVE_MAX (__IFLA_BOND_SLAVE_MAX - 1)
@@ -933,4 +939,10 @@ enum {
   __IFLA_MCTP_MAX,
 };
 #define IFLA_MCTP_MAX (__IFLA_MCTP_MAX - 1)
+enum {
+  IFLA_DSA_UNSPEC,
+  IFLA_DSA_MASTER,
+  __IFLA_DSA_MAX,
+};
+#define IFLA_DSA_MAX (__IFLA_DSA_MAX - 1)
 #endif
