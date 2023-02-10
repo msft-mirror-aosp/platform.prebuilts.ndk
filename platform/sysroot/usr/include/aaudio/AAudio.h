@@ -103,7 +103,23 @@ enum {
      *
      * Available since API level 31.
      */
-    AAUDIO_FORMAT_PCM_I32
+    AAUDIO_FORMAT_PCM_I32,
+
+    /**
+     * This format is used for compressed audio wrapped in IEC61937 for HDMI
+     * or S/PDIF passthrough.
+     *
+     * Unlike PCM playback, the Android framework is not able to do format
+     * conversion for IEC61937. In that case, when IEC61937 is requested, sampling
+     * rate and channel count or channel mask must be specified. Otherwise, it may
+     * fail when opening the stream. Apps are able to get the correct configuration
+     * for the playback by calling
+     * <a href="/reference/android/media/AudioManager#getDevices(int)">
+     *   AudioManager#getDevices(int)</a>.
+     *
+     * Available since API level 34.
+     */
+    AAUDIO_FORMAT_IEC61937
 
 };
 typedef int32_t aaudio_format_t;
@@ -261,6 +277,7 @@ enum
     AAUDIO_STREAM_STATE_CLOSED,
     /**
      * The stream is disconnected from audio device.
+     * @deprecated
      */
     AAUDIO_STREAM_STATE_DISCONNECTED
 };
@@ -870,6 +887,12 @@ AAUDIO_API void AAudioStreamBuilder_setSampleRate(AAudioStreamBuilder* builder,
  * will be respected if both this function and {@link AAudioStreamBuilder_setChannelMask} are
  * called.
  *
+ * Note that if the channel count is two then it may get mixed to mono when the device only supports
+ * one channel. If the channel count is greater than two but the device's supported channel count is
+ * less than the requested value, the channels higher than the device channel will be dropped. If
+ * higher channels should be mixed or spatialized, use {@link AAudioStreamBuilder_setChannelMask}
+ * instead.
+ *
  * Available since API level 26.
  *
  * @param builder reference provided by AAudio_createStreamBuilder()
@@ -1157,7 +1180,10 @@ typedef int32_t aaudio_data_callback_result_t;
  * in the streams current data format to the audioData buffer.
  *
  * For an input stream, this function should read and process numFrames of data
- * from the audioData buffer.
+ * from the audioData buffer. The data in the audioData buffer must not be modified
+ * directly. Instead, it should be copied to another buffer before doing any modification.
+ * In many cases, writing to the audioData buffer of an input stream will result in a
+ * native exception.
  *
  * The audio data is passed through the buffer. So do NOT call AAudioStream_read() or
  * AAudioStream_write() on the stream that is making the callback.
@@ -1441,7 +1467,10 @@ AAUDIO_API aaudio_result_t  AAudioStream_requestPause(AAudioStream* stream) __IN
 /**
  * Asynchronous request for the stream to flush.
  * Flushing will discard any pending data.
- * This call only works if the stream is pausing or paused. TODO review
+ * This call only works if the stream is OPEN, PAUSED, STOPPED, or FLUSHED.
+ * Calling this function when in other states,
+ * or calling from an AAudio callback function,
+ * will have no effect and an error will be returned.
  * Frame counters are not reset by a flush. They may be advanced.
  * After this call the state will be in {@link #AAUDIO_STREAM_STATE_FLUSHING} or
  * {@link #AAUDIO_STREAM_STATE_FLUSHED}.
@@ -1672,9 +1701,25 @@ AAUDIO_API int32_t AAudioStream_getXRunCount(AAudioStream* stream) __INTRODUCED_
  * Available since API level 26.
  *
  * @param stream reference provided by AAudioStreamBuilder_openStream()
- * @return actual sample rate
+ * @return actual sample rate of the stream
  */
 AAUDIO_API int32_t AAudioStream_getSampleRate(AAudioStream* stream) __INTRODUCED_IN(26);
+
+/**
+ * There may be sample rate conversions in the Audio framework.
+ * The sample rate set in the stream builder may not be actual sample rate used in the hardware.
+ *
+ * This returns the sample rate used by the hardware.
+ *
+ * If AAudioStreamBuilder_openStream() returned AAUDIO_OK, the result should always be valid.
+ *
+ * Available since API level 34.
+ *
+ * @param stream reference provided by AAudioStreamBuilder_openStream()
+ * @return actual sample rate of the underlying hardware
+ */
+AAUDIO_API int32_t AAudioStream_getHardwareSampleRate(AAudioStream* stream)
+        __INTRODUCED_IN(__ANDROID_API_U__);
 
 /**
  * A stream has one or more channels of data.
@@ -1683,9 +1728,26 @@ AAUDIO_API int32_t AAudioStream_getSampleRate(AAudioStream* stream) __INTRODUCED
  * Available since API level 26.
  *
  * @param stream reference provided by AAudioStreamBuilder_openStream()
- * @return actual number of channels
+ * @return actual number of channels of the stream
  */
 AAUDIO_API int32_t AAudioStream_getChannelCount(AAudioStream* stream) __INTRODUCED_IN(26);
+
+/**
+ * There may be channel conversions in the Audio framework.
+ * The channel count or channel mask set in the stream builder may not be actual number of
+ * channels used in the hardware.
+ *
+ * This returns the channel count used by the hardware.
+ *
+ * If AAudioStreamBuilder_openStream() returned AAUDIO_OK, the result should always be valid.
+ *
+ * Available since API level 34.
+ *
+ * @param stream reference provided by AAudioStreamBuilder_openStream()
+ * @return actual number of channels of the underlying hardware
+ */
+AAUDIO_API int32_t AAudioStream_getHardwareChannelCount(AAudioStream* stream)
+        __INTRODUCED_IN(__ANDROID_API_U__);
 
 /**
  * Identical to AAudioStream_getChannelCount().
@@ -1709,9 +1771,25 @@ AAUDIO_API int32_t AAudioStream_getDeviceId(AAudioStream* stream) __INTRODUCED_I
  * Available since API level 26.
  *
  * @param stream reference provided by AAudioStreamBuilder_openStream()
- * @return actual data format
+ * @return actual data format of the stream
  */
 AAUDIO_API aaudio_format_t AAudioStream_getFormat(AAudioStream* stream) __INTRODUCED_IN(26);
+
+/**
+ * There may be data format conversions in the Audio framework.
+ * The data format set in the stream builder may not be actual format used in the hardware.
+ *
+ * This returns the audio format used by the hardware.
+ * AUDIO_FORMAT_PCM_8_24_BIT is currently not supported in AAudio, but the hardware may use it.
+ * If AUDIO_FORMAT_PCM_8_24_BIT is used by the hardware, return AAUDIO_FORMAT_PCM_I24_PACKED.
+ *
+ * Available since API level 34.
+ *
+ * @param stream reference provided by AAudioStreamBuilder_openStream()
+ * @return actual data format of the underlying hardware.
+ */
+AAUDIO_API aaudio_format_t AAudioStream_getHardwareFormat(AAudioStream* stream)
+        __INTRODUCED_IN(__ANDROID_API_U__);
 
 /**
  * Provide actual sharing mode.
