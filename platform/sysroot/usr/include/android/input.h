@@ -54,7 +54,14 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include <android/keycodes.h>
+
+// This file is included by modules that have host support but android/looper.h is not supported
+// on host. __REMOVED_IN needs to be defined in order for android/looper.h to be compiled.
+#ifndef __BIONIC__
+#define __REMOVED_IN(x) __attribute__((deprecated))
+#endif
 #include <android/looper.h>
+
 #include <jni.h>
 
 #if !defined(__INTRODUCED_IN)
@@ -764,9 +771,46 @@ enum {
      * The interpretation of a generic axis is device-specific.
      */
     AMOTION_EVENT_AXIS_GENERIC_16 = 47,
+    /**
+     * Axis constant: X gesture offset axis of a motion event.
+     *
+     * - For a touch pad, reports the distance that a swipe gesture has moved in the X axis, as a
+     *   proportion of the touch pad's size. For example, if a touch pad is 1000 units wide, and a
+     *   swipe gesture starts at X = 500 then moves to X = 400, this axis would have a value of
+     *   -0.1.
+     */
+    AMOTION_EVENT_AXIS_GESTURE_X_OFFSET = 48,
+    /**
+     * Axis constant: Y gesture offset axis of a motion event.
+     *
+     * The same as {@link AMOTION_EVENT_AXIS_GESTURE_X_OFFSET}, but for the Y axis.
+     */
+    AMOTION_EVENT_AXIS_GESTURE_Y_OFFSET = 49,
+    /**
+     * Axis constant: X scroll distance axis of a motion event.
+     *
+     * - For a touch pad, reports the distance that should be scrolled in the X axis as a result of
+     *   the user's two-finger scroll gesture, in display pixels.
+     */
+    AMOTION_EVENT_AXIS_GESTURE_SCROLL_X_DISTANCE = 50,
+    /**
+     * Axis constant: Y scroll distance axis of a motion event.
+     *
+     * The same as {@link AMOTION_EVENT_AXIS_GESTURE_SCROLL_X_DISTANCE}, but for the Y axis.
+     */
+    AMOTION_EVENT_AXIS_GESTURE_SCROLL_Y_DISTANCE = 51,
+
+    /**
+     * Note: This is not an "Axis constant". It does not represent any axis, nor should it be used
+     * to represent any axis. It is a constant holding the value of the largest defined axis value,
+     * to make some computations (like iterating through all possible axes) cleaner.
+     * Please update the value accordingly if you add a new axis.
+     */
+    AMOTION_EVENT_MAXIMUM_VALID_AXIS_VALUE = AMOTION_EVENT_AXIS_GESTURE_SCROLL_Y_DISTANCE,
 
     // NOTE: If you add a new axis here you must also add it to several other files.
     //       Refer to frameworks/base/core/java/android/view/MotionEvent.java for the full list.
+    //       Update AMOTION_EVENT_MAXIMUM_VALID_AXIS_VALUE accordingly as well.
 };
 
 /**
@@ -833,6 +877,20 @@ enum AMotionClassification : uint32_t {
      * This classification type should be used to accelerate the long press behaviour.
      */
     AMOTION_EVENT_CLASSIFICATION_DEEP_PRESS = 2,
+    /**
+     * Classification constant: touchpad two-finger swipe.
+     *
+     * The current event stream represents the user swiping with two fingers on a touchpad.
+     */
+    AMOTION_EVENT_CLASSIFICATION_TWO_FINGER_SWIPE = 3,
+    /**
+     * Classification constant: multi-finger swipe.
+     *
+     * The current event stream represents the user swiping with three or more fingers on a
+     * touchpad. Unlike two-finger swipes, these are only to be handled by the system UI, which is
+     * why they have a separate constant from two-finger swipes.
+     */
+    AMOTION_EVENT_CLASSIFICATION_MULTI_FINGER_SWIPE = 4,
 };
 
 /**

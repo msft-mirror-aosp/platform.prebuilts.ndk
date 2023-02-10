@@ -27,6 +27,8 @@
 #endif   // U_SHOW_CPLUSPLUS_API
 
 /**
+ * @addtogroup ICU4C
+ * @{
  *\file
  * \brief C API: Bidi algorithm
  *
@@ -291,7 +293,6 @@
  */
 
 /*DOCXX_TAG*/
-/*@addtogroup ICU4C*/
 /*@{*/
 
 /**
@@ -2290,3 +2291,5 @@ ubidi_writeReverse(const UChar *src, int32_t srcLength,
 /*@}*/
 
 #endif
+
+/** @} */ // addtogroup
