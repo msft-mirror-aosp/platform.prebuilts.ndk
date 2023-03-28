@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 import argparse
+from collections.abc import Iterator
 from dataclasses import dataclass
 import json
 import logging
@@ -95,34 +96,48 @@ def fetch_artifact(branch: str, target: str, build: str, pattern: str) -> None:
     check_call(cmd)
 
 
-def remove_platform_if_out_of_range(version: int, path: Path, platforms: PlatformsMetadata) -> None:
+def remove_platform_if_out_of_range(
+    version: int, path: Path, platforms: PlatformsMetadata
+) -> None:
     if version not in range(platforms.minimum, platforms.maximum + 1):
+        logger().info(
+            "Removing API level %d from %s because it is not in the range [%d, %d]",
+            version,
+            path,
+            platforms.minimum,
+            platforms.maximum,
+        )
         rmtree(path)
 
 
 def rename_platform(version: str, path: Path, platforms: PlatformsMetadata) -> None:
     new_name = platforms.aliases[version]
-    new_name_path = path.parent / f"android-{new_name}"
+    new_name_path = path.with_name(str(new_name))
 
     if new_name_path.exists():
         raise RuntimeError(
-            f"Could not rename android-{version} to android-{new_name} "
-            f"because android-{new_name} already exists."
+            f"Could not rename {path} to {new_name_path} because it already exists."
         )
 
     rename(path, new_name_path)
 
 
-def remove_or_rename_codename_if_unknown(version: str, path: Path, platforms: PlatformsMetadata) -> None:
+def remove_or_rename_codename_if_unknown(
+    version: str, path: Path, platforms: PlatformsMetadata
+) -> None:
     if version not in platforms.aliases:
+        logger().info(
+            "Removing %s from %s because it is not a known codename", version, path
+        )
         rmtree(path)
     else:
         rename_platform(version, path, platforms)
 
 
-def remove_or_rename_platform_directory(path: Path, platforms: PlatformsMetadata) -> None:
-    dirname = path.name
-    _, _, version = dirname.partition("-")
+def remove_or_rename_platform_directory(
+    path: Path, platforms: PlatformsMetadata
+) -> None:
+    version = path.name
     try:
         version_int = int(version)
         remove_platform_if_out_of_range(version_int, path, platforms)
@@ -135,18 +150,16 @@ def remove_and_rename_platforms_to_match_metadata(
     install_path: Path, platforms: PlatformsMetadata
 ) -> None:
     """Removes platforms that should not be checked in."""
-    for path in install_path.glob("platforms/android-*"):
+    for path in iter_versioned_library_directories(install_path):
         remove_or_rename_platform_directory(path, platforms)
 
 
 def verify_no_codenames(install_path: Path) -> None:
     """Checks for codenamed releases and raises an error if any are found."""
     codenames = set()
-    for release in install_path.glob("platforms/android-*"):
-        name = release.name
-        _, version = name.split("-", maxsplit=1)
+    for release in iter_versioned_library_directories(install_path):
         try:
-            int(version)
+            int(release.name)
         except ValueError:
             codenames.add(release)
     if codenames:
@@ -157,6 +170,12 @@ def verify_no_codenames(install_path: Path) -> None:
             "removed using --remove-platform or renamed using "
             f"--rename-codename. Found codenames:\n{codename_lines}"
         )
+
+
+def iter_versioned_library_directories(parent: Path) -> Iterator[Path]:
+    for path in parent.glob("sysroot/usr/lib/*/*"):
+        if path.is_dir():
+            yield path
 
 
 def in_pore_tree() -> bool:
