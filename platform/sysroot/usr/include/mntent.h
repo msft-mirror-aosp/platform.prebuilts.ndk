@@ -47,10 +47,10 @@
 #define MNTOPT_SUID "suid"
 
 struct mntent {
-  char* mnt_fsname;
-  char* mnt_dir;
-  char* mnt_type;
-  char* mnt_opts;
+  char* _Nullable mnt_fsname;
+  char* _Nullable mnt_dir;
+  char* _Nullable mnt_type;
+  char* _Nullable mnt_opts;
   int mnt_freq;
   int mnt_passno;
 };
@@ -59,19 +59,19 @@ __BEGIN_DECLS
 
 
 #if __ANDROID_API__ >= 21
-int endmntent(FILE* __fp) __INTRODUCED_IN(21);
+int endmntent(FILE* _Nullable __fp) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
-struct mntent* getmntent(FILE* __fp);
+struct mntent* _Nullable getmntent(FILE* _Nonnull __fp);
 
 #if __ANDROID_API__ >= 21
-struct mntent* getmntent_r(FILE* __fp, struct mntent* __entry, char* __buf, int __size) __INTRODUCED_IN(21);
-FILE* setmntent(const char* __filename, const char* __type) __INTRODUCED_IN(21);
+struct mntent* _Nullable getmntent_r(FILE* _Nonnull __fp, struct mntent* _Nonnull __entry, char* _Nonnull __buf, int __size) __INTRODUCED_IN(21);
+FILE* _Nullable setmntent(const char* _Nonnull __filename, const char* _Nonnull __type) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
 #if __ANDROID_API__ >= 26
-char* hasmntopt(const struct mntent* __entry, const char* __option) __INTRODUCED_IN(26);
+char* _Nullable hasmntopt(const struct mntent* _Nonnull __entry, const char* _Nonnull __option) __INTRODUCED_IN(26);
 #endif /* __ANDROID_API__ >= 26 */
 
 

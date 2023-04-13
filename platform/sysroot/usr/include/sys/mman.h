@@ -55,17 +55,18 @@ void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t
 void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset);
 #endif
 
-#if __ANDROID_API__ >= 21
 /**
  * mmap64() is a variant of mmap() that takes a 64-bit offset even on LP32.
  *
  * See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md
  *
- * mmap64 wasn't really around until L, but we added an inline for it since it
- * allows a lot more code to compile with _FILE_OFFSET_BITS=64.
+ * Available since API level 21.
  */
+
+#if __ANDROID_API__ >= 21
 void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd, off64_t __offset) __INTRODUCED_IN(21);
-#endif
+#endif /* __ANDROID_API__ >= 21 */
+
 
 /**
  * [munmap(2)](http://man7.org/linux/man-pages/man2/munmap.2.html)
@@ -252,5 +253,3 @@ int posix_madvise(void* __addr, size_t __size, int __advice) __INTRODUCED_IN(23)
 
 
 __END_DECLS
-
-#include <android/legacy_sys_mman_inlines.h>
