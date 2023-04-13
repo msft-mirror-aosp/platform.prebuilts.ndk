@@ -95,7 +95,7 @@ typedef struct DIR DIR;
  *
  * Returns null and sets `errno` on failure.
  */
-DIR* opendir(const char* __path);
+DIR* _Nullable opendir(const char* _Nonnull __path);
 
 /**
  * [fopendir(3)](http://man7.org/linux/man-pages/man3/opendir.3.html)
@@ -103,7 +103,7 @@ DIR* opendir(const char* __path);
  *
  * Returns null and sets `errno` on failure.
  */
-DIR* fdopendir(int __dir_fd);
+DIR* _Nullable fdopendir(int __dir_fd);
 
 /**
  * [readdir(3)](http://man7.org/linux/man-pages/man3/readdir.3.html)
@@ -113,7 +113,7 @@ DIR* fdopendir(int __dir_fd);
  * or returns null and leaves `errno` unchanged at the end of the directory,
  * or returns null and sets `errno` on failure.
  */
-struct dirent* readdir(DIR* __dir);
+struct dirent* _Nullable readdir(DIR* _Nonnull __dir);
 
 /**
  * [readdir64(3)](http://man7.org/linux/man-pages/man3/readdir.3.html)
@@ -125,14 +125,14 @@ struct dirent* readdir(DIR* __dir);
  */
 
 #if __ANDROID_API__ >= 21
-struct dirent64* readdir64(DIR* __dir) __INTRODUCED_IN(21);
+struct dirent64* _Nullable readdir64(DIR* _Nonnull __dir) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
-int readdir_r(DIR* __dir, struct dirent* __entry, struct dirent** __buffer) __attribute__((__deprecated__("readdir_r is deprecated; use readdir instead")));
+int readdir_r(DIR* _Nonnull __dir, struct dirent* _Nonnull __entry, struct dirent* _Nullable * _Nonnull __buffer) __attribute__((__deprecated__("readdir_r is deprecated; use readdir instead")));
 
 #if __ANDROID_API__ >= 21
-int readdir64_r(DIR* __dir, struct dirent64* __entry, struct dirent64** __buffer) __INTRODUCED_IN(21) __attribute__((__deprecated__("readdir64_r is deprecated; use readdir64 instead")));
+int readdir64_r(DIR* _Nonnull __dir, struct dirent64* _Nonnull __entry, struct dirent64* _Nullable * _Nonnull __buffer) __INTRODUCED_IN(21) __attribute__((__deprecated__("readdir64_r is deprecated; use readdir64 instead")));
 #endif /* __ANDROID_API__ >= 21 */
 
 
@@ -142,13 +142,13 @@ int readdir64_r(DIR* __dir, struct dirent64* __entry, struct dirent64** __buffer
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  */
-int closedir(DIR* __dir);
+int closedir(DIR* _Nonnull __dir);
 
 /**
  * [rewinddir(3)](http://man7.org/linux/man-pages/man3/rewinddir.3.html)
  * rewinds a directory stream to the first entry.
  */
-void rewinddir(DIR* __dir);
+void rewinddir(DIR* _Nonnull __dir);
 
 /**
  * [seekdir(3)](http://man7.org/linux/man-pages/man3/seekdir.3.html)
@@ -159,7 +159,7 @@ void rewinddir(DIR* __dir);
  */
 
 #if __ANDROID_API__ >= 23
-void seekdir(DIR* __dir, long __location) __INTRODUCED_IN(23);
+void seekdir(DIR* _Nonnull __dir, long __location) __INTRODUCED_IN(23);
 
 /**
  * [telldir(3)](http://man7.org/linux/man-pages/man3/telldir.3.html)
@@ -170,7 +170,7 @@ void seekdir(DIR* __dir, long __location) __INTRODUCED_IN(23);
  *
  * Available since API level 23.
  */
-long telldir(DIR* __dir) __INTRODUCED_IN(23);
+long telldir(DIR* _Nonnull __dir) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
@@ -180,13 +180,13 @@ long telldir(DIR* __dir) __INTRODUCED_IN(23);
  *
  * Returns a file descriptor on success and returns -1 and sets `errno` on failure.
  */
-int dirfd(DIR* __dir);
+int dirfd(DIR* _Nonnull __dir);
 
 /**
  * [alphasort](http://man7.org/linux/man-pages/man3/alphasort.3.html) is a
  * comparator for use with scandir() that uses strcoll().
  */
-int alphasort(const struct dirent** __lhs, const struct dirent** __rhs);
+int alphasort(const struct dirent* _Nonnull * _Nonnull __lhs, const struct dirent* _Nonnull * _Nonnull __rhs);
 
 /**
  * [alphasort64](http://man7.org/linux/man-pages/man3/alphasort.3.html) is a
@@ -196,7 +196,7 @@ int alphasort(const struct dirent** __lhs, const struct dirent** __rhs);
  */
 
 #if __ANDROID_API__ >= 21
-int alphasort64(const struct dirent64** __lhs, const struct dirent64** __rhs) __INTRODUCED_IN(21);
+int alphasort64(const struct dirent64* _Nonnull * _Nonnull __lhs, const struct dirent64* _Nonnull * _Nonnull __rhs) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
@@ -205,17 +205,19 @@ int alphasort64(const struct dirent64** __lhs, const struct dirent64** __rhs) __
  * scans all the directory `__path`, filtering entries with `__filter` and
  * sorting them with qsort() using the given `__comparator`, and storing them
  * into `__name_list`. Passing NULL as the filter accepts all entries.
+ * Passing NULL as the comparator skips sorting.
  *
  * Returns the number of entries returned in the list on success,
  * and returns -1 and sets `errno` on failure.
  */
-int scandir(const char* __path, struct dirent*** __name_list, int (*__filter)(const struct dirent*), int (*__comparator)(const struct dirent**, const struct dirent**));
+int scandir(const char* _Nonnull __path, struct dirent* _Nonnull * _Nonnull * _Nonnull __name_list, int (* _Nullable __filter)(const struct dirent* _Nonnull), int (* _Nullable __comparator)(const struct dirent* _Nonnull * _Nonnull, const struct dirent* _Nonnull * _Nonnull));
 
 /**
  * [scandir64(3)](http://man7.org/linux/man-pages/man3/scandir.3.html)
  * scans all the directory `__path`, filtering entries with `__filter` and
  * sorting them with qsort() using the given `__comparator`, and storing them
  * into `__name_list`. Passing NULL as the filter accepts all entries.
+ * Passing NULL as the comparator skips sorting.
  *
  * Returns the number of entries returned in the list on success,
  * and returns -1 and sets `errno` on failure.
@@ -224,7 +226,7 @@ int scandir(const char* __path, struct dirent*** __name_list, int (*__filter)(co
  */
 
 #if __ANDROID_API__ >= 21
-int scandir64(const char* __path, struct dirent64*** __name_list, int (*__filter)(const struct dirent64*), int (*__comparator)(const struct dirent64**, const struct dirent64**)) __INTRODUCED_IN(21);
+int scandir64(const char* _Nonnull __path, struct dirent64* _Nonnull * _Nonnull * _Nonnull __name_list, int (* _Nullable __filter)(const struct dirent64* _Nonnull), int (* _Nullable __comparator)(const struct dirent64* _Nonnull * _Nonnull, const struct dirent64* _Nonnull * _Nonnull)) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
@@ -236,6 +238,7 @@ int scandir64(const char* __path, struct dirent64*** __name_list, int (*__filter
  * filtering entries with `__filter` and sorting them with qsort() using the
  * given `__comparator`, and storing them into `__name_list`. Passing NULL as
  * the filter accepts all entries.
+ * Passing NULL as the comparator skips sorting.
  *
  * Returns the number of entries returned in the list on success,
  * and returns -1 and sets `errno` on failure.
@@ -244,7 +247,7 @@ int scandir64(const char* __path, struct dirent64*** __name_list, int (*__filter
  */
 
 #if __ANDROID_API__ >= 24
-int scandirat64(int __dir_fd, const char* __path, struct dirent64*** __name_list, int (*__filter)(const struct dirent64*), int (*__comparator)(const struct dirent64**, const struct dirent64**)) __INTRODUCED_IN(24);
+int scandirat64(int __dir_fd, const char* _Nonnull __path, struct dirent64* _Nonnull * _Nonnull * _Nonnull __name_list, int (* _Nullable __filter)(const struct dirent64* _Nonnull), int (* _Nullable __comparator)(const struct dirent64* _Nonnull * _Nonnull, const struct dirent64* _Nonnull * _Nonnull)) __INTRODUCED_IN(24);
 
 /**
  * [scandirat(3)](http://man7.org/linux/man-pages/man3/scandirat.3.html)
@@ -252,13 +255,14 @@ int scandirat64(int __dir_fd, const char* __path, struct dirent64*** __name_list
  * filtering entries with `__filter` and sorting them with qsort() using the
  * given `__comparator`, and storing them into `__name_list`. Passing NULL as
  * the filter accepts all entries.
+ * Passing NULL as the comparator skips sorting.
  *
  * Returns the number of entries returned in the list on success,
  * and returns -1 and sets `errno` on failure.
  *
  * Available since API level 24.
  */
-int scandirat(int __dir_fd, const char* __path, struct dirent*** __name_list, int (*__filter)(const struct dirent*), int (*__comparator)(const struct dirent**, const struct dirent**)) __INTRODUCED_IN(24);
+int scandirat(int __dir_fd, const char* _Nonnull __path, struct dirent* _Nonnull * _Nonnull * _Nonnull __name_list, int (* _Nullable __filter)(const struct dirent* _Nonnull), int (* _Nullable __comparator)(const struct dirent* _Nonnull * _Nonnull, const struct dirent* _Nonnull * _Nonnull)) __INTRODUCED_IN(24);
 #endif /* __ANDROID_API__ >= 24 */
 
 

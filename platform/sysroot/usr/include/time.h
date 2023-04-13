@@ -82,11 +82,10 @@ char* _Nullable strptime_l(const char* _Nonnull __s, const char* _Nonnull __fmt,
 
 
 size_t strftime(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, const struct tm* _Nullable __tm) __strftimelike(3);
+
 #if __ANDROID_API__ >= 21
 size_t strftime_l(char* _Nonnull __buf, size_t __n, const char* _Nonnull __fmt, const struct tm* _Nullable __tm, locale_t _Nonnull __l) __strftimelike(3) __INTRODUCED_IN(21);
-#else
-// Implemented as static inline before 21.
-#endif
+#endif /* __ANDROID_API__ >= 21 */
 
 
 char* _Nullable ctime(const time_t* _Nonnull __t);

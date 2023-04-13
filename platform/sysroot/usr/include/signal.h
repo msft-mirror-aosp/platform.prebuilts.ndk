@@ -58,78 +58,94 @@ int __libc_current_sigrtmax(void) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
-extern const char* const sys_siglist[_NSIG];
-extern const char* const sys_signame[_NSIG]; /* BSD compatibility. */
+extern const char* _Nonnull const sys_siglist[_NSIG];
+extern const char* _Nonnull const sys_signame[_NSIG]; /* BSD compatibility. */
 
 #define si_timerid si_tid /* glibc compatibility. */
 
-int sigaction(int __signal, const struct sigaction* __new_action, struct sigaction* __old_action);
+int sigaction(int __signal, const struct sigaction* _Nullable __new_action, struct sigaction* _Nullable __old_action);
 
 #if __ANDROID_API__ >= 28
-int sigaction64(int __signal, const struct sigaction64* __new_action, struct sigaction64* __old_action) __INTRODUCED_IN(28);
+int sigaction64(int __signal, const struct sigaction64* _Nullable __new_action, struct sigaction64* _Nullable __old_action) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
 
 int siginterrupt(int __signal, int __flag);
 
+
 #if __ANDROID_API__ >= 21
-sighandler_t signal(int __signal, sighandler_t __handler) __INTRODUCED_IN(21);
-int sigaddset(sigset_t* __set, int __signal) __INTRODUCED_IN(21);
+sighandler_t _Nonnull signal(int __signal, sighandler_t _Nullable __handler) __INTRODUCED_IN(21);
+int sigaddset(sigset_t* _Nonnull __set, int __signal) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 #if __ANDROID_API__ >= 28
-int sigaddset64(sigset64_t* __set, int __signal) __INTRODUCED_IN(28);
+int sigaddset64(sigset64_t* _Nonnull __set, int __signal) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
-int sigdelset(sigset_t* __set, int __signal) __INTRODUCED_IN(21);
+
+#if __ANDROID_API__ >= 21
+int sigdelset(sigset_t* _Nonnull __set, int __signal) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 #if __ANDROID_API__ >= 28
-int sigdelset64(sigset64_t* __set, int __signal) __INTRODUCED_IN(28);
+int sigdelset64(sigset64_t* _Nonnull __set, int __signal) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
-int sigemptyset(sigset_t* __set) __INTRODUCED_IN(21);
+
+#if __ANDROID_API__ >= 21
+int sigemptyset(sigset_t* _Nonnull __set) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 #if __ANDROID_API__ >= 28
-int sigemptyset64(sigset64_t* __set) __INTRODUCED_IN(28);
+int sigemptyset64(sigset64_t* _Nonnull __set) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
-int sigfillset(sigset_t* __set) __INTRODUCED_IN(21);
+
+#if __ANDROID_API__ >= 21
+int sigfillset(sigset_t* _Nonnull __set) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 #if __ANDROID_API__ >= 28
-int sigfillset64(sigset64_t* __set) __INTRODUCED_IN(28);
+int sigfillset64(sigset64_t* _Nonnull __set) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
-int sigismember(const sigset_t* __set, int __signal) __INTRODUCED_IN(21);
+
+#if __ANDROID_API__ >= 21
+int sigismember(const sigset_t* _Nonnull __set, int __signal) __INTRODUCED_IN(21);
+#endif /* __ANDROID_API__ >= 21 */
+
 
 #if __ANDROID_API__ >= 28
-int sigismember64(const sigset64_t* __set, int __signal) __INTRODUCED_IN(28);
+int sigismember64(const sigset64_t* _Nonnull __set, int __signal) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
-#else
-// Implemented as static inlines before 21.
-#endif
 
-int sigpending(sigset_t* __set);
+int sigpending(sigset_t* _Nonnull __set);
 
 #if __ANDROID_API__ >= 28
-int sigpending64(sigset64_t* __set) __INTRODUCED_IN(28);
+int sigpending64(sigset64_t* _Nonnull __set) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
-int sigprocmask(int __how, const sigset_t* __new_set, sigset_t* __old_set);
+int sigprocmask(int __how, const sigset_t* _Nullable __new_set, sigset_t* _Nullable __old_set);
 
 #if __ANDROID_API__ >= 28
-int sigprocmask64(int __how, const sigset64_t* __new_set, sigset64_t* __old_set) __INTRODUCED_IN(28);
+int sigprocmask64(int __how, const sigset64_t* _Nullable __new_set, sigset64_t* _Nullable __old_set) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
-int sigsuspend(const sigset_t* __mask);
+int sigsuspend(const sigset_t* _Nonnull __mask);
 
 #if __ANDROID_API__ >= 28
-int sigsuspend64(const sigset64_t* __mask) __INTRODUCED_IN(28);
+int sigsuspend64(const sigset64_t* _Nonnull __mask) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
-int sigwait(const sigset_t* __set, int* __signal);
+int sigwait(const sigset_t* _Nonnull __set, int* _Nonnull __signal);
 
 #if __ANDROID_API__ >= 28
-int sigwait64(const sigset64_t* __set, int* __signal) __INTRODUCED_IN(28);
+int sigwait64(const sigset64_t* _Nonnull __set, int* _Nonnull __signal) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
 
@@ -145,7 +161,7 @@ int sigpause(int __signal)
 int sigrelse(int __signal)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
   __INTRODUCED_IN(26);
-sighandler_t sigset(int __signal, sighandler_t __handler)
+sighandler_t _Nonnull sigset(int __signal, sighandler_t _Nullable __handler)
   __attribute__((deprecated("use sigaction() instead"))) __INTRODUCED_IN(26);
 #endif /* __ANDROID_API__ >= 26 */
 
@@ -155,12 +171,12 @@ int kill(pid_t __pid, int __signal);
 int killpg(int __pgrp, int __signal);
 int tgkill(int __tgid, int __tid, int __signal);
 
-int sigaltstack(const stack_t* __new_signal_stack, stack_t* __old_signal_stack);
+int sigaltstack(const stack_t* _Nullable __new_signal_stack, stack_t*  _Nullable __old_signal_stack);
 
 
 #if __ANDROID_API__ >= 17
-void psiginfo(const siginfo_t* __info, const char* __msg) __INTRODUCED_IN(17);
-void psignal(int __signal, const char* __msg) __INTRODUCED_IN(17);
+void psiginfo(const siginfo_t* _Nonnull __info, const char* _Nullable __msg) __INTRODUCED_IN(17);
+void psignal(int __signal, const char* _Nullable __msg) __INTRODUCED_IN(17);
 #endif /* __ANDROID_API__ >= 17 */
 
 
@@ -173,37 +189,35 @@ int pthread_sigqueue(pthread_t __pthread, int __signal, const union sigval __val
 
 #endif
 
-int pthread_sigmask(int __how, const sigset_t* __new_set, sigset_t* __old_set);
+int pthread_sigmask(int __how, const sigset_t* _Nullable __new_set, sigset_t* _Nullable __old_set);
 
 #if __ANDROID_API__ >= 28
-int pthread_sigmask64(int __how, const sigset64_t* __new_set, sigset64_t* __old_set) __INTRODUCED_IN(28);
+int pthread_sigmask64(int __how, const sigset64_t* _Nullable __new_set, sigset64_t* _Nullable __old_set) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
 
 
 #if __ANDROID_API__ >= 23
 int sigqueue(pid_t __pid, int __signal, const union sigval __value) __INTRODUCED_IN(23);
-int sigtimedwait(const sigset_t* __set, siginfo_t* __info, const struct timespec* __timeout) __INTRODUCED_IN(23);
+int sigtimedwait(const sigset_t* _Nonnull __set, siginfo_t* _Nullable __info, const struct timespec* _Nullable __timeout) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
 #if __ANDROID_API__ >= 28
-int sigtimedwait64(const sigset64_t* __set, siginfo_t* __info, const struct timespec* __timeout) __INTRODUCED_IN(28);
+int sigtimedwait64(const sigset64_t* _Nonnull __set, siginfo_t* _Nullable __info, const struct timespec* _Nullable __timeout) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
 
 #if __ANDROID_API__ >= 23
-int sigwaitinfo(const sigset_t* __set, siginfo_t* __info) __INTRODUCED_IN(23);
+int sigwaitinfo(const sigset_t* _Nonnull __set, siginfo_t* _Nullable __info) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
 #if __ANDROID_API__ >= 28
-int sigwaitinfo64(const sigset64_t* __set, siginfo_t* __info) __INTRODUCED_IN(28);
+int sigwaitinfo64(const sigset64_t* _Nonnull __set, siginfo_t* _Nullable __info) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
 
 __END_DECLS
-
-#include <android/legacy_signal_inlines.h>
 
 #endif

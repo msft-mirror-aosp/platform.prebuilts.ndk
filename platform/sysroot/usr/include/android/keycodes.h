@@ -809,28 +809,6 @@ enum {
     AKEYCODE_DEMO_APP_3 = 303,
     /** Demo Application key #4. */
     AKEYCODE_DEMO_APP_4 = 304,
-    /** Keyboard backlight Down key.
-     * Adjusts the keyboard backlight brightness down. */
-    AKEYCODE_KEYBOARD_BACKLIGHT_DOWN = 305,
-    /** Keyboard backlight Up key.
-     * Adjusts the keyboard backlight brightness up. */
-    AKEYCODE_KEYBOARD_BACKLIGHT_UP = 306,
-    /** Keyboard backlight Toggle key.
-     * Toggles the keyboard backlight on/off. */
-    AKEYCODE_KEYBOARD_BACKLIGHT_TOGGLE = 307,
-    /** The primary button on the barrel of a stylus.
-     * This is usually the button closest to the tip of the stylus. */
-    AKEYCODE_STYLUS_BUTTON_PRIMARY = 308,
-    /** The secondary button on the barrel of a stylus.
-     * This is usually the second button from the tip of the stylus. */
-    AKEYCODE_STYLUS_BUTTON_SECONDARY = 309,
-    /** The tertiary button on the barrel of a stylus.
-     * This is usually the third button from the tip of the stylus. */
-    AKEYCODE_STYLUS_BUTTON_TERTIARY = 310,
-    /** A button on the tail end of a stylus. */
-    AKEYCODE_STYLUS_BUTTON_TAIL = 311,
-    /** Key to open recent apps (a.k.a. Overview) */
-    AKEYCODE_RECENT_APPS = 312,
 
     // NOTE: If you add a new keycode here you must also add it to several other files.
     //       Refer to frameworks/base/core/java/android/view/KeyEvent.java for the full list.

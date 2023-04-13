@@ -64,7 +64,7 @@ typedef int nl_item;
  */
 
 #if __ANDROID_API__ >= 26
-nl_catd catopen(const char* __name, int __flag) __INTRODUCED_IN(26);
+nl_catd _Nonnull catopen(const char* _Nonnull __name, int __flag) __INTRODUCED_IN(26);
 
 /**
  * [catgets(3)](http://man7.org/linux/man-pages/man3/catgets.3.html) translates the given message
@@ -74,14 +74,14 @@ nl_catd catopen(const char* __name, int __flag) __INTRODUCED_IN(26);
  *
  * Available since API level 28.
  */
-char* catgets(nl_catd __catalog, int __set_number, int __msg_number, const char* __msg) __INTRODUCED_IN(26);
+char* _Nonnull catgets(nl_catd _Nonnull __catalog, int __set_number, int __msg_number, const char* _Nonnull __msg) __INTRODUCED_IN(26);
 
 /**
  * [catclose(3)](http://man7.org/linux/man-pages/man3/catclose.3.html) closes a message catalog.
  *
  * On Android, this always returns -1 with `errno` set to `EBADF`.
  */
-int catclose(nl_catd __catalog) __INTRODUCED_IN(26);
+int catclose(nl_catd _Nonnull __catalog) __INTRODUCED_IN(26);
 #endif /* __ANDROID_API__ >= 26 */
 
 

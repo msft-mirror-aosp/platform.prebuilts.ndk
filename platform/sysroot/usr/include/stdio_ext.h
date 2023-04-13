@@ -46,7 +46,7 @@ __BEGIN_DECLS
  */
 
 #if __ANDROID_API__ >= 23
-size_t __fbufsize(FILE* __fp) __INTRODUCED_IN(23);
+size_t __fbufsize(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
  * [__freadable(3)](http://man7.org/linux/man-pages/man3/__freadable.3.html) returns non-zero if
@@ -54,7 +54,7 @@ size_t __fbufsize(FILE* __fp) __INTRODUCED_IN(23);
  *
  * Available since API level 23.
  */
-int __freadable(FILE* __fp) __INTRODUCED_IN(23);
+int __freadable(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
@@ -66,7 +66,7 @@ int __freadable(FILE* __fp) __INTRODUCED_IN(23);
  */
 
 #if __ANDROID_API__ >= 28
-int __freading(FILE* __fp) __INTRODUCED_IN(28);
+int __freading(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
 
@@ -78,7 +78,7 @@ int __freading(FILE* __fp) __INTRODUCED_IN(28);
  */
 
 #if __ANDROID_API__ >= 23
-int __fwritable(FILE* __fp) __INTRODUCED_IN(23);
+int __fwritable(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
@@ -90,7 +90,7 @@ int __fwritable(FILE* __fp) __INTRODUCED_IN(23);
  */
 
 #if __ANDROID_API__ >= 28
-int __fwriting(FILE* __fp) __INTRODUCED_IN(28);
+int __fwriting(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
 
@@ -102,7 +102,7 @@ int __fwriting(FILE* __fp) __INTRODUCED_IN(28);
  */
 
 #if __ANDROID_API__ >= 23
-int __flbf(FILE* __fp) __INTRODUCED_IN(23);
+int __flbf(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
  * [__fpurge(3)](http://man7.org/linux/man-pages/man3/__fpurge.3.html) discards the contents of
@@ -110,7 +110,7 @@ int __flbf(FILE* __fp) __INTRODUCED_IN(23);
  *
  * Available since API level 23.
  */
-void __fpurge(FILE* __fp) __INTRODUCED_IN(23);
+void __fpurge(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
  * [__fpending(3)](http://man7.org/linux/man-pages/man3/__fpending.3.html) returns the number of
@@ -118,7 +118,7 @@ void __fpurge(FILE* __fp) __INTRODUCED_IN(23);
  *
  * Available since API level 23.
  */
-size_t __fpending(FILE* __fp) __INTRODUCED_IN(23);
+size_t __fpending(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
@@ -130,7 +130,7 @@ size_t __fpending(FILE* __fp) __INTRODUCED_IN(23);
  */
 
 #if __ANDROID_API__ >= 34
-size_t __freadahead(FILE* __fp) __INTRODUCED_IN(34);
+size_t __freadahead(FILE* _Nonnull __fp) __INTRODUCED_IN(34);
 #endif /* __ANDROID_API__ >= 34 */
 
 
@@ -154,7 +154,7 @@ void _flushlbf(void) __INTRODUCED_IN(23);
  */
 
 #if __ANDROID_API__ >= 28
-void __fseterr(FILE* __fp) __INTRODUCED_IN(28);
+void __fseterr(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
 
@@ -175,7 +175,7 @@ void __fseterr(FILE* __fp) __INTRODUCED_IN(28);
  */
 
 #if __ANDROID_API__ >= 23
-int __fsetlocking(FILE* __fp, int __type) __INTRODUCED_IN(23);
+int __fsetlocking(FILE* _Nonnull __fp, int __type) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
