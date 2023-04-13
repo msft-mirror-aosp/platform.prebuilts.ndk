@@ -303,6 +303,10 @@ def main() -> None:
         ANDROID_DIR / "ndk/meta/platforms.json"
     )
 
+    if args.download:
+        fetch_artifact(args.branch, "ndk", build, "ndk_platform.tar.bz2")
+        package = Path("ndk_platform.tar.bz2")
+
     if not args.use_current_branch:
         start_branch(f"update-platform-{branch_name_suffix}")
 
@@ -311,10 +315,6 @@ def main() -> None:
     if install_path.exists():
         rmtree(install_path)
     makedirs(install_path)
-
-    if args.download:
-        fetch_artifact(args.branch, "ndk", build, "ndk_platform.tar.bz2")
-        package = Path("ndk_platform.tar.bz2")
 
     check_call(
         ["tar", "xf", str(package), "--strip-components=1", "-C", str(install_path)]
