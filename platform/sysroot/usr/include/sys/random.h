@@ -52,7 +52,7 @@ __BEGIN_DECLS
  */
 
 #if __ANDROID_API__ >= 28
-int getentropy(void* __buffer, size_t __buffer_size) __wur __INTRODUCED_IN(28);
+int getentropy(void* _Nonnull __buffer, size_t __buffer_size) __wur __INTRODUCED_IN(28);
 
 /**
  * [getrandom(2)](http://man7.org/linux/man-pages/man2/getrandom.2.html) fills the given buffer
@@ -64,7 +64,7 @@ int getentropy(void* __buffer, size_t __buffer_size) __wur __INTRODUCED_IN(28);
  *
  * See also arc4random_buf() which is available in all API levels.
  */
-ssize_t getrandom(void* __buffer, size_t __buffer_size, unsigned int __flags) __wur __INTRODUCED_IN(28);
+ssize_t getrandom(void* _Nonnull __buffer, size_t __buffer_size, unsigned int __flags) __wur __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
 
