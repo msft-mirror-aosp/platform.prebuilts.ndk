@@ -50,9 +50,9 @@ __BEGIN_DECLS
  * and returns `MAP_FAILED` and sets `errno` on failure.
  */
 #if defined(__USE_FILE_OFFSET64)
-void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset) __RENAME(mmap64);
+void* _Nonnull mmap(void* _Nullable __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset) __RENAME(mmap64);
 #else
-void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset);
+void* _Nonnull mmap(void* _Nullable __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset);
 #endif
 
 /**
@@ -64,7 +64,7 @@ void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t
  */
 
 #if __ANDROID_API__ >= 21
-void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd, off64_t __offset) __INTRODUCED_IN(21);
+void* _Nonnull mmap64(void* _Nullable __addr, size_t __size, int __prot, int __flags, int __fd, off64_t __offset) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
@@ -74,7 +74,7 @@ void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd, off
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int munmap(void* __addr, size_t __size);
+int munmap(void* _Nonnull __addr, size_t __size);
 
 /**
  * [msync(2)](http://man7.org/linux/man-pages/man2/msync.2.html)
@@ -82,7 +82,7 @@ int munmap(void* __addr, size_t __size);
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int msync(void* __addr, size_t __size, int __flags);
+int msync(void* _Nonnull __addr, size_t __size, int __flags);
 
 /**
  * [mprotect(2)](http://man7.org/linux/man-pages/man2/mprotect.2.html)
@@ -90,7 +90,7 @@ int msync(void* __addr, size_t __size, int __flags);
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int mprotect(void* __addr, size_t __size, int __prot);
+int mprotect(void* _Nonnull __addr, size_t __size, int __prot);
 
 /** Flag for mremap(). */
 #define MREMAP_MAYMOVE  1
@@ -105,7 +105,7 @@ int mprotect(void* __addr, size_t __size, int __prot);
  * Returns the address of the mapping on success,
  * and returns `MAP_FAILED` and sets `errno` on failure.
  */
-void* mremap(void* __old_addr, size_t __old_size, size_t __new_size, int __flags, ...);
+void* _Nonnull mremap(void* _Nonnull __old_addr, size_t __old_size, size_t __new_size, int __flags, ...);
 
 /**
  * [mlockall(2)](http://man7.org/linux/man-pages/man2/mlockall.2.html)
@@ -137,7 +137,7 @@ int munlockall(void) __INTRODUCED_IN(17);
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int mlock(const void* __addr, size_t __size);
+int mlock(const void* _Nonnull __addr, size_t __size);
 
 /**
  * [mlock2(2)](http://man7.org/linux/man-pages/man2/mlock.2.html)
@@ -149,7 +149,7 @@ int mlock(const void* __addr, size_t __size);
  */
 
 #if __ANDROID_API__ >= 30
-int mlock2(const void* __addr, size_t __size, int __flags) __INTRODUCED_IN(30);
+int mlock2(const void* _Nonnull __addr, size_t __size, int __flags) __INTRODUCED_IN(30);
 #endif /* __ANDROID_API__ >= 30 */
 
 
@@ -159,7 +159,7 @@ int mlock2(const void* __addr, size_t __size, int __flags) __INTRODUCED_IN(30);
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int munlock(const void* __addr, size_t __size);
+int munlock(const void* _Nonnull __addr, size_t __size);
 
 /**
  * [mincore(2)](http://man7.org/linux/man-pages/man2/mincore.2.html)
@@ -167,7 +167,7 @@ int munlock(const void* __addr, size_t __size);
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int mincore(void* __addr, size_t __size, unsigned char* __vector);
+int mincore(void* _Nonnull __addr, size_t __size, unsigned char* _Nonnull __vector);
 
 /**
  * [madvise(2)](http://man7.org/linux/man-pages/man2/madvise.2.html)
@@ -175,7 +175,7 @@ int mincore(void* __addr, size_t __size, unsigned char* __vector);
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-int madvise(void* __addr, size_t __size, int __advice);
+int madvise(void* _Nonnull __addr, size_t __size, int __advice);
 
 /**
  * [process_madvise(2)](http://man7.org/linux/man-pages/man2/process_madvise.2.html)
@@ -191,7 +191,7 @@ int madvise(void* __addr, size_t __size, int __advice);
  */
 
 #if __ANDROID_API__ >= 31
-ssize_t process_madvise(int __pid_fd, const struct iovec* __iov, size_t __count, int __advice, unsigned __flags) __INTRODUCED_IN(31);
+ssize_t process_madvise(int __pid_fd, const struct iovec* _Nonnull __iov, size_t __count, int __advice, unsigned __flags) __INTRODUCED_IN(31);
 #endif /* __ANDROID_API__ >= 31 */
 
 
@@ -207,7 +207,7 @@ ssize_t process_madvise(int __pid_fd, const struct iovec* __iov, size_t __count,
  */
 
 #if __ANDROID_API__ >= 30
-int memfd_create(const char* __name, unsigned __flags) __INTRODUCED_IN(30);
+int memfd_create(const char* _Nonnull __name, unsigned __flags) __INTRODUCED_IN(30);
 #endif /* __ANDROID_API__ >= 30 */
 
 
@@ -248,7 +248,7 @@ int memfd_create(const char* __name, unsigned __flags) __INTRODUCED_IN(30);
  */
 
 #if __ANDROID_API__ >= 23
-int posix_madvise(void* __addr, size_t __size, int __advice) __INTRODUCED_IN(23);
+int posix_madvise(void* _Nonnull __addr, size_t __size, int __advice) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 

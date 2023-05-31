@@ -73,9 +73,9 @@ typedef struct {
 
 
 #if __ANDROID_API__ >= 21
-void __FD_CLR_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
-void __FD_SET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
-int __FD_ISSET_chk(int, const fd_set*, size_t) __INTRODUCED_IN(21);
+void __FD_CLR_chk(int, fd_set* _Nonnull , size_t) __INTRODUCED_IN(21);
+void __FD_SET_chk(int, fd_set* _Nonnull, size_t) __INTRODUCED_IN(21);
+int __FD_ISSET_chk(int, const fd_set* _Nonnull, size_t) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 
@@ -99,7 +99,7 @@ int __FD_ISSET_chk(int, const fd_set*, size_t) __INTRODUCED_IN(21);
  * Returns the number of ready file descriptors on success, 0 for timeout,
  * and returns -1 and sets `errno` on failure.
  */
-int select(int __max_fd_plus_one, fd_set* __read_fds, fd_set* __write_fds, fd_set* __exception_fds, struct timeval* __timeout);
+int select(int __max_fd_plus_one, fd_set* _Nullable __read_fds, fd_set* _Nullable __write_fds, fd_set* _Nullable __exception_fds, struct timeval* _Nullable __timeout);
 
 /**
  * [pselect(2)](http://man7.org/linux/man-pages/man2/select.2.html) waits on a
@@ -110,7 +110,7 @@ int select(int __max_fd_plus_one, fd_set* __read_fds, fd_set* __write_fds, fd_se
  * Returns the number of ready file descriptors on success, 0 for timeout,
  * and returns -1 and sets `errno` on failure.
  */
-int pselect(int __max_fd_plus_one, fd_set* __read_fds, fd_set* __write_fds, fd_set* __exception_fds, const struct timespec* __timeout, const sigset_t* __mask);
+int pselect(int __max_fd_plus_one, fd_set* _Nullable __read_fds, fd_set* _Nullable __write_fds, fd_set* _Nullable __exception_fds, const struct timespec* _Nullable __timeout, const sigset_t* _Nullable __mask);
 
 /**
  * [pselect64(2)](http://man7.org/linux/man-pages/man2/select.2.html) waits on a
@@ -125,7 +125,7 @@ int pselect(int __max_fd_plus_one, fd_set* __read_fds, fd_set* __write_fds, fd_s
  */
 
 #if __ANDROID_API__ >= 28
-int pselect64(int __max_fd_plus_one, fd_set* __read_fds, fd_set* __write_fds, fd_set* __exception_fds, const struct timespec* __timeout, const sigset64_t* __mask) __INTRODUCED_IN(28);
+int pselect64(int __max_fd_plus_one, fd_set* _Nullable __read_fds, fd_set* _Nullable __write_fds, fd_set* _Nullable __exception_fds, const struct timespec* _Nullable __timeout, const sigset64_t* _Nullable __mask) __INTRODUCED_IN(28);
 #endif /* __ANDROID_API__ >= 28 */
 
 

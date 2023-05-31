@@ -42,7 +42,7 @@ __BEGIN_DECLS
 #if defined(__USE_FILE_OFFSET64)
 
 #if __ANDROID_API__ >= 21
-ssize_t sendfile(int __out_fd, int __in_fd, off_t* __offset, size_t __count) __RENAME(sendfile64) __INTRODUCED_IN(21);
+ssize_t sendfile(int __out_fd, int __in_fd, off_t* _Nullable __offset, size_t __count) __RENAME(sendfile64) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 #else
@@ -54,7 +54,7 @@ ssize_t sendfile(int __out_fd, int __in_fd, off_t* __offset, size_t __count) __R
  *
  * Available since API level 21.
  */
-ssize_t sendfile(int __out_fd, int __in_fd, off_t* __offset, size_t __count);
+ssize_t sendfile(int __out_fd, int __in_fd, off_t* _Nullable __offset, size_t __count);
 #endif
 
 /**
@@ -63,7 +63,7 @@ ssize_t sendfile(int __out_fd, int __in_fd, off_t* __offset, size_t __count);
  */
 
 #if __ANDROID_API__ >= 21
-ssize_t sendfile64(int __out_fd, int __in_fd, off64_t* __offset, size_t __count) __INTRODUCED_IN(21);
+ssize_t sendfile64(int __out_fd, int __in_fd, off64_t* _Nullable __offset, size_t __count) __INTRODUCED_IN(21);
 #endif /* __ANDROID_API__ >= 21 */
 
 

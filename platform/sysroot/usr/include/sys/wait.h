@@ -37,11 +37,11 @@
 
 __BEGIN_DECLS
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
+pid_t wait(int* _Nullable __status);
+pid_t waitpid(pid_t __pid, int* _Nullable __status, int __options);
 
 #if __ANDROID_API__ >= 18
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
+pid_t wait4(pid_t __pid, int* _Nullable __status, int __options, struct rusage* _Nullable __rusage) __INTRODUCED_IN(18);
 #endif /* __ANDROID_API__ >= 18 */
 
 
@@ -51,6 +51,6 @@ pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) 
  */
 typedef int idtype_t;
 
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
+int waitid(idtype_t __type, id_t __id, siginfo_t* _Nullable __info, int __options);
 
 __END_DECLS
