@@ -96,6 +96,9 @@ LIBCXX_STATIC_GLOB = (
     "toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/*/libc++_static.a"
 )
 LIBCXXABI_GLOB = "toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/*/libc++abi.a"
+LIBANDROID_SUPPORT_GLOB = (
+    "toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/*/libandroid_support.a"
+)
 
 
 def unzip_single_directory(artifact: Path, destination: Path) -> None:
@@ -116,6 +119,7 @@ def unzip_single_directory(artifact: Path, destination: Path) -> None:
             os.path.join("*", LIBCXX_SHARED_GLOB),
             os.path.join("*", LIBCXX_STATIC_GLOB),
             os.path.join("*", LIBCXXABI_GLOB),
+            os.path.join("*", LIBANDROID_SUPPORT_GLOB),
         ]
         check_call(cmd)
 
@@ -135,7 +139,12 @@ def relocate_libcxx(install_dir: Path) -> None:
     directory should be dead soon we'll just fix-up the install for now.
     """
     dest_base = install_dir / "sources/cxx-stl/llvm-libc++/libs"
-    for glob in {LIBCXX_SHARED_GLOB, LIBCXX_STATIC_GLOB, LIBCXXABI_GLOB}:
+    for glob in {
+        LIBCXX_SHARED_GLOB,
+        LIBCXX_STATIC_GLOB,
+        LIBCXXABI_GLOB,
+        LIBANDROID_SUPPORT_GLOB,
+    }:
         file_name = Path(glob).name
         for file_path in install_dir.glob(glob):
             triple = file_path.parent.name
