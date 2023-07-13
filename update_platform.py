@@ -267,7 +267,7 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
-        "--branch", default="aosp-master", help="Branch to pull from the build server."
+        "--branch", default="aosp-main", help="Branch to pull from the build server."
     )
 
     parser.add_argument(
