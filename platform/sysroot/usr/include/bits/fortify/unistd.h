@@ -31,52 +31,48 @@
 
 
 #if __ANDROID_API__ >= 24
-char* __getcwd_chk(char*, size_t, size_t) __INTRODUCED_IN(24);
+char* _Nullable __getcwd_chk(char* _Nullable, size_t, size_t) __INTRODUCED_IN(24);
 #endif /* __ANDROID_API__ >= 24 */
 
 
 
 #if __ANDROID_API__ >= 23
-ssize_t __pread_chk(int, void*, size_t, off_t, size_t) __INTRODUCED_IN(23);
+ssize_t __pread_chk(int, void* _Nonnull, size_t, off_t, size_t) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
-ssize_t __pread_real(int, void*, size_t, off_t) __RENAME(pread);
+ssize_t __pread_real(int, void* _Nonnull, size_t, off_t) __RENAME(pread);
 
 
 #if __ANDROID_API__ >= 23
-ssize_t __pread64_chk(int, void*, size_t, off64_t, size_t) __INTRODUCED_IN(23);
+ssize_t __pread64_chk(int, void* _Nonnull, size_t, off64_t, size_t) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
-ssize_t __pread64_real(int, void*, size_t, off64_t) __RENAME(pread64);
+ssize_t __pread64_real(int, void* _Nonnull, size_t, off64_t) __RENAME(pread64);
 
 
 #if __ANDROID_API__ >= 24
-ssize_t __pwrite_chk(int, const void*, size_t, off_t, size_t) __INTRODUCED_IN(24);
+ssize_t __pwrite_chk(int, const void* _Nonnull, size_t, off_t, size_t) __INTRODUCED_IN(24);
 #endif /* __ANDROID_API__ >= 24 */
 
-ssize_t __pwrite_real(int, const void*, size_t, off_t) __RENAME(pwrite);
+ssize_t __pwrite_real(int, const void* _Nonnull, size_t, off_t) __RENAME(pwrite);
 
 
 #if __ANDROID_API__ >= 24
-ssize_t __pwrite64_chk(int, const void*, size_t, off64_t, size_t) __INTRODUCED_IN(24);
+ssize_t __pwrite64_chk(int, const void* _Nonnull, size_t, off64_t, size_t) __INTRODUCED_IN(24);
 #endif /* __ANDROID_API__ >= 24 */
 
-ssize_t __pwrite64_real(int, const void*, size_t, off64_t) __RENAME(pwrite64);
+ssize_t __pwrite64_real(int, const void* _Nonnull, size_t, off64_t) __RENAME(pwrite64);
 
-
-#if __ANDROID_API__ >= 21
-ssize_t __read_chk(int, void*, size_t, size_t) __INTRODUCED_IN(21);
-#endif /* __ANDROID_API__ >= 21 */
-
+ssize_t __read_chk(int, void* __BIONIC_COMPLICATED_NULLNESS, size_t, size_t);
 
 #if __ANDROID_API__ >= 24
-ssize_t __write_chk(int, const void*, size_t, size_t) __INTRODUCED_IN(24);
+ssize_t __write_chk(int, const void* __BIONIC_COMPLICATED_NULLNESS, size_t, size_t) __INTRODUCED_IN(24);
 #endif /* __ANDROID_API__ >= 24 */
 
 
 #if __ANDROID_API__ >= 23
-ssize_t __readlink_chk(const char*, char*, size_t, size_t) __INTRODUCED_IN(23);
-ssize_t __readlinkat_chk(int dirfd, const char*, char*, size_t, size_t) __INTRODUCED_IN(23);
+ssize_t __readlink_chk(const char* _Nonnull, char* _Nonnull, size_t, size_t) __INTRODUCED_IN(23);
+ssize_t __readlinkat_chk(int dirfd, const char* _Nonnull, char* _Nonnull, size_t, size_t) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
@@ -102,7 +98,7 @@ ssize_t __readlinkat_chk(int dirfd, const char*, char*, size_t, size_t) __INTROD
         __builtin_constant_p(index) && (index) <= SSIZE_MAX))
 
 __BIONIC_FORTIFY_INLINE
-char* getcwd(char* const __pass_object_size buf, size_t size)
+char* _Nullable getcwd(char* const _Nullable __pass_object_size buf, size_t size)
         __overloadable
         __error_if_overflows_objectsize(size, __bos(buf), getcwd) {
 #if __ANDROID_API__ >= 24 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
@@ -117,7 +113,7 @@ char* getcwd(char* const __pass_object_size buf, size_t size)
 
 #if !defined(__USE_FILE_OFFSET64)
 __BIONIC_FORTIFY_INLINE
-ssize_t pread(int fd, void* const __pass_object_size0 buf, size_t count, off_t offset)
+ssize_t pread(int fd, void* const _Nonnull __pass_object_size0 buf, size_t count, off_t offset)
         __overloadable
         __error_if_overflows_ssizet(count, pread)
         __error_if_overflows_objectsize(count, __bos0(buf), pread) {
@@ -133,7 +129,7 @@ ssize_t pread(int fd, void* const __pass_object_size0 buf, size_t count, off_t o
 #endif /* !defined(__USE_FILE_OFFSET64) */
 
 __BIONIC_FORTIFY_INLINE
-ssize_t pread64(int fd, void* const __pass_object_size0 buf, size_t count, off64_t offset)
+ssize_t pread64(int fd, void* const _Nonnull __pass_object_size0 buf, size_t count, off64_t offset)
         __overloadable
         __error_if_overflows_ssizet(count, pread64)
         __error_if_overflows_objectsize(count, __bos0(buf), pread64) {
@@ -149,7 +145,7 @@ ssize_t pread64(int fd, void* const __pass_object_size0 buf, size_t count, off64
 
 #if !defined(__USE_FILE_OFFSET64)
 __BIONIC_FORTIFY_INLINE
-ssize_t pwrite(int fd, const void* const __pass_object_size0 buf, size_t count, off_t offset)
+ssize_t pwrite(int fd, const void* const _Nonnull __pass_object_size0 buf, size_t count, off_t offset)
         __overloadable
         __error_if_overflows_ssizet(count, pwrite)
         __error_if_overflows_objectsize(count, __bos0(buf), pwrite) {
@@ -165,7 +161,7 @@ ssize_t pwrite(int fd, const void* const __pass_object_size0 buf, size_t count, 
 #endif /* !defined(__USE_FILE_OFFSET64) */
 
 __BIONIC_FORTIFY_INLINE
-ssize_t pwrite64(int fd, const void* const __pass_object_size0 buf, size_t count, off64_t offset)
+ssize_t pwrite64(int fd, const void* const _Nonnull __pass_object_size0 buf, size_t count, off64_t offset)
         __overloadable
         __error_if_overflows_ssizet(count, pwrite64)
         __error_if_overflows_objectsize(count, __bos0(buf), pwrite64) {
@@ -180,7 +176,7 @@ ssize_t pwrite64(int fd, const void* const __pass_object_size0 buf, size_t count
 }
 
 __BIONIC_FORTIFY_INLINE
-ssize_t read(int fd, void* const __pass_object_size0 buf, size_t count)
+ssize_t read(int fd, void* const __BIONIC_COMPLICATED_NULLNESS __pass_object_size0 buf, size_t count)
         __overloadable
         __error_if_overflows_ssizet(count, read)
         __error_if_overflows_objectsize(count, __bos0(buf), read) {
@@ -195,7 +191,7 @@ ssize_t read(int fd, void* const __pass_object_size0 buf, size_t count)
 }
 
 __BIONIC_FORTIFY_INLINE
-ssize_t write(int fd, const void* const __pass_object_size0 buf, size_t count)
+ssize_t write(int fd, const void* const __BIONIC_COMPLICATED_NULLNESS __pass_object_size0 buf, size_t count)
         __overloadable
         __error_if_overflows_ssizet(count, write)
         __error_if_overflows_objectsize(count, __bos0(buf), write) {
@@ -210,7 +206,7 @@ ssize_t write(int fd, const void* const __pass_object_size0 buf, size_t count)
 }
 
 __BIONIC_FORTIFY_INLINE
-ssize_t readlink(const char* path, char* const __pass_object_size buf, size_t size)
+ssize_t readlink(const char* _Nonnull path, char* _Nonnull const __pass_object_size buf, size_t size)
         __overloadable
         __error_if_overflows_ssizet(size, readlink)
         __error_if_overflows_objectsize(size, __bos(buf), readlink) {
@@ -225,7 +221,7 @@ ssize_t readlink(const char* path, char* const __pass_object_size buf, size_t si
 }
 
 __BIONIC_FORTIFY_INLINE
-ssize_t readlinkat(int dirfd, const char* path, char* const __pass_object_size buf, size_t size)
+ssize_t readlinkat(int dirfd, const char* _Nonnull path, char* const _Nonnull __pass_object_size buf, size_t size)
         __overloadable
         __error_if_overflows_ssizet(size, readlinkat)
         __error_if_overflows_objectsize(size, __bos(buf), readlinkat) {

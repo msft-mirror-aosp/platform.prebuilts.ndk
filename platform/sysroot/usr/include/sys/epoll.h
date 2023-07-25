@@ -38,19 +38,11 @@
 __BEGIN_DECLS
 
 int epoll_create(int __size);
-
-#if __ANDROID_API__ >= 21
-int epoll_create1(int __flags) __INTRODUCED_IN(21);
-#endif /* __ANDROID_API__ >= 21 */
-
+int epoll_create1(int __flags);
 
 int epoll_ctl(int __epoll_fd, int __op, int __fd, struct epoll_event* __BIONIC_COMPLICATED_NULLNESS __event);
 int epoll_wait(int __epoll_fd, struct epoll_event* _Nonnull __events, int __event_count, int __timeout_ms);
-
-#if __ANDROID_API__ >= 21
-int epoll_pwait(int __epoll_fd, struct epoll_event* _Nonnull __events, int __event_count, int __timeout_ms, const sigset_t* _Nullable __mask) __INTRODUCED_IN(21);
-#endif /* __ANDROID_API__ >= 21 */
-
+int epoll_pwait(int __epoll_fd, struct epoll_event* _Nonnull __events, int __event_count, int __timeout_ms, const sigset_t* _Nullable __mask);
 
 #if __ANDROID_API__ >= 28
 int epoll_pwait64(int __epoll_fd, struct epoll_event* _Nonnull __events, int __event_count, int __timeout_ms, const sigset64_t* _Nullable __mask) __INTRODUCED_IN(28);
