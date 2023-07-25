@@ -172,39 +172,23 @@ int sched_rr_get_interval(pid_t __pid, struct timespec* _Nonnull __quantum);
  * Returns the pid of the child to the caller on success and
  * returns -1 and sets `errno` on failure.
  */
-
-#if (defined(__LP64__)) || (defined(__arm__)) || (defined(__i386__) && __ANDROID_API__ >= 17)
-int clone(int (* __BIONIC_COMPLICATED_NULLNESS __fn)(void* __BIONIC_COMPLICATED_NULLNESS ), void* __BIONIC_COMPLICATED_NULLNESS __child_stack, int __flags, void* _Nullable __arg, ...) __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_X86(17);
-#endif /* (defined(__LP64__)) || (defined(__arm__)) || (defined(__i386__) && __ANDROID_API__ >= 17) */
-
+int clone(int (* __BIONIC_COMPLICATED_NULLNESS __fn)(void* __BIONIC_COMPLICATED_NULLNESS ), void* __BIONIC_COMPLICATED_NULLNESS __child_stack, int __flags, void* _Nullable __arg, ...);
 
 /**
  * [unshare(2)](http://man7.org/linux/man-pages/man2/unshare.2.html)
  * disassociates part of the caller's execution context.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
- *
- * Available since API level 17.
  */
-
-#if __ANDROID_API__ >= 17
-int unshare(int __flags) __INTRODUCED_IN(17);
-#endif /* __ANDROID_API__ >= 17 */
-
+int unshare(int __flags);
 
 /**
  * [setns(2)](http://man7.org/linux/man-pages/man2/setns.2.html)
  * reassociates a thread with a different namespace.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
- *
- * Available since API level 21.
  */
-
-#if __ANDROID_API__ >= 21
-int setns(int __fd, int __ns_type) __INTRODUCED_IN(21);
-#endif /* __ANDROID_API__ >= 21 */
-
+int setns(int __fd, int __ns_type);
 
 /**
  * [sched_getcpu(3)](http://man7.org/linux/man-pages/man3/sched_getcpu.3.html)
