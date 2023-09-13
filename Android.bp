@@ -75,3 +75,18 @@ cc_library_static {
     sdk_version: "minimum",
     export_include_dirs: ["current/sources/android/cpufeatures"],
 }
+
+// A module that encapsulates the header files of NDK System STL
+cc_library_headers {
+    name: "ndk_system",
+    sdk_version: "minimum",
+    sdk_variant_only: true,
+    stl: "none",
+    export_system_include_dirs: ["current/sources/cxx-stl/system/include"],
+    // the headers are available to both the platform and anyapex.
+    // this availability is required to compile jni deps of any android_app in these api domains.
+    apex_available: [
+        "//apex_available:anyapex",
+        "//apex_available:platform",
+    ],
+}
