@@ -207,7 +207,7 @@ int renameat2(int __old_dir_fd, const char* _Nonnull __old_path, int __new_dir_f
 int fseek(FILE* _Nonnull __fp, long __offset, int __whence);
 long ftell(FILE* _Nonnull __fp);
 
-/* See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md */
+/* See https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
 
 #if __ANDROID_API__ >= 24

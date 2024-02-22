@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __LINUX_KVM_H
 #define __LINUX_KVM_H
 #include <linux/const.h>
@@ -212,6 +200,7 @@ struct kvm_xen_exit {
 #define KVM_EXIT_RISCV_SBI 35
 #define KVM_EXIT_RISCV_CSR 36
 #define KVM_EXIT_NOTIFY 37
+#define KVM_EXIT_LOONGARCH_IOCSR 38
 #define KVM_INTERNAL_ERROR_EMULATION 1
 #define KVM_INTERNAL_ERROR_SIMUL_EX 2
 #define KVM_INTERNAL_ERROR_DELIVERY_EV 3
@@ -261,6 +250,12 @@ struct kvm_run {
       __u32 len;
       __u8 is_write;
     } mmio;
+    struct {
+      __u64 phys_addr;
+      __u8 data[8];
+      __u32 len;
+      __u8 is_write;
+    } iocsr_io;
     struct {
       __u64 nr;
       __u64 args[6];
@@ -935,6 +930,9 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_DIRTY_LOG_RING_WITH_BITMAP 225
 #define KVM_CAP_PMU_EVENT_MASKED_EVENTS 226
 #define KVM_CAP_COUNTER_OFFSET 227
+#define KVM_CAP_ARM_EAGER_SPLIT_CHUNK_SIZE 228
+#define KVM_CAP_ARM_SUPPORTED_BLOCK_SIZES 229
+#define KVM_CAP_ARM_SUPPORTED_REG_MASK_RANGES 230
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
@@ -1062,6 +1060,7 @@ struct kvm_dirty_tlb {
 #define KVM_REG_ARM64 0x6000000000000000ULL
 #define KVM_REG_MIPS 0x7000000000000000ULL
 #define KVM_REG_RISCV 0x8000000000000000ULL
+#define KVM_REG_LOONGARCH 0x9000000000000000ULL
 #define KVM_REG_SIZE_SHIFT 52
 #define KVM_REG_SIZE_MASK 0x00f0000000000000ULL
 #define KVM_REG_SIZE_U8 0x0000000000000000ULL
@@ -1106,9 +1105,12 @@ struct kvm_device_attr {
   __u64 attr;
   __u64 addr;
 };
-#define KVM_DEV_VFIO_GROUP 1
-#define KVM_DEV_VFIO_GROUP_ADD 1
-#define KVM_DEV_VFIO_GROUP_DEL 2
+#define KVM_DEV_VFIO_FILE 1
+#define KVM_DEV_VFIO_FILE_ADD 1
+#define KVM_DEV_VFIO_FILE_DEL 2
+#define KVM_DEV_VFIO_GROUP KVM_DEV_VFIO_FILE
+#define KVM_DEV_VFIO_GROUP_ADD KVM_DEV_VFIO_FILE_ADD
+#define KVM_DEV_VFIO_GROUP_DEL KVM_DEV_VFIO_FILE_DEL
 #define KVM_DEV_VFIO_GROUP_SET_SPAPR_TCE 3
 enum kvm_device_type {
   KVM_DEV_TYPE_FSL_MPIC_20 = 1,
@@ -1131,6 +1133,8 @@ enum kvm_device_type {
 #define KVM_DEV_TYPE_XIVE KVM_DEV_TYPE_XIVE
   KVM_DEV_TYPE_ARM_PV_TIME,
 #define KVM_DEV_TYPE_ARM_PV_TIME KVM_DEV_TYPE_ARM_PV_TIME
+  KVM_DEV_TYPE_RISCV_AIA,
+#define KVM_DEV_TYPE_RISCV_AIA KVM_DEV_TYPE_RISCV_AIA
   KVM_DEV_TYPE_MAX,
 };
 struct kvm_vfio_spapr_tce {
@@ -1202,6 +1206,7 @@ struct kvm_s390_ucas_mapping {
 #define KVM_PPC_SVM_OFF _IO(KVMIO, 0xb3)
 #define KVM_ARM_MTE_COPY_TAGS _IOR(KVMIO, 0xb4, struct kvm_arm_copy_mte_tags)
 #define KVM_ARM_SET_COUNTER_OFFSET _IOW(KVMIO, 0xb5, struct kvm_arm_counter_offset)
+#define KVM_ARM_GET_REG_WRITABLE_MASKS _IOR(KVMIO, 0xb6, struct reg_mask_range)
 #define KVM_CREATE_DEVICE _IOWR(KVMIO, 0xe0, struct kvm_create_device)
 #define KVM_SET_DEVICE_ATTR _IOW(KVMIO, 0xe1, struct kvm_device_attr)
 #define KVM_GET_DEVICE_ATTR _IOW(KVMIO, 0xe2, struct kvm_device_attr)

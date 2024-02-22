@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _USR_IDXD_H_
 #define _USR_IDXD_H_
 #include <stdint.h>
@@ -40,6 +28,7 @@ enum idxd_scmd_stat {
   IDXD_SCMD_WQ_IRQ_ERR = 0x80100000,
   IDXD_SCMD_WQ_USER_NO_IOMMU = 0x80110000,
   IDXD_SCMD_DEV_EVL_ERR = 0x80120000,
+  IDXD_SCMD_WQ_NO_DRV_NAME = 0x80200000,
 };
 #define IDXD_SCMD_SOFTERR_MASK 0x80000000
 #define IDXD_SCMD_SOFTERR_SHIFT 16

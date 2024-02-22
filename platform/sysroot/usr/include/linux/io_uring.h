@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef LINUX_IO_URING_H
 #define LINUX_IO_URING_H
 #include <linux/fs.h>
@@ -42,6 +30,10 @@ struct io_uring_sqe {
   union {
     __u64 addr;
     __u64 splice_off_in;
+    struct {
+      __u32 level;
+      __u32 optname;
+    };
   };
   __u32 len;
   union {
@@ -64,6 +56,8 @@ struct io_uring_sqe {
     __u32 xattr_flags;
     __u32 msg_ring_flags;
     __u32 uring_cmd_flags;
+    __u32 waitid_flags;
+    __u32 futex_flags;
   };
   __u64 user_data;
   union {
@@ -74,6 +68,7 @@ struct io_uring_sqe {
   union {
     __s32 splice_fd_in;
     __u32 file_index;
+    __u32 optlen;
     struct {
       __u16 addr_len;
       __u16 __pad3[1];
@@ -84,6 +79,7 @@ struct io_uring_sqe {
       __u64 addr3;
       __u64 __pad2[1];
     };
+    __u64 optval;
     __u8 cmd[0];
   };
 };
@@ -118,6 +114,9 @@ enum {
 #define IORING_SETUP_CQE32 (1U << 11)
 #define IORING_SETUP_SINGLE_ISSUER (1U << 12)
 #define IORING_SETUP_DEFER_TASKRUN (1U << 13)
+#define IORING_SETUP_NO_MMAP (1U << 14)
+#define IORING_SETUP_REGISTERED_FD_ONLY (1U << 15)
+#define IORING_SETUP_NO_SQARRAY (1U << 16)
 enum io_uring_op {
   IORING_OP_NOP,
   IORING_OP_READV,
@@ -168,9 +167,15 @@ enum io_uring_op {
   IORING_OP_URING_CMD,
   IORING_OP_SEND_ZC,
   IORING_OP_SENDMSG_ZC,
+  IORING_OP_READ_MULTISHOT,
+  IORING_OP_WAITID,
+  IORING_OP_FUTEX_WAIT,
+  IORING_OP_FUTEX_WAKE,
+  IORING_OP_FUTEX_WAITV,
   IORING_OP_LAST,
 };
 #define IORING_URING_CMD_FIXED (1U << 0)
+#define IORING_URING_CMD_MASK IORING_URING_CMD_FIXED
 #define IORING_FSYNC_DATASYNC (1U << 0)
 #define IORING_TIMEOUT_ABS (1U << 0)
 #define IORING_TIMEOUT_UPDATE (1U << 1)
@@ -190,6 +195,8 @@ enum io_uring_op {
 #define IORING_ASYNC_CANCEL_FD (1U << 1)
 #define IORING_ASYNC_CANCEL_ANY (1U << 2)
 #define IORING_ASYNC_CANCEL_FD_FIXED (1U << 3)
+#define IORING_ASYNC_CANCEL_USERDATA (1U << 4)
+#define IORING_ASYNC_CANCEL_OP (1U << 5)
 #define IORING_RECVSEND_POLL_FIRST (1U << 0)
 #define IORING_RECV_MULTISHOT (1U << 1)
 #define IORING_RECVSEND_FIXED_BUF (1U << 2)
@@ -230,7 +237,7 @@ struct io_sqring_offsets {
   __u32 dropped;
   __u32 array;
   __u32 resv1;
-  __u64 resv2;
+  __u64 user_addr;
 };
 #define IORING_SQ_NEED_WAKEUP (1U << 0)
 #define IORING_SQ_CQ_OVERFLOW (1U << 1)
@@ -244,7 +251,7 @@ struct io_cqring_offsets {
   __u32 cqes;
   __u32 flags;
   __u32 resv1;
-  __u64 resv2;
+  __u64 user_addr;
 };
 #define IORING_CQ_EVENTFD_DISABLED (1U << 0)
 #define IORING_ENTER_GETEVENTS (1U << 0)
@@ -408,7 +415,9 @@ struct io_uring_sync_cancel_reg {
   __s32 fd;
   __u32 flags;
   struct __kernel_timespec timeout;
-  __u64 pad[4];
+  __u8 opcode;
+  __u8 pad[7];
+  __u64 pad2[3];
 };
 struct io_uring_file_index_range {
   __u32 off;
@@ -420,6 +429,12 @@ struct io_uring_recvmsg_out {
   __u32 controllen;
   __u32 payloadlen;
   __u32 flags;
+};
+enum {
+  SOCKET_URING_OP_SIOCINQ = 0,
+  SOCKET_URING_OP_SIOCOUTQ,
+  SOCKET_URING_OP_GETSOCKOPT,
+  SOCKET_URING_OP_SETSOCKOPT,
 };
 #ifdef __cplusplus
 }
