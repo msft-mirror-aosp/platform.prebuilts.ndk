@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI__LINUX_BPF_H__
 #define _UAPI__LINUX_BPF_H__
 #include <linux/types.h>
@@ -23,6 +11,7 @@
 #define BPF_JMP32 0x06
 #define BPF_ALU64 0x07
 #define BPF_DW 0x18
+#define BPF_MEMSX 0x80
 #define BPF_ATOMIC 0xc0
 #define BPF_XADD 0xc0
 #define BPF_MOV 0xb0
@@ -158,7 +147,8 @@ enum bpf_map_type {
   BPF_MAP_TYPE_CGROUP_STORAGE_DEPRECATED,
   BPF_MAP_TYPE_CGROUP_STORAGE = BPF_MAP_TYPE_CGROUP_STORAGE_DEPRECATED,
   BPF_MAP_TYPE_REUSEPORT_SOCKARRAY,
-  BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE,
+  BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE_DEPRECATED,
+  BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE = BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE_DEPRECATED,
   BPF_MAP_TYPE_QUEUE,
   BPF_MAP_TYPE_STACK,
   BPF_MAP_TYPE_SK_STORAGE,
@@ -253,6 +243,16 @@ enum bpf_attach_type {
   BPF_LSM_CGROUP,
   BPF_STRUCT_OPS,
   BPF_NETFILTER,
+  BPF_TCX_INGRESS,
+  BPF_TCX_EGRESS,
+  BPF_TRACE_UPROBE_MULTI,
+  BPF_CGROUP_UNIX_CONNECT,
+  BPF_CGROUP_UNIX_SENDMSG,
+  BPF_CGROUP_UNIX_RECVMSG,
+  BPF_CGROUP_UNIX_GETPEERNAME,
+  BPF_CGROUP_UNIX_GETSOCKNAME,
+  BPF_NETKIT_PRIMARY,
+  BPF_NETKIT_PEER,
   __MAX_BPF_ATTACH_TYPE
 };
 #define MAX_BPF_ATTACH_TYPE __MAX_BPF_ATTACH_TYPE
@@ -268,11 +268,27 @@ enum bpf_link_type {
   BPF_LINK_TYPE_KPROBE_MULTI = 8,
   BPF_LINK_TYPE_STRUCT_OPS = 9,
   BPF_LINK_TYPE_NETFILTER = 10,
+  BPF_LINK_TYPE_TCX = 11,
+  BPF_LINK_TYPE_UPROBE_MULTI = 12,
+  BPF_LINK_TYPE_NETKIT = 13,
   MAX_BPF_LINK_TYPE,
+};
+enum bpf_perf_event_type {
+  BPF_PERF_EVENT_UNSPEC = 0,
+  BPF_PERF_EVENT_UPROBE = 1,
+  BPF_PERF_EVENT_URETPROBE = 2,
+  BPF_PERF_EVENT_KPROBE = 3,
+  BPF_PERF_EVENT_KRETPROBE = 4,
+  BPF_PERF_EVENT_TRACEPOINT = 5,
+  BPF_PERF_EVENT_EVENT = 6,
 };
 #define BPF_F_ALLOW_OVERRIDE (1U << 0)
 #define BPF_F_ALLOW_MULTI (1U << 1)
 #define BPF_F_REPLACE (1U << 2)
+#define BPF_F_BEFORE (1U << 3)
+#define BPF_F_AFTER (1U << 4)
+#define BPF_F_ID (1U << 5)
+#define BPF_F_LINK BPF_F_LINK
 #define BPF_F_STRICT_ALIGNMENT (1U << 0)
 #define BPF_F_ANY_ALIGNMENT (1U << 1)
 #define BPF_F_TEST_RND_HI32 (1U << 2)
@@ -280,7 +296,13 @@ enum bpf_link_type {
 #define BPF_F_SLEEPABLE (1U << 4)
 #define BPF_F_XDP_HAS_FRAGS (1U << 5)
 #define BPF_F_XDP_DEV_BOUND_ONLY (1U << 6)
-#define BPF_F_KPROBE_MULTI_RETURN (1U << 0)
+enum {
+  BPF_F_KPROBE_MULTI_RETURN = (1U << 0)
+};
+enum {
+  BPF_F_UPROBE_MULTI_RETURN = (1U << 0)
+};
+#define BPF_F_NETFILTER_IP_DEFRAG (1U << 0)
 #define BPF_PSEUDO_MAP_FD 1
 #define BPF_PSEUDO_MAP_IDX 5
 #define BPF_PSEUDO_MAP_VALUE 2
@@ -310,6 +332,7 @@ enum {
   BPF_F_PRESERVE_ELEMS = (1U << 11),
   BPF_F_INNER_MAP = (1U << 12),
   BPF_F_LINK = (1U << 13),
+  BPF_F_PATH_FD = (1U << 14),
 };
 #define BPF_F_QUERY_EFFECTIVE (1U << 0)
 #define BPF_F_TEST_RUN_ON_CPU (1U << 0)
@@ -403,13 +426,22 @@ union bpf_attr {
     __aligned_u64 pathname;
     __u32 bpf_fd;
     __u32 file_flags;
+    __s32 path_fd;
   };
   struct {
-    __u32 target_fd;
+    union {
+      __u32 target_fd;
+      __u32 target_ifindex;
+    };
     __u32 attach_bpf_fd;
     __u32 attach_type;
     __u32 attach_flags;
     __u32 replace_bpf_fd;
+    union {
+      __u32 relative_fd;
+      __u32 relative_id;
+    };
+    __u64 expected_revision;
   };
   struct {
     __u32 prog_fd;
@@ -445,13 +477,23 @@ union bpf_attr {
     __aligned_u64 info;
   } info;
   struct {
-    __u32 target_fd;
+    union {
+      __u32 target_fd;
+      __u32 target_ifindex;
+    };
     __u32 attach_type;
     __u32 query_flags;
     __u32 attach_flags;
     __aligned_u64 prog_ids;
-    __u32 prog_cnt;
+    union {
+      __u32 prog_cnt;
+      __u32 count;
+    };
+    __u32 : 32;
     __aligned_u64 prog_attach_flags;
+    __aligned_u64 link_ids;
+    __aligned_u64 link_attach_flags;
+    __u64 revision;
   } query;
   struct {
     __u64 name;
@@ -513,6 +555,29 @@ union bpf_attr {
         __s32 priority;
         __u32 flags;
       } netfilter;
+      struct {
+        union {
+          __u32 relative_fd;
+          __u32 relative_id;
+        };
+        __u64 expected_revision;
+      } tcx;
+      struct {
+        __aligned_u64 path;
+        __aligned_u64 offsets;
+        __aligned_u64 ref_ctr_offsets;
+        __aligned_u64 cookies;
+        __u32 cnt;
+        __u32 flags;
+        __u32 pid;
+      } uprobe_multi;
+      struct {
+        union {
+          __u32 relative_fd;
+          __u32 relative_id;
+        };
+        __u64 expected_revision;
+      } netkit;
     };
   } link_create;
   struct {
@@ -803,6 +868,12 @@ struct bpf_sock_tuple {
     } ipv6;
   };
 };
+enum tcx_action_base {
+  TCX_NEXT = - 1,
+  TCX_PASS = 0,
+  TCX_DROP = 2,
+  TCX_REDIRECT = 7,
+};
 struct bpf_xdp_sock {
   __u32 queue_id;
 };
@@ -985,6 +1056,46 @@ struct bpf_link_info {
       __s32 priority;
       __u32 flags;
     } netfilter;
+    struct {
+      __aligned_u64 addrs;
+      __u32 count;
+      __u32 flags;
+      __u64 missed;
+    } kprobe_multi;
+    struct {
+      __u32 type;
+      __u32 : 32;
+      union {
+        struct {
+          __aligned_u64 file_name;
+          __u32 name_len;
+          __u32 offset;
+        } uprobe;
+        struct {
+          __aligned_u64 func_name;
+          __u32 name_len;
+          __u32 offset;
+          __u64 addr;
+          __u64 missed;
+        } kprobe;
+        struct {
+          __aligned_u64 tp_name;
+          __u32 name_len;
+        } tracepoint;
+        struct {
+          __u64 config;
+          __u32 type;
+        } event;
+      };
+    } perf_event;
+    struct {
+      __u32 ifindex;
+      __u32 attach_type;
+    } tcx;
+    struct {
+      __u32 ifindex;
+      __u32 attach_type;
+    } netkit;
   };
 } __attribute__((aligned(8)));
 struct bpf_sock_addr {
@@ -1131,6 +1242,8 @@ enum {
   BPF_FIB_LOOKUP_DIRECT = (1U << 0),
   BPF_FIB_LOOKUP_OUTPUT = (1U << 1),
   BPF_FIB_LOOKUP_SKIP_NEIGH = (1U << 2),
+  BPF_FIB_LOOKUP_TBID = (1U << 3),
+  BPF_FIB_LOOKUP_SRC = (1U << 4),
 };
 enum {
   BPF_FIB_LKUP_RET_SUCCESS,
@@ -1142,6 +1255,7 @@ enum {
   BPF_FIB_LKUP_RET_UNSUPP_LWT,
   BPF_FIB_LKUP_RET_NO_NEIGH,
   BPF_FIB_LKUP_RET_FRAG_NEEDED,
+  BPF_FIB_LKUP_RET_NO_SRC_ADDR,
 };
 struct bpf_fib_lookup {
   __u8 family;
@@ -1166,8 +1280,13 @@ struct bpf_fib_lookup {
     __be32 ipv4_dst;
     __u32 ipv6_dst[4];
   };
-  __be16 h_vlan_proto;
-  __be16 h_vlan_TCI;
+  union {
+    struct {
+      __be16 h_vlan_proto;
+      __be16 h_vlan_TCI;
+    };
+    __u32 tbid;
+  };
   __u8 smac[6];
   __u8 dmac[6];
 };
@@ -1253,12 +1372,14 @@ struct bpf_list_head {
 struct bpf_list_node {
   __u64 : 64;
   __u64 : 64;
+  __u64 : 64;
 } __attribute__((aligned(8)));
 struct bpf_rb_root {
   __u64 : 64;
   __u64 : 64;
 } __attribute__((aligned(8)));
 struct bpf_rb_node {
+  __u64 : 64;
   __u64 : 64;
   __u64 : 64;
   __u64 : 64;
@@ -1333,6 +1454,7 @@ struct bpf_core_relo {
 };
 enum {
   BPF_F_TIMER_ABS = (1ULL << 0),
+  BPF_F_TIMER_CPU_PIN = (1ULL << 1),
 };
 struct bpf_iter_num {
   __u64 __opaque[1];

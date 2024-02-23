@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef QAIC_ACCEL_H_
 #define QAIC_ACCEL_H_
 #include "drm.h"
@@ -182,6 +170,10 @@ struct qaic_perf_stats_entry {
   __u32 device_latency_us;
   __u32 pad;
 };
+struct qaic_detach_slice {
+  __u32 handle;
+  __u32 pad;
+};
 #define DRM_QAIC_MANAGE 0x00
 #define DRM_QAIC_CREATE_BO 0x01
 #define DRM_QAIC_MMAP_BO 0x02
@@ -190,6 +182,7 @@ struct qaic_perf_stats_entry {
 #define DRM_QAIC_PARTIAL_EXECUTE_BO 0x05
 #define DRM_QAIC_WAIT_BO 0x06
 #define DRM_QAIC_PERF_STATS_BO 0x07
+#define DRM_QAIC_DETACH_SLICE_BO 0x08
 #define DRM_IOCTL_QAIC_MANAGE DRM_IOWR(DRM_COMMAND_BASE + DRM_QAIC_MANAGE, struct qaic_manage_msg)
 #define DRM_IOCTL_QAIC_CREATE_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_QAIC_CREATE_BO, struct qaic_create_bo)
 #define DRM_IOCTL_QAIC_MMAP_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_QAIC_MMAP_BO, struct qaic_mmap_bo)
@@ -198,6 +191,7 @@ struct qaic_perf_stats_entry {
 #define DRM_IOCTL_QAIC_PARTIAL_EXECUTE_BO DRM_IOW(DRM_COMMAND_BASE + DRM_QAIC_PARTIAL_EXECUTE_BO, struct qaic_execute)
 #define DRM_IOCTL_QAIC_WAIT_BO DRM_IOW(DRM_COMMAND_BASE + DRM_QAIC_WAIT_BO, struct qaic_wait)
 #define DRM_IOCTL_QAIC_PERF_STATS_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_QAIC_PERF_STATS_BO, struct qaic_perf_stats)
+#define DRM_IOCTL_QAIC_DETACH_SLICE_BO DRM_IOW(DRM_COMMAND_BASE + DRM_QAIC_DETACH_SLICE_BO, struct qaic_detach_slice)
 #ifdef __cplusplus
 }
 #endif

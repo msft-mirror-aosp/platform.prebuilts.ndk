@@ -33,9 +33,14 @@
  * @brief The android_set_abort_message() function.
  */
 
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
+
+typedef struct crash_detail_t crash_detail_t;
 
 /**
  * android_set_abort_message() sets the abort message that will be shown

@@ -26,8 +26,16 @@
 #ifndef ANDROID_LOOPER_H
 #define ANDROID_LOOPER_H
 
+#include <sys/cdefs.h>
+
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+// This file may also be built on glibc or on Windows/MacOS libc's, so
+// deprecated definitions are provided.
+#if !defined(__REMOVED_IN)
+#define __REMOVED_IN(__api_level) __attribute__((__deprecated__))
 #endif
 
 struct ALooper;
@@ -201,8 +209,11 @@ int ALooper_pollOnce(int timeoutMillis, int* outFd, int* outEvents, void** outDa
  * Like ALooper_pollOnce(), but performs all pending callbacks until all
  * data has been consumed or a file descriptor is available with no callback.
  * This function will never return ALOOPER_POLL_CALLBACK.
+ *
+ * Removed in API 34 as ALooper_pollAll can swallow ALooper_wake calls.
+ * Use ALooper_pollOnce instead.
  */
-int ALooper_pollAll(int timeoutMillis, int* outFd, int* outEvents, void** outData);
+int ALooper_pollAll(int timeoutMillis, int* outFd, int* outEvents, void** outData) __REMOVED_IN(1);
 
 /**
  * Wakes the poll asynchronously.

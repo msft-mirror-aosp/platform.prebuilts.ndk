@@ -29,6 +29,8 @@
 #ifndef ANDROID_SENSOR_H
 #define ANDROID_SENSOR_H
 
+#include <sys/cdefs.h>
+
 /******************************************************************
  *
  * IMPORTANT NOTICE:
@@ -52,6 +54,8 @@
 #include <math.h>
 #include <stdint.h>
 
+// This file may also be built on glibc or on Windows/MacOS libc's, so no-op
+// and deprecated definitions are provided.
 #if !defined(__INTRODUCED_IN)
 #define __INTRODUCED_IN(__api_level) /* nothing */
 #endif
@@ -606,10 +610,14 @@ typedef struct AHeadingEvent {
  * sensors_event_t
  */
 typedef struct ASensorEvent {
-    int32_t version; /* sizeof(struct ASensorEvent) */
-    int32_t sensor;  /** The sensor that generates this event */
-    int32_t type;    /** Sensor type for the event, such as {@link ASENSOR_TYPE_ACCELEROMETER} */
-    int32_t reserved0; /** do not use */
+    /* sizeof(struct ASensorEvent) */
+    int32_t version;
+    /** The sensor that generates this event */
+    int32_t sensor;
+    /** Sensor type for the event, such as {@link ASENSOR_TYPE_ACCELEROMETER} */
+    int32_t type;
+    /** do not use */
+    int32_t reserved0;
     /**
      * The time in nanoseconds at which the event happened, and its behavior
      * is identical to <a href="/reference/android/hardware/SensorEvent#timestamp">

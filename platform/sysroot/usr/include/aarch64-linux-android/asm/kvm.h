@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef __ARM_KVM_H__
 #define __ARM_KVM_H__
 #define KVM_SPSR_EL1 0
@@ -287,5 +275,13 @@ struct kvm_smccc_filter {
 };
 #define KVM_HYPERCALL_EXIT_SMC (1U << 0)
 #define KVM_HYPERCALL_EXIT_16BIT (1U << 1)
+#define KVM_ARM_FEATURE_ID_RANGE_IDX(op0,op1,crn,crm,op2) ({ __u64 __op1 = (op1) & 3; __op1 -= (__op1 == 3); (__op1 << 6 | ((crm) & 7) << 3 | (op2)); })
+#define KVM_ARM_FEATURE_ID_RANGE 0
+#define KVM_ARM_FEATURE_ID_RANGE_SIZE (3 * 8 * 8)
+struct reg_mask_range {
+  __u64 addr;
+  __u32 range;
+  __u32 reserved[13];
+};
 #endif
 #endif

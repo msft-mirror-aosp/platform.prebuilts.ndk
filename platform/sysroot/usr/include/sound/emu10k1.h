@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _UAPI__SOUND_EMU10K1_H
 #define _UAPI__SOUND_EMU10K1_H
 #ifdef __linux__
@@ -262,6 +250,8 @@ struct snd_emu10k1_fx8010_info {
 #define EMU10K1_GPR_TRANSLATION_BASS 2
 #define EMU10K1_GPR_TRANSLATION_TREBLE 3
 #define EMU10K1_GPR_TRANSLATION_ONOFF 4
+#define EMU10K1_GPR_TRANSLATION_NEGATE 5
+#define EMU10K1_GPR_TRANSLATION_NEG_TABLE100 6
 enum emu10k1_ctl_elem_iface {
   EMU10K1_CTL_ELEM_IFACE_MIXER = 2,
   EMU10K1_CTL_ELEM_IFACE_PCM = 3,
@@ -279,9 +269,9 @@ struct snd_emu10k1_fx8010_control_gpr {
   unsigned int vcount;
   unsigned int count;
   unsigned short gpr[32];
-  unsigned int value[32];
-  unsigned int min;
-  unsigned int max;
+  int value[32];
+  int min;
+  int max;
   unsigned int translation;
   const unsigned int * tlv;
 };

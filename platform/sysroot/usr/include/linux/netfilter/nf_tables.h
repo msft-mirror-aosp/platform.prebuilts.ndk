@@ -1,21 +1,9 @@
-/****************************************************************************
- ****************************************************************************
- ***
- ***   This header was automatically generated from a Linux kernel header
- ***   of the same name, to make information necessary for userspace to
- ***   call into the kernel available to libc.  It contains only constants,
- ***   structures, and macros generated from the original header, and thus,
- ***   contains no copyrightable information.
- ***
- ***   To edit the content of this header, modify the corresponding
- ***   source file (e.g. under external/kernel-headers/original/) then
- ***   run bionic/libc/kernel/tools/update_all.py
- ***
- ***   Any manual change here will be lost the next time this script will
- ***   be run. You've been warned!
- ***
- ****************************************************************************
- ****************************************************************************/
+/*
+ * This file is auto-generated. Modifications will be lost.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/libc/kernel/
+ * for more information.
+ */
 #ifndef _LINUX_NF_TABLES_H
 #define _LINUX_NF_TABLES_H
 #define NFT_NAME_MAXLEN 256
@@ -94,6 +82,7 @@ enum nf_tables_msg_types {
   NFT_MSG_DESTROYSETELEM,
   NFT_MSG_DESTROYOBJ,
   NFT_MSG_DESTROYFLOWTABLE,
+  NFT_MSG_GETSETELEM_RESET,
   NFT_MSG_MAX,
 };
 enum nft_list_attributes {
@@ -448,6 +437,7 @@ enum nft_exthdr_op {
   NFT_EXTHDR_OP_TCPOPT,
   NFT_EXTHDR_OP_IPV4,
   NFT_EXTHDR_OP_SCTP,
+  NFT_EXTHDR_OP_DCCP,
   __NFT_EXTHDR_OP_MAX
 };
 #define NFT_EXTHDR_OP_MAX (__NFT_EXTHDR_OP_MAX - 1)
