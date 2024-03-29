@@ -51,7 +51,7 @@ typedef unsigned long shmatt_t;
 #if __ANDROID_API__ >= 26
 void* _Nonnull shmat(int __shm_id, const void* _Nullable __addr, int __flags) __INTRODUCED_IN(26);
 /** Not useful on Android; disallowed by SELinux. */
-int shmctl(int __shm_id, int __cmd, struct shmid_ds* _Nullable __buf) __INTRODUCED_IN(26);
+int shmctl(int __shm_id, int __op, struct shmid_ds* _Nullable __buf) __INTRODUCED_IN(26);
 /** Not useful on Android; disallowed by SELinux. */
 int shmdt(const void* _Nonnull __addr) __INTRODUCED_IN(26);
 /** Not useful on Android; disallowed by SELinux. */
