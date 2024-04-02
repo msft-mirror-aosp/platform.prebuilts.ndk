@@ -34,8 +34,6 @@
  */
 
 #include <stddef.h>
-#include <stdint.h>
-#include <string.h>
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
@@ -51,6 +49,11 @@ typedef struct crash_detail_t crash_detail_t;
  * Tombstone proto definition:
  *   https://cs.android.com/android/platform/superproject/main/+/main:system/core/debuggerd/proto/tombstone.proto
  *
+ * An app can get hold of these for any `REASON_CRASH_NATIVE` instance of
+ * `android.app.ApplicationExitInfo`.
+ *
+ * https://developer.android.com/reference/android/app/ApplicationExitInfo#getTraceInputStream()
+
  * The lifetime of name and data has to be valid until the program crashes, or until
  * android_crash_detail_unregister is called.
  *
@@ -66,7 +69,7 @@ typedef struct crash_detail_t crash_detail_t;
  * Introduced in API 35.
  *
  * \param name identifying name for this extra data.
- *             this should generally be a human-readable debug string, but we are treating
+ *             this should generally be a human-readable UTF-8 string, but we are treating
  *             it as arbitrary bytes because it could be corrupted by the crash.
  * \param name_size number of bytes of the buffer pointed to by name
  * \param data a buffer containing the extra detail bytes, if null the crash detail
