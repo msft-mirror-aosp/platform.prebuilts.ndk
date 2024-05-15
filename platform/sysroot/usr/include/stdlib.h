@@ -57,7 +57,7 @@ int unsetenv(const char* _Nonnull __name);
 int clearenv(void);
 
 char* _Nullable mkdtemp(char* _Nonnull __template);
-char* _Nullable mktemp(char* _Nonnull __template) __attribute__((deprecated("mktemp is unsafe, use mkstemp or tmpfile instead")));
+char* _Nullable mktemp(char* _Nonnull __template) __attribute__((__deprecated__("mktemp is unsafe, use mkstemp or tmpfile instead")));
 
 
 #if __ANDROID_API__ >= 23
