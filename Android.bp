@@ -37,22 +37,6 @@ libcxx_includes =  [
 ]
 
 ndk_prebuilt_static_stl {
-    name: "ndk_libandroid_support",
-    min_sdk_version: "33",
-    export_include_dirs: [
-        "current/sources/android/support/include",
-    ],
-    arch: {
-        arm64: {
-            enabled: false,
-        },
-        x86_64: {
-            enabled: false,
-        },
-    },
-}
-
-ndk_prebuilt_static_stl {
     name: "ndk_libc++abi",
     min_sdk_version: "16",
 }
@@ -90,4 +74,19 @@ cc_library_static {
     cflags: ["-Wall", "-Werror"],
     sdk_version: "minimum",
     export_include_dirs: ["current/sources/android/cpufeatures"],
+}
+
+// A module that encapsulates the header files of NDK System STL
+cc_library_headers {
+    name: "ndk_system",
+    sdk_version: "minimum",
+    sdk_variant_only: true,
+    stl: "none",
+    export_system_include_dirs: ["current/sources/cxx-stl/system/include"],
+    // the headers are available to both the platform and anyapex.
+    // this availability is required to compile jni deps of any android_app in these api domains.
+    apex_available: [
+        "//apex_available:anyapex",
+        "//apex_available:platform",
+    ],
 }
