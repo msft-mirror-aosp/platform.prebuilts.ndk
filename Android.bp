@@ -31,6 +31,32 @@ license {
     ],
 }
 
+libcxx_includes =  [
+    "current/sources/cxx-stl/llvm-libc++/include",
+    "current/sources/cxx-stl/llvm-libc++abi/include",
+]
+
+ndk_prebuilt_static_stl {
+    name: "ndk_libc++abi",
+    min_sdk_version: "16",
+}
+
+ndk_prebuilt_static_stl {
+    name: "ndk_libunwind",
+    min_sdk_version: "16",
+}
+
+ndk_prebuilt_static_stl {
+    name: "ndk_libc++_static",
+    export_include_dirs: libcxx_includes,
+    min_sdk_version: "16",
+}
+
+ndk_prebuilt_shared_stl {
+    name: "ndk_libc++_shared",
+    export_include_dirs: libcxx_includes,
+}
+
 cc_library_static {
     name: "android_native_app_glue",
     srcs: ["current/sources/android/native_app_glue/android_native_app_glue.c"],
