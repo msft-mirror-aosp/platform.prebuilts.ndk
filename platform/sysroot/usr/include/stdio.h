@@ -105,10 +105,10 @@ extern FILE __sF[] __REMOVED_IN(23, "Use stdin/stdout/stderr");
 
 void clearerr(FILE* _Nonnull __fp);
 int fclose(FILE* _Nonnull __fp);
-int feof(FILE* _Nonnull __fp);
-int ferror(FILE* _Nonnull __fp);
+__wur int feof(FILE* _Nonnull __fp);
+__wur int ferror(FILE* _Nonnull __fp);
 int fflush(FILE* _Nullable __fp);
-int fgetc(FILE* _Nonnull __fp);
+__wur int fgetc(FILE* _Nonnull __fp);
 char* _Nullable fgets(char* _Nonnull __buf, int __size, FILE* _Nonnull __fp);
 int fprintf(FILE* _Nonnull __fp , const char* _Nonnull __fmt, ...) __printflike(2, 3);
 int fputc(int __ch, FILE* _Nonnull __fp);
@@ -116,8 +116,8 @@ int fputs(const char* _Nonnull __s, FILE* _Nonnull __fp);
 size_t fread(void* _Nonnull __buf, size_t __size, size_t __count, FILE* _Nonnull __fp);
 int fscanf(FILE* _Nonnull __fp, const char* _Nonnull __fmt, ...) __scanflike(2, 3);
 size_t fwrite(const void* _Nonnull __buf, size_t __size, size_t __count, FILE* _Nonnull __fp);
-int getc(FILE* _Nonnull __fp);
-int getchar(void);
+__wur int getc(FILE* _Nonnull __fp);
+__wur int getchar(void);
 ssize_t getdelim(char* _Nullable * _Nonnull __line_ptr, size_t* _Nonnull __line_length_ptr, int __delimiter, FILE* _Nonnull __fp);
 ssize_t getline(char* _Nullable * _Nonnull __line_ptr, size_t* _Nonnull __line_length_ptr, FILE* _Nonnull __fp);
 
@@ -205,7 +205,7 @@ int renameat2(int __old_dir_fd, const char* _Nonnull __old_path, int __new_dir_f
 #endif
 
 int fseek(FILE* _Nonnull __fp, long __offset, int __whence);
-long ftell(FILE* _Nonnull __fp);
+__wur long ftell(FILE* _Nonnull __fp);
 
 /* See https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
@@ -214,14 +214,14 @@ long ftell(FILE* _Nonnull __fp);
 int fgetpos(FILE* _Nonnull __fp, fpos_t* _Nonnull __pos) __RENAME(fgetpos64) __INTRODUCED_IN(24);
 int fsetpos(FILE* _Nonnull __fp, const fpos_t* _Nonnull __pos) __RENAME(fsetpos64) __INTRODUCED_IN(24);
 int fseeko(FILE* _Nonnull __fp, off_t __offset, int __whence) __RENAME(fseeko64) __INTRODUCED_IN(24);
-off_t ftello(FILE* _Nonnull __fp) __RENAME(ftello64) __INTRODUCED_IN(24);
+__wur off_t ftello(FILE* _Nonnull __fp) __RENAME(ftello64) __INTRODUCED_IN(24);
 #endif /* __ANDROID_API__ >= 24 */
 
 #  if defined(__USE_BSD)
 /* If __read_fn and __write_fn are both nullptr, it will cause EINVAL */
 
 #if __ANDROID_API__ >= 24
-FILE* _Nullable funopen(const void* _Nullable __cookie,
+__wur FILE* _Nullable funopen(const void* _Nullable __cookie,
               int (* __BIONIC_COMPLICATED_NULLNESS __read_fn)(void* _Nonnull, char* _Nonnull, int),
               int (* __BIONIC_COMPLICATED_NULLNESS __write_fn)(void* _Nonnull, const char* _Nonnull, int),
               fpos_t (* _Nullable __seek_fn)(void* _Nonnull, fpos_t, int),
@@ -233,10 +233,10 @@ FILE* _Nullable funopen(const void* _Nullable __cookie,
 int fgetpos(FILE* _Nonnull __fp, fpos_t* _Nonnull __pos);
 int fsetpos(FILE* _Nonnull __fp, const fpos_t* _Nonnull __pos);
 int fseeko(FILE* _Nonnull __fp, off_t __offset, int __whence);
-off_t ftello(FILE* _Nonnull __fp);
+__wur off_t ftello(FILE* _Nonnull __fp);
 #  if defined(__USE_BSD)
 /* If __read_fn and __write_fn are both nullptr, it will cause EINVAL */
-FILE* _Nullable funopen(const void* _Nullable __cookie,
+__wur FILE* _Nullable funopen(const void* _Nullable __cookie,
               int (* __BIONIC_COMPLICATED_NULLNESS __read_fn)(void* _Nonnull, char* _Nonnull, int),
               int (* __BIONIC_COMPLICATED_NULLNESS __write_fn)(void* _Nonnull, const char* _Nonnull, int),
               fpos_t (* _Nullable __seek_fn)(void* _Nonnull, fpos_t, int),
@@ -248,14 +248,14 @@ FILE* _Nullable funopen(const void* _Nullable __cookie,
 int fgetpos64(FILE* _Nonnull __fp, fpos64_t* _Nonnull __pos) __INTRODUCED_IN(24);
 int fsetpos64(FILE* _Nonnull __fp, const fpos64_t* _Nonnull __pos) __INTRODUCED_IN(24);
 int fseeko64(FILE* _Nonnull __fp, off64_t __offset, int __whence) __INTRODUCED_IN(24);
-off64_t ftello64(FILE* _Nonnull __fp) __INTRODUCED_IN(24);
+__wur off64_t ftello64(FILE* _Nonnull __fp) __INTRODUCED_IN(24);
 #endif /* __ANDROID_API__ >= 24 */
 
 #if defined(__USE_BSD)
 /* If __read_fn and __write_fn are both nullptr, it will cause EINVAL */
 
 #if __ANDROID_API__ >= 24
-FILE* _Nullable funopen64(const void* _Nullable __cookie,
+__wur FILE* _Nullable funopen64(const void* _Nullable __cookie,
                 int (* __BIONIC_COMPLICATED_NULLNESS __read_fn)(void* _Nonnull, char* _Nonnull, int),
                 int (* __BIONIC_COMPLICATED_NULLNESS __write_fn)(void* _Nonnull, const char* _Nonnull, int),
                 fpos64_t (* _Nullable __seek_fn)(void* _Nonnull, fpos64_t, int),
@@ -264,10 +264,10 @@ FILE* _Nullable funopen64(const void* _Nullable __cookie,
 
 #endif
 
-FILE* _Nullable fopen(const char* _Nonnull __path, const char* _Nonnull __mode);
+__wur FILE* _Nullable fopen(const char* _Nonnull __path, const char* _Nonnull __mode);
 
 #if __ANDROID_API__ >= 24
-FILE* _Nullable fopen64(const char* _Nonnull __path, const char* _Nonnull __mode) __INTRODUCED_IN(24);
+__wur FILE* _Nullable fopen64(const char* _Nonnull __path, const char* _Nonnull __mode) __INTRODUCED_IN(24);
 #endif /* __ANDROID_API__ >= 24 */
 
 FILE* _Nullable freopen(const char* _Nullable __path, const char* _Nonnull __mode, FILE* _Nonnull __fp);
@@ -276,10 +276,10 @@ FILE* _Nullable freopen(const char* _Nullable __path, const char* _Nonnull __mod
 FILE* _Nullable freopen64(const char* _Nullable __path, const char* _Nonnull __mode, FILE* _Nonnull __fp) __INTRODUCED_IN(24);
 #endif /* __ANDROID_API__ >= 24 */
 
-FILE* _Nullable tmpfile(void);
+__wur FILE* _Nullable tmpfile(void);
 
 #if __ANDROID_API__ >= 24
-FILE* _Nullable tmpfile64(void) __INTRODUCED_IN(24);
+__wur FILE* _Nullable tmpfile64(void) __INTRODUCED_IN(24);
 #endif /* __ANDROID_API__ >= 24 */
 
 
@@ -296,22 +296,22 @@ char* _Nonnull ctermid(char* _Nullable __buf) __INTRODUCED_IN(26);
 #endif /* __ANDROID_API__ >= 26 */
 
 
-FILE* _Nullable fdopen(int __fd, const char* _Nonnull __mode);
-int fileno(FILE* _Nonnull __fp);
+__wur FILE* _Nullable fdopen(int __fd, const char* _Nonnull __mode);
+__wur int fileno(FILE* _Nonnull __fp);
 int pclose(FILE* _Nonnull __fp);
-FILE* _Nullable popen(const char* _Nonnull __command, const char* _Nonnull __mode);
+__wur FILE* _Nullable popen(const char* _Nonnull __command, const char* _Nonnull __mode);
 void flockfile(FILE* _Nonnull  __fp);
 int ftrylockfile(FILE* _Nonnull __fp);
 void funlockfile(FILE* _Nonnull __fp);
-int getc_unlocked(FILE* _Nonnull __fp);
-int getchar_unlocked(void);
+__wur int getc_unlocked(FILE* _Nonnull __fp);
+__wur int getchar_unlocked(void);
 int putc_unlocked(int __ch, FILE* _Nonnull __fp);
 int putchar_unlocked(int __ch);
 
 
 #if __ANDROID_API__ >= 23
-FILE* _Nullable fmemopen(void* _Nullable __buf, size_t __size, const char* _Nonnull __mode) __INTRODUCED_IN(23);
-FILE* _Nullable open_memstream(char* _Nonnull * _Nonnull __ptr, size_t* _Nonnull __size_ptr) __INTRODUCED_IN(23);
+__wur FILE* _Nullable fmemopen(void* _Nullable __buf, size_t __size, const char* _Nonnull __mode) __INTRODUCED_IN(23);
+__wur FILE* _Nullable open_memstream(char* _Nonnull * _Nonnull __ptr, size_t* _Nonnull __size_ptr) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
@@ -325,13 +325,13 @@ int vasprintf(char* _Nullable * _Nonnull __s_ptr, const char* _Nonnull __fmt, va
 
 #if __ANDROID_API__ >= 23
 void clearerr_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
-int feof_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
-int ferror_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
+__wur int feof_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
+__wur int ferror_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 #endif /* __ANDROID_API__ >= 23 */
 
 
 #if __ANDROID_API__ >= 24
-int fileno_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(24);
+__wur int fileno_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(24);
 #endif /* __ANDROID_API__ >= 24 */
 
 #define fropen(cookie, fn) funopen(cookie, fn, 0, 0, 0)
@@ -342,7 +342,7 @@ int fileno_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(24);
 
 #if __ANDROID_API__ >= 28
 int fflush_unlocked(FILE* _Nullable __fp) __INTRODUCED_IN(28);
-int fgetc_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
+__wur int fgetc_unlocked(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
 int fputc_unlocked(int __ch, FILE* _Nonnull __fp) __INTRODUCED_IN(28);
 size_t fread_unlocked(void* _Nonnull __buf, size_t __size, size_t __count, FILE* _Nonnull __fp) __INTRODUCED_IN(28);
 size_t fwrite_unlocked(const void* _Nonnull __buf, size_t __size, size_t __count, FILE* _Nonnull __fp) __INTRODUCED_IN(28);
