@@ -369,6 +369,28 @@ void ASurfaceTransaction_setColor(ASurfaceTransaction* _Nonnull transaction,
                                   float b, float alpha, enum ADataSpace dataspace)
         __INTRODUCED_IN(29);
 
+// These APIs (setGeometry and setCrop) were originally written in a
+// C-incompatible form using references instead of pointers, and the OS shipped
+// that version for years before it was noticed. Fortunately the compiled code
+// for callers is the same regardless of whether it's a pointer or a reference,
+// so we can declare this as a nonnull pointer for C and keep the existing C++
+// decl and definition.
+//
+// We could alternatively change the decl and the definition to both be a
+// pointer (with an inline definition using references to preserve source compat
+// for existing C++ callers), but that requires changing the definition of an
+// API that has been in the OS for years. It's theoretically a safe change, but
+// without being able to prove it that's a very big risk to take. By keeping the
+// C-compatibility hack in the header, we can be sure that we haven't changed
+// anything for existing callers. By definition there were no C users of the
+// reference-based decl; if there were any C callers of the API at all, they were
+// using the same workaround that is now used below.
+//
+// Even if this workaround turns out to not work for C, there's no permanent
+// damage done to the platform (unlike if we were to change the definition). At
+// worst it continues to work for C++ (since the preprocessed header as seen by
+// C++ hasn't changed, nor has the definition) and continues to not work for C.
+
 /**
  * \param source The sub-rect within the buffer's content to be rendered inside the surface's area
  * The surface's source rect is clipped by the bounds of its current buffer. The source rect's width
@@ -379,7 +401,7 @@ void ASurfaceTransaction_setColor(ASurfaceTransaction* _Nonnull transaction,
  * clipped by the bounds of its parent. The destination rect's width and height must be > 0.
  *
  * \param transform The transform applied after the source rect is applied to the buffer. This
- * parameter should be set to 0 for no transform. To specify a transfrom use the
+ * parameter should be set to 0 for no transform. To specify a transform use the
  * NATIVE_WINDOW_TRANSFORM_* enum.
  *
  * Available since API level 29.
@@ -390,9 +412,14 @@ void ASurfaceTransaction_setColor(ASurfaceTransaction* _Nonnull transaction,
  * properties at once.
  */
 void ASurfaceTransaction_setGeometry(ASurfaceTransaction* _Nonnull transaction,
-                                     ASurfaceControl* _Nonnull surface_control, const ARect& source,
-                                     const ARect& destination, int32_t transform)
-        __INTRODUCED_IN(29);
+                                     ASurfaceControl* _Nonnull surface_control,
+#if defined(__cplusplus)
+                                     const ARect& source, const ARect& destination,
+#else
+                                     const ARect* _Nonnull source,
+                                     const ARect* _Nonnull destination,
+#endif
+                                     int32_t transform) __INTRODUCED_IN(29);
 
 /**
  * Bounds the surface and its children to the bounds specified. The crop and buffer size will be
@@ -404,7 +431,12 @@ void ASurfaceTransaction_setGeometry(ASurfaceTransaction* _Nonnull transaction,
  * Available since API level 31.
  */
 void ASurfaceTransaction_setCrop(ASurfaceTransaction* _Nonnull transaction,
-                                 ASurfaceControl* _Nonnull surface_control, const ARect& crop)
+                                 ASurfaceControl* _Nonnull surface_control,
+#if defined(__cplusplus)
+                                 const ARect& crop)
+#else
+                                 const ARect* _Nonnull crop)
+#endif
         __INTRODUCED_IN(31);
 
 /**
@@ -537,9 +569,8 @@ void ASurfaceTransaction_setHdrMetadata_cta861_3(ASurfaceTransaction* _Nonnull t
 
 /**
  * Sets the desired extended range brightness for the layer. This only applies for layers whose
- * dataspace has RANGE_EXTENDED set on it.
- *
- * Available since API level 34.
+ * dataspace has RANGE_EXTENDED set on it. See: ASurfaceTransaction_setDesiredHdrHeadroom, prefer
+ * using this API for formats that encode an HDR/SDR ratio as part of generating the buffer.
  *
  * @param surface_control The layer whose extended range brightness is being specified
  * @param currentBufferRatio The current hdr/sdr ratio of the current buffer as represented as
@@ -573,6 +604,12 @@ void ASurfaceTransaction_setHdrMetadata_cta861_3(ASurfaceTransaction* _Nonnull t
  *                     determined entirely by the dataspace being used (ie, typically SDR
  *                     however PQ or HLG transfer functions will still result in HDR)
  *
+ *                     When called after ASurfaceTransaction_setDesiredHdrHeadroom, the
+ *                     desiredRatio will override the desiredHeadroom provided by
+ *                     ASurfaceTransaction_setDesiredHdrHeadroom. Conversely, when called before
+ *                     ASurfaceTransaction_setDesiredHdrHeadroom, the desiredHeadroom provided by
+ *.                    ASurfaceTransaction_setDesiredHdrHeadroom will override the desiredRatio.
+ *
  *                     Must be finite && >= 1.0f
  *
  * Available since API level 34.
@@ -581,6 +618,45 @@ void ASurfaceTransaction_setExtendedRangeBrightness(ASurfaceTransaction* _Nonnul
                                                     ASurfaceControl* _Nonnull surface_control,
                                                     float currentBufferRatio, float desiredRatio)
                                                     __INTRODUCED_IN(__ANDROID_API_U__);
+
+/**
+ * Sets the desired hdr headroom for the layer. See: ASurfaceTransaction_setExtendedRangeBrightness,
+ * prefer using this API for formats that conform to HDR standards like HLG or HDR10, that do not
+ * communicate a HDR/SDR ratio as part of generating the buffer.
+ *
+ * @param surface_control The layer whose desired hdr headroom is being specified
+ *
+ * @param desiredHeadroom The desired hdr/sdr ratio as represented as peakHdrBrightnessInNits /
+ *                        targetSdrWhitePointInNits. This can be used to communicate the max
+ *                        desired brightness range of the panel. The system may not be able to, or
+ *                        may choose not to, deliver the requested range.
+ *
+ *                        While requesting a large desired ratio will result in the most
+ *                        dynamic range, voluntarily reducing the requested range can help
+ *                        improve battery life as well as can improve quality by ensuring
+ *                        greater bit depth is allocated to the luminance range in use.
+ *
+ *                        Default value is 0.0f and indicates that the system will choose the best
+ *                        headroom for this surface control's content. Typically, this means that
+ *                        HLG/PQ encoded content will be displayed with some HDR headroom greater
+ *                        than 1.0.
+ *
+ *                        When called after ASurfaceTransaction_setExtendedRangeBrightness, the
+ *                        desiredHeadroom will override the desiredRatio provided by
+ *                        ASurfaceTransaction_setExtendedRangeBrightness. Conversely, when called
+ *                        before ASurfaceTransaction_setExtendedRangeBrightness, the desiredRatio
+ *                        provided by ASurfaceTransaction_setExtendedRangeBrightness will override
+ *                        the desiredHeadroom.
+ *
+ *                        Must be finite && >= 1.0f or 0.0f to indicate there is no desired
+ *                        headroom.
+ *
+ * Available since API level 35.
+ */
+void ASurfaceTransaction_setDesiredHdrHeadroom(ASurfaceTransaction* _Nonnull transaction,
+                                               ASurfaceControl* _Nonnull surface_control,
+                                               float desiredHeadroom)
+        __INTRODUCED_IN(__ANDROID_API_V__);
 
 /**
  * Same as ASurfaceTransaction_setFrameRateWithChangeStrategy(transaction, surface_control,

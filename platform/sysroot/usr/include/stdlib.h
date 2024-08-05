@@ -121,9 +121,33 @@ __wur char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __re
  */
 int system(const char* _Nonnull __command);
 
-void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
+/**
+ * [bsearch(3)](http://man7.org/linux/man-pages/man3/bsearch.3.html) searches
+ * a sorted array.
+ *
+ * Returns a pointer to a matching item on success,
+ * or NULL if no matching item is found.
+ */
+__wur void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
 
-void qsort(void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nullable __lhs, const void* _Nullable __rhs));
+/**
+ * [qsort(3)](http://man7.org/linux/man-pages/man3/qsort.3.html) sorts an array
+ * of n elements each of the given size, using the given comparator.
+ */
+void qsort(void* _Nullable __array, size_t __n, size_t __size, int (* _Nonnull __comparator)(const void* _Nullable __lhs, const void* _Nullable __rhs));
+
+/**
+ * [qsort_r(3)](http://man7.org/linux/man-pages/man3/qsort_r.3.html) sorts an
+ * array of n elements each of the given size, using the given comparator,
+ * and passing the given context argument to the comparator.
+ *
+ * Available since API level 36.
+ */
+
+#if __ANDROID_API__ >= 36
+void qsort_r(void* _Nullable __array, size_t __n, size_t __size, int (* _Nonnull __comparator)(const void* _Nullable __lhs, const void* _Nullable __rhs, void* _Nullable __context), void* _Nullable __context) __INTRODUCED_IN(36);
+#endif /* __ANDROID_API__ >= 36 */
+
 
 uint32_t arc4random(void);
 uint32_t arc4random_uniform(uint32_t __upper_bound);
