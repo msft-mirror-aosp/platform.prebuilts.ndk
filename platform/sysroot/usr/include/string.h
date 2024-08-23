@@ -52,16 +52,12 @@ void* _Nullable memrchr(const void* _Nonnull __s, int __ch, size_t __n) __attrib
 int memcmp(const void* _Nonnull __lhs, const void* _Nonnull __rhs, size_t __n) __attribute_pure__;
 void* _Nonnull memcpy(void* _Nonnull, const void* _Nonnull, size_t);
 #if defined(__USE_GNU)
-
-#if __ANDROID_API__ >= 23
 void* _Nonnull mempcpy(void* _Nonnull __dst, const void* _Nonnull __src, size_t __n) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
 #endif
 void* _Nonnull memmove(void* _Nonnull __dst, const void* _Nonnull __src, size_t __n);
 
 /**
- * [memset(3)](http://man7.org/linux/man-pages/man3/memset.3.html) writes the
+ * [memset(3)](https://man7.org/linux/man-pages/man3/memset.3.html) writes the
  * bottom 8 bits of the given int to the next `n` bytes of `dst`.
  *
  * Returns `dst`.
@@ -69,17 +65,13 @@ void* _Nonnull memmove(void* _Nonnull __dst, const void* _Nonnull __src, size_t 
 void* _Nonnull memset(void* _Nonnull __dst, int __ch, size_t __n);
 
 /**
- * [memset_explicit(3)](http://man7.org/linux/man-pages/man3/memset_explicit.3.html)
+ * [memset_explicit(3)](https://man7.org/linux/man-pages/man3/memset_explicit.3.html)
  * writes the bottom 8 bits of the given int to the next `n` bytes of `dst`,
  * but won't be optimized out by the compiler.
  *
  * Returns `dst`.
  */
-
-#if __ANDROID_API__ >= 34
 void* _Nonnull memset_explicit(void* _Nonnull __dst, int __ch, size_t __n) __INTRODUCED_IN(34);
-#endif /* __ANDROID_API__ >= 34 */
-
 
 void* _Nullable memmem(const void* _Nonnull __haystack, size_t __haystack_size, const void* _Nonnull __needle, size_t __needle_size) __attribute_pure__;
 
@@ -87,18 +79,10 @@ char* _Nullable strchr(const char* _Nonnull __s, int __ch) __attribute_pure__;
 char* _Nullable __strchr_chk(const char* _Nonnull __s, int __ch, size_t __n);
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
-
-#if __ANDROID_API__ >= 24
 extern "C++" char* _Nonnull strchrnul(char* _Nonnull __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
 extern "C++" const char* _Nonnull strchrnul(const char* _Nonnull __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
-#endif /* __ANDROID_API__ >= 24 */
-
 #else
-
-#if __ANDROID_API__ >= 24
 char* _Nonnull strchrnul(const char* _Nonnull __s, int __ch) __attribute_pure__ __INTRODUCED_IN(24);
-#endif /* __ANDROID_API__ >= 24 */
-
 #endif
 #endif
 
@@ -124,12 +108,35 @@ char* _Nullable strcasestr(const char* _Nonnull __haystack, const char* _Nonnull
 char* _Nullable strtok(char* _Nullable __s, const char* _Nonnull __delimiter);
 char* _Nullable strtok_r(char* _Nullable __s, const char* _Nonnull __delimiter, char* _Nonnull * _Nonnull __pos_ptr);
 
+/**
+ * [strerror(3)](https://man7.org/linux/man-pages/man3/strerror.3.html)
+ * returns a string describing the given errno value.
+ * `strerror(EINVAL)` would return "Invalid argument", for example.
+ *
+ * On Android, unknown errno values return a string such as "Unknown error 666".
+ * These unknown errno value strings live in thread-local storage, and are valid
+ * until the next call of strerror() on the same thread.
+ *
+ * Returns a pointer to a string.
+ */
 char* _Nonnull strerror(int __errno_value);
 
-#if __ANDROID_API__ >= 23
-char* _Nonnull strerror_l(int __errno_value, locale_t _Nonnull __l) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
+/**
+ * Equivalent to strerror() on Android where only C/POSIX locales are available.
+ */
+char* _Nonnull strerror_l(int __errno_value, locale_t _Nonnull __l) __RENAME(strerror);
 
+/**
+ * [strerror_r(3)](https://man7.org/linux/man-pages/man3/strerror_r.3.html)
+ * writes a string describing the given errno value into the given buffer.
+ *
+ * There are two variants of this function, POSIX and GNU.
+ * The GNU variant returns a pointer to the buffer.
+ * The POSIX variant returns 0 on success or an errno value on failure.
+ *
+ * The GNU variant is available since API level 23 if `_GNU_SOURCE` is defined.
+ * The POSIX variant is available otherwise.
+ */
 #if defined(__USE_GNU) && __ANDROID_API__ >= 23
 char* _Nonnull strerror_r(int __errno_value, char* _Nullable __buf, size_t __n) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
 #else /* POSIX */
@@ -137,7 +144,7 @@ int strerror_r(int __errno_value, char* _Nonnull __buf, size_t __n);
 #endif
 
 /**
- * [strerrorname_np(3)](http://man7.org/linux/man-pages/man3/strerrordesc_np.3.html)
+ * [strerrorname_np(3)](https://man7.org/linux/man-pages/man3/strerrordesc_np.3.html)
  * returns the name of the errno constant corresponding to its argument.
  * `strerrorname_np(38)` would return "ENOSYS", because `ENOSYS` is errno 38. This
  * is mostly useful for error reporting in cases where a string like "ENOSYS" is
@@ -149,15 +156,11 @@ int strerror_r(int __errno_value, char* _Nonnull __buf, size_t __n);
  * Available since API level 35.
  */
 #if defined(__USE_GNU)
-
-#if __ANDROID_API__ >= 35
 const char* _Nullable strerrorname_np(int __errno_value) __INTRODUCED_IN(35);
-#endif /* __ANDROID_API__ >= 35 */
-
 #endif
 
 /**
- * [strerrordesc_np(3)](http://man7.org/linux/man-pages/man3/strerrordesc_np.3.html)
+ * [strerrordesc_np(3)](https://man7.org/linux/man-pages/man3/strerrordesc_np.3.html)
  * is like strerror() but without localization. Since Android's strerror()
  * does not localize, this is the same as strerror() on Android.
  *
@@ -196,18 +199,10 @@ size_t strxfrm_l(char* __BIONIC_COMPLICATED_NULLNESS __dst, const char* _Nonnull
  * It doesn't modify its argument, and in C++ it's const-correct.
  */
 #if defined(__cplusplus)
-
-#if __ANDROID_API__ >= 23
 extern "C++" char* _Nonnull basename(char* _Nullable __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 extern "C++" const char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
 #else
-
-#if __ANDROID_API__ >= 23
 char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
 #endif
 #endif
 
@@ -217,11 +212,10 @@ char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __
 
 /* Const-correct overloads. Placed after FORTIFY so we call those functions, if possible. */
 #if defined(__cplusplus)
-/*
- * Use two enable_ifs so these overloads don't conflict with + are preferred over libcxx's. This can
- * be reduced to 1 after libcxx recognizes that we have const-correct overloads.
- */
-#define __prefer_this_overload __enable_if(true, "preferred overload") __enable_if(true, "")
+/* libcxx tries to provide these. Suppress that, since libcxx's impl doesn't respect FORTIFY. */
+#define __CORRECT_ISO_CPP_STRING_H_PROTO
+/* Used to make these preferable over regular <string.h> signatures for overload resolution. */
+#define __prefer_this_overload __enable_if(true, "")
 extern "C++" {
 inline __always_inline
 void* _Nullable __bionic_memchr(const void* _Nonnull const s __pass_object_size, int c, size_t n) {

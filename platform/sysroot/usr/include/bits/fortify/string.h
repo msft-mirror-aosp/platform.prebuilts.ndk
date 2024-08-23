@@ -30,12 +30,8 @@
 #error "Never include this file directly; instead, include <string.h>"
 #endif
 
-
-#if __ANDROID_API__ >= 23
 void* _Nullable __memchr_chk(const void* _Nonnull, int, size_t, size_t) __INTRODUCED_IN(23);
 void* _Nullable __memrchr_chk(const void* _Nonnull, int, size_t, size_t) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
 char* _Nonnull __stpncpy_chk2(char* _Nonnull, const char* _Nonnull, size_t, size_t, size_t);
 char* _Nonnull __strncpy_chk2(char* _Nonnull, const char* _Nonnull, size_t, size_t, size_t);
 size_t __strlcpy_chk(char* _Nonnull, const char* _Nonnull, size_t, size_t);

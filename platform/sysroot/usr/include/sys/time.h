@@ -47,12 +47,8 @@ int setitimer(int __which, const struct itimerval* _Nonnull __new_value, struct 
 int utimes(const char* _Nonnull __path, const struct timeval __times[_Nullable 2]);
 
 #if defined(__USE_BSD)
-
-#if __ANDROID_API__ >= 26
 int futimes(int __fd, const struct timeval __times[_Nullable 2]) __INTRODUCED_IN(26);
 int lutimes(const char* _Nonnull __path, const struct timeval __times[_Nullable 2]) __INTRODUCED_IN(26);
-#endif /* __ANDROID_API__ >= 26 */
-
 #endif
 
 #if defined(__USE_GNU)
@@ -69,11 +65,7 @@ int lutimes(const char* _Nonnull __path, const struct timeval __times[_Nullable 
  *
  * Available since API level 26.
  */
-
-#if __ANDROID_API__ >= 26
 int futimesat(int __dir_fd, const char* __BIONIC_COMPLICATED_NULLNESS __path, const struct timeval __times[_Nullable 2]) __INTRODUCED_IN(26);
-#endif /* __ANDROID_API__ >= 26 */
-
 #endif
 
 #define timerclear(a)   \

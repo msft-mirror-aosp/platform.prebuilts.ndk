@@ -45,11 +45,7 @@ typedef struct {
 
 #define SEM_FAILED __BIONIC_CAST(reinterpret_cast, sem_t*, 0)
 
-
-#if __ANDROID_API__ >= 30
 int sem_clockwait(sem_t* _Nonnull __sem, clockid_t __clock, const struct timespec* _Nonnull __ts) __INTRODUCED_IN(30);
-#endif /* __ANDROID_API__ >= 30 */
-
 int sem_destroy(sem_t* _Nonnull __sem);
 int sem_getvalue(sem_t* _Nonnull __sem, int* _Nonnull __value);
 int sem_init(sem_t* _Nonnull __sem, int __shared, unsigned int __value);
@@ -63,11 +59,7 @@ int sem_timedwait(sem_t* _Nonnull __sem, const struct timespec* _Nonnull __ts);
  * Note that sem_clockwait() allows specifying an arbitrary clock and has superseded this
  * function.
  */
-
-#if __ANDROID_API__ >= 28
 int sem_timedwait_monotonic_np(sem_t* _Nonnull __sem, const struct timespec* _Nonnull __ts) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 int sem_trywait(sem_t* _Nonnull __sem);
 int sem_wait(sem_t* _Nonnull __sem);
 

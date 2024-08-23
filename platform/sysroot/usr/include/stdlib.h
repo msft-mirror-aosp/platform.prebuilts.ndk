@@ -59,21 +59,13 @@ int clearenv(void);
 char* _Nullable mkdtemp(char* _Nonnull __template);
 char* _Nullable mktemp(char* _Nonnull __template) __attribute__((__deprecated__("mktemp is unsafe, use mkstemp or tmpfile instead")));
 
-
-#if __ANDROID_API__ >= 23
 int mkostemp64(char* _Nonnull __template, int __flags) __INTRODUCED_IN(23);
 int mkostemp(char* _Nonnull __template, int __flags) __INTRODUCED_IN(23);
 int mkostemps64(char* _Nonnull __template, int __suffix_length, int __flags) __INTRODUCED_IN(23);
 int mkostemps(char* _Nonnull __template, int __suffix_length, int __flags) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
 int mkstemp64(char* _Nonnull __template);
 int mkstemp(char* _Nonnull __template);
-
-#if __ANDROID_API__ >= 23
 int mkstemps64(char* _Nonnull __template, int __flags) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
 int mkstemps(char* _Nonnull __template, int __flags);
 
 long strtol(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
@@ -83,20 +75,21 @@ unsigned long long strtoull(const char* _Nonnull __s, char* _Nullable * _Nullabl
 
 int posix_memalign(void* _Nullable * _Nullable __memptr, size_t __alignment, size_t __size);
 
-
-#if __ANDROID_API__ >= 28
-void* _Nullable aligned_alloc(size_t __alignment, size_t __size) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
+/**
+ * [aligned_alloc(3)](https://man7.org/linux/man-pages/man3/aligned_alloc.3.html)
+ * allocates the given number of bytes with the given alignment.
+ *
+ * Returns a pointer to the allocated memory on success and returns a null
+ * pointer and sets `errno` on failure.
+ *
+ * Available since API level 28.
+ */
+__wur void* _Nullable aligned_alloc(size_t __alignment, size_t __size) __INTRODUCED_IN(28);
 
 double strtod(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr);
 long double strtold(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr);
 
-
-#if __ANDROID_API__ >= 26
 unsigned long strtoul_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base, locale_t _Nonnull __l) __INTRODUCED_IN(26);
-#endif /* __ANDROID_API__ >= 26 */
-
 
 int atoi(const char* _Nonnull __s) __attribute_pure__;
 long atol(const char* _Nonnull __s) __attribute_pure__;
@@ -105,7 +98,7 @@ long long atoll(const char* _Nonnull __s) __attribute_pure__;
 __wur char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __resolved);
 
 /**
- * [system(3)](http://man7.org/linux/man-pages/man3/system.3.html) executes
+ * [system(3)](https://man7.org/linux/man-pages/man3/system.3.html) executes
  * the given command in a new shell process.
  *
  * On Android, the special case of `system(NULL)` always returns 1,
@@ -116,13 +109,13 @@ __wur char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __re
  * or permanently (for lack of permission, say).
  *
  * Returns -1 and sets errno if process creation fails; returns a
- * [waitpid(2)](http://man7.org/linux/man-pages/man2/waitpid.2.html)
+ * [waitpid(2)](https://man7.org/linux/man-pages/man2/waitpid.2.html)
  * status otherwise.
  */
 int system(const char* _Nonnull __command);
 
 /**
- * [bsearch(3)](http://man7.org/linux/man-pages/man3/bsearch.3.html) searches
+ * [bsearch(3)](https://man7.org/linux/man-pages/man3/bsearch.3.html) searches
  * a sorted array.
  *
  * Returns a pointer to a matching item on success,
@@ -131,23 +124,19 @@ int system(const char* _Nonnull __command);
 __wur void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
 
 /**
- * [qsort(3)](http://man7.org/linux/man-pages/man3/qsort.3.html) sorts an array
+ * [qsort(3)](https://man7.org/linux/man-pages/man3/qsort.3.html) sorts an array
  * of n elements each of the given size, using the given comparator.
  */
 void qsort(void* _Nullable __array, size_t __n, size_t __size, int (* _Nonnull __comparator)(const void* _Nullable __lhs, const void* _Nullable __rhs));
 
 /**
- * [qsort_r(3)](http://man7.org/linux/man-pages/man3/qsort_r.3.html) sorts an
+ * [qsort_r(3)](https://man7.org/linux/man-pages/man3/qsort_r.3.html) sorts an
  * array of n elements each of the given size, using the given comparator,
  * and passing the given context argument to the comparator.
  *
  * Available since API level 36.
  */
-
-#if __ANDROID_API__ >= 36
 void qsort_r(void* _Nullable __array, size_t __n, size_t __size, int (* _Nonnull __comparator)(const void* _Nullable __lhs, const void* _Nullable __rhs, void* _Nullable __context), void* _Nullable __context) __INTRODUCED_IN(36);
-#endif /* __ANDROID_API__ >= 36 */
-
 
 uint32_t arc4random(void);
 uint32_t arc4random_uniform(uint32_t __upper_bound);
@@ -160,11 +149,7 @@ int rand_r(unsigned int* _Nonnull __seed_ptr);
 double drand48(void);
 double erand48(unsigned short __xsubi[_Nonnull 3]);
 long jrand48(unsigned short __xsubi[_Nonnull 3]);
-
-#if __ANDROID_API__ >= 23
 void lcong48(unsigned short __param[_Nonnull 7]) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
 long lrand48(void);
 long mrand48(void);
 long nrand48(unsigned short __xsubi[_Nonnull 3]);
@@ -180,11 +165,7 @@ char* _Nullable ptsname(int __fd);
 int ptsname_r(int __fd, char* _Nonnull __buf, size_t __n);
 int unlockpt(int __fd);
 
-
-#if __ANDROID_API__ >= 26
 int getsubopt(char* _Nonnull * _Nonnull __option, char* _Nonnull const* _Nonnull __tokens, char* _Nullable * _Nonnull __value_ptr) __INTRODUCED_IN(26);
-#endif /* __ANDROID_API__ >= 26 */
-
 
 typedef struct {
   int quot;
@@ -208,23 +189,19 @@ typedef struct {
 lldiv_t lldiv(long long __numerator, long long __denominator) __attribute_const__;
 
 /**
- * [getloadavg(3)](http://man7.org/linux/man-pages/man3/getloadavg.3.html) queries the
+ * [getloadavg(3)](https://man7.org/linux/man-pages/man3/getloadavg.3.html) queries the
  * number of runnable processes averaged over time. The Linux kernel supports averages
  * over the last 1, 5, and 15 minutes.
  *
  * Returns the number of samples written to `__averages` (at most 3), and returns -1 on failure.
  */
-
-#if __ANDROID_API__ >= 29
 int getloadavg(double __averages[_Nonnull], int __n) __INTRODUCED_IN(29);
-#endif /* __ANDROID_API__ >= 29 */
-
 
 /* BSD compatibility. */
 const char* _Nullable getprogname(void);
 void setprogname(const char* _Nonnull __name);
 
-int mblen(const char* _Nullable __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(26);
+int mblen(const char* _Nullable __s, size_t __n) __INTRODUCED_IN(26);
 size_t mbstowcs(wchar_t* _Nullable __dst, const char* _Nullable __src, size_t __n);
 int mbtowc(wchar_t* _Nullable __wc_ptr, const char*  _Nullable __s, size_t __n);
 int wctomb(char* _Nullable __dst, wchar_t __wc);

@@ -350,11 +350,7 @@ int isnanf(float __x) __attribute_const__;
 double gamma_r(double __x, int* _Nonnull __sign);
 double lgamma_r(double __x, int* _Nonnull __sign);
 double significand(double __x);
-
-#if __ANDROID_API__ >= 23
 long double lgammal_r(long double __x, int* _Nonnull __sign) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
 long double significandl(long double __x);
 float dremf(float __x, float __y);
 int finitef(float __x) __attribute_const__;

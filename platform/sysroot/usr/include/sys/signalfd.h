@@ -41,7 +41,7 @@
 __BEGIN_DECLS
 
 /**
- * [signalfd(2)](http://man7.org/linux/man-pages/man2/signalfd.2.html) creates/manipulates a
+ * [signalfd(2)](https://man7.org/linux/man-pages/man2/signalfd.2.html) creates/manipulates a
  * file descriptor for reading signal events.
  *
  * Returns the file descriptor on success, and returns -1 and sets `errno` on failure.
@@ -51,10 +51,6 @@ int signalfd(int __fd, const sigset_t* _Nonnull __mask, int __flags);
 /**
  * Like signalfd() but allows setting a signal mask with RT signals even from a 32-bit process.
  */
-
-#if __ANDROID_API__ >= 28
 int signalfd64(int __fd, const sigset64_t* _Nonnull __mask, int __flags) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 
 __END_DECLS

@@ -61,11 +61,7 @@ int endmntent(FILE* _Nullable __fp);
 struct mntent* _Nullable getmntent(FILE* _Nonnull __fp);
 struct mntent* _Nullable getmntent_r(FILE* _Nonnull __fp, struct mntent* _Nonnull __entry, char* _Nonnull __buf, int __size);
 FILE* _Nullable setmntent(const char* _Nonnull __filename, const char* _Nonnull __type);
-
-#if __ANDROID_API__ >= 26
 char* _Nullable hasmntopt(const struct mntent* _Nonnull __entry, const char* _Nonnull __option) __INTRODUCED_IN(26);
-#endif /* __ANDROID_API__ >= 26 */
-
 
 __END_DECLS
 

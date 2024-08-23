@@ -157,11 +157,7 @@ mode_t umask(mode_t __mask);
 #endif
 
 int mkfifo(const char* _Nonnull __path, mode_t __mode);
-
-#if __ANDROID_API__ >= 23
 int mkfifoat(int __dir_fd, const char* _Nonnull __path, mode_t __mode) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
 
 int fchmodat(int __dir_fd, const char* _Nonnull __path, mode_t __mode, int __flags);
 int mkdirat(int __dir_fd, const char* _Nonnull __path, mode_t __mode);
@@ -209,18 +205,14 @@ int futimens(int __fd, const struct timespec __times[_Nullable 2]);
 
 #if defined(__USE_GNU)
 /**
- * [statx(2)](http://man7.org/linux/man-pages/man2/statx.2.html) returns
+ * [statx(2)](https://man7.org/linux/man-pages/man2/statx.2.html) returns
  * extended file status information.
  *
  * Returns 0 on success and returns -1 and sets `errno` on failure.
  *
  * Available since API level 30.
  */
-
-#if __ANDROID_API__ >= 30
 int statx(int __dir_fd, const char* _Nonnull __path, int __flags, unsigned __mask, struct statx* _Nonnull __buf) __INTRODUCED_IN(30);
-#endif /* __ANDROID_API__ >= 30 */
-
 #endif
 
 __END_DECLS
