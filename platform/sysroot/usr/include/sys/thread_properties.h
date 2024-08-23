@@ -50,8 +50,6 @@ __BEGIN_DECLS
  *
  * Available since API level 31.
  */
-
-#if __ANDROID_API__ >= 31
 void __libc_get_static_tls_bounds(void* _Nonnull * _Nonnull __static_tls_begin,
                                   void* _Nonnull * _Nonnull __static_tls_end) __INTRODUCED_IN(31);
 
@@ -95,7 +93,5 @@ void __libc_register_dynamic_tls_listeners(
                           void* _Nonnull __dynamic_tls_end),
     void (* _Nonnull __on_destruction)(void* _Nonnull __dynamic_tls_begin,
                              void* _Nonnull __dynamic_tls_end)) __INTRODUCED_IN(31);
-#endif /* __ANDROID_API__ >= 31 */
-
 
 __END_DECLS

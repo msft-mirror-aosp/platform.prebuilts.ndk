@@ -189,11 +189,7 @@ __BEGIN_DECLS
  *
  * Available since API level 24.
  */
-
-#if __ANDROID_API__ >= 24
 int android_get_application_target_sdk_version() __INTRODUCED_IN(24);
-#endif /* __ANDROID_API__ >= 24 */
-
 
 #if __ANDROID_API__ < 29
 

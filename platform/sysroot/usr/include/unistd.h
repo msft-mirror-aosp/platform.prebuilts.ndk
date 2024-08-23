@@ -79,7 +79,7 @@ extern char* _Nullable * _Nullable environ;
 __noreturn void _exit(int __status);
 
 /**
- * [fork(2)](http://man7.org/linux/man-pages/man2/fork.2.html) creates a new
+ * [fork(2)](https://man7.org/linux/man-pages/man2/fork.2.html) creates a new
  * process. fork() runs any handlers set by pthread_atfork().
  *
  * Returns 0 in the child, the pid of the child in the parent,
@@ -100,14 +100,10 @@ pid_t fork(void);
  *
  * Available since API level 35.
  */
-
-#if __ANDROID_API__ >= 35
 pid_t _Fork(void) __INTRODUCED_IN(35);
-#endif /* __ANDROID_API__ >= 35 */
-
 
 /**
- * [vfork(2)](http://man7.org/linux/man-pages/man2/vfork.2.html) creates a new
+ * [vfork(2)](https://man7.org/linux/man-pages/man2/vfork.2.html) creates a new
  * process. vfork() differs from fork() in that it does not run any handlers
  * set by pthread_atfork(), and the parent is suspended until the child calls
  * exec() or exits.
@@ -118,7 +114,7 @@ pid_t _Fork(void) __INTRODUCED_IN(35);
 pid_t vfork(void) __returns_twice;
 
 /**
- * [getpid(2)](http://man7.org/linux/man-pages/man2/getpid.2.html) returns
+ * [getpid(2)](https://man7.org/linux/man-pages/man2/getpid.2.html) returns
  * the caller's process ID.
  *
  * Returns the caller's process ID.
@@ -126,7 +122,7 @@ pid_t vfork(void) __returns_twice;
 pid_t  getpid(void);
 
 /**
- * [gettid(2)](http://man7.org/linux/man-pages/man2/gettid.2.html) returns
+ * [gettid(2)](https://man7.org/linux/man-pages/man2/gettid.2.html) returns
  * the caller's thread ID.
  *
  * Returns the caller's thread ID.
@@ -149,16 +145,12 @@ int execl(const char* _Nonnull __path, const char* _Nullable __arg0, ...) __attr
 int execlp(const char* _Nonnull __file, const char* _Nullable __arg0, ...) __attribute__((__sentinel__));
 int execle(const char* _Nonnull __path, const char* _Nullable __arg0, ... /*,  char* const* __envp */)
     __attribute__((__sentinel__(1)));
-
-#if __ANDROID_API__ >= 28
 int fexecve(int __fd, char* _Nullable const* _Nullable __argv, char* _Nullable const* _Nullable __envp) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 
 int nice(int __incr);
 
 /**
- * [setegid(2)](http://man7.org/linux/man-pages/man2/setegid.2.html) sets
+ * [setegid(2)](https://man7.org/linux/man-pages/man2/setegid.2.html) sets
  * the effective group ID.
  *
  * On Android, this function only affects the calling thread, not all threads
@@ -169,7 +161,7 @@ int nice(int __incr);
 int setegid(gid_t __gid);
 
 /**
- * [seteuid(2)](http://man7.org/linux/man-pages/man2/seteuid.2.html) sets
+ * [seteuid(2)](https://man7.org/linux/man-pages/man2/seteuid.2.html) sets
  * the effective user ID.
  *
  * On Android, this function only affects the calling thread, not all threads
@@ -180,7 +172,7 @@ int setegid(gid_t __gid);
 int seteuid(uid_t __uid);
 
 /**
- * [setgid(2)](http://man7.org/linux/man-pages/man2/setgid.2.html) sets
+ * [setgid(2)](https://man7.org/linux/man-pages/man2/setgid.2.html) sets
  * the group ID.
  *
  * On Android, this function only affects the calling thread, not all threads
@@ -191,7 +183,7 @@ int seteuid(uid_t __uid);
 int setgid(gid_t __gid);
 
 /**
- * [setregid(2)](http://man7.org/linux/man-pages/man2/setregid.2.html) sets
+ * [setregid(2)](https://man7.org/linux/man-pages/man2/setregid.2.html) sets
  * the real and effective group IDs (use -1 to leave an ID unchanged).
  *
  * On Android, this function only affects the calling thread, not all threads
@@ -202,7 +194,7 @@ int setgid(gid_t __gid);
 int setregid(gid_t __rgid, gid_t __egid);
 
 /**
- * [setresgid(2)](http://man7.org/linux/man-pages/man2/setresgid.2.html) sets
+ * [setresgid(2)](https://man7.org/linux/man-pages/man2/setresgid.2.html) sets
  * the real, effective, and saved group IDs (use -1 to leave an ID unchanged).
  *
  * On Android, this function only affects the calling thread, not all threads
@@ -213,7 +205,7 @@ int setregid(gid_t __rgid, gid_t __egid);
 int setresgid(gid_t __rgid, gid_t __egid, gid_t __sgid);
 
 /**
- * [setresuid(2)](http://man7.org/linux/man-pages/man2/setresuid.2.html) sets
+ * [setresuid(2)](https://man7.org/linux/man-pages/man2/setresuid.2.html) sets
  * the real, effective, and saved user IDs (use -1 to leave an ID unchanged).
  *
  * On Android, this function only affects the calling thread, not all threads
@@ -224,7 +216,7 @@ int setresgid(gid_t __rgid, gid_t __egid, gid_t __sgid);
 int setresuid(uid_t __ruid, uid_t __euid, uid_t __suid);
 
 /**
- * [setreuid(2)](http://man7.org/linux/man-pages/man2/setreuid.2.html) sets
+ * [setreuid(2)](https://man7.org/linux/man-pages/man2/setreuid.2.html) sets
  * the real and effective group IDs (use -1 to leave an ID unchanged).
  *
  * On Android, this function only affects the calling thread, not all threads
@@ -235,7 +227,7 @@ int setresuid(uid_t __ruid, uid_t __euid, uid_t __suid);
 int setreuid(uid_t __ruid, uid_t __euid);
 
 /**
- * [setuid(2)](http://man7.org/linux/man-pages/man2/setuid.2.html) sets
+ * [setuid(2)](https://man7.org/linux/man-pages/man2/setuid.2.html) sets
  * the user ID.
  *
  * On Android, this function only affects the calling thread, not all threads
@@ -254,11 +246,7 @@ int setgroups(size_t __size, const gid_t* _Nullable __list);
 int getresuid(uid_t* _Nonnull __ruid, uid_t* _Nonnull __euid, uid_t* _Nonnull __suid);
 int getresgid(gid_t* _Nonnull __rgid, gid_t* _Nonnull __egid, gid_t* _Nonnull __sgid);
 char* _Nullable getlogin(void);
-
-#if __ANDROID_API__ >= 28
 int getlogin_r(char* _Nonnull __buffer, size_t __buffer_size) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 
 long fpathconf(int __fd, int __name);
 long pathconf(const char* _Nonnull __path, int __name);
@@ -289,11 +277,7 @@ char* _Nullable getcwd(char* _Nullable __buf, size_t __size);
 
 void sync(void);
 #if defined(__USE_GNU)
-
-#if __ANDROID_API__ >= 28
 int syncfs(int __fd) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 #endif
 
 int close(int __fd);
@@ -355,11 +339,7 @@ unsigned int sleep(unsigned int __seconds);
 int usleep(useconds_t __microseconds);
 
 int gethostname(char* _Nonnull _buf, size_t __buf_size);
-
-#if __ANDROID_API__ >= 23
 int sethostname(const char* _Nonnull __name, size_t __n) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
 
 int brk(void* _Nonnull __addr);
 void* _Nullable sbrk(ptrdiff_t __increment);
@@ -402,12 +382,8 @@ int tcsetpgrp(int __fd, pid_t __pid);
     } while (_rc == -1 && errno == EINTR); \
     _rc; })
 
-
-#if __ANDROID_API__ >= 26
 int getdomainname(char* _Nonnull __buf, size_t __buf_size) __INTRODUCED_IN(26);
 int setdomainname(const char* _Nonnull __name, size_t __n) __INTRODUCED_IN(26);
-#endif /* __ANDROID_API__ >= 26 */
-
 
 /**
  * [copy_file_range(2)](https://man7.org/linux/man-pages/man2/copy_file_range.2.html) copies
@@ -418,11 +394,7 @@ int setdomainname(const char* _Nonnull __name, size_t __n) __INTRODUCED_IN(26);
  * Returns the number of bytes copied on success, and returns -1 and sets
  * `errno` on failure.
  */
-
-#if __ANDROID_API__ >= 34
 ssize_t copy_file_range(int __fd_in, off64_t* _Nullable __off_in, int __fd_out, off64_t* _Nullable __off_out, size_t __length, unsigned int __flags) __INTRODUCED_IN(34);
-#endif /* __ANDROID_API__ >= 34 */
-
 
 #if __ANDROID_API__ >= 28
 void swab(const void* _Nonnull __src, void* _Nonnull __dst, ssize_t __byte_count) __INTRODUCED_IN(28);
@@ -442,11 +414,7 @@ void swab(const void* _Nonnull __src, void* _Nonnull __dst, ssize_t __byte_count
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
-
-#if __ANDROID_API__ >= 34
 int close_range(unsigned int __min_fd, unsigned int __max_fd, int __flags) __INTRODUCED_IN(34);
-#endif /* __ANDROID_API__ >= 34 */
-
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #define _UNISTD_H_

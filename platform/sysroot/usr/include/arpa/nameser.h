@@ -547,8 +547,6 @@ __BEGIN_DECLS
 #define ns_sprintrrf __ns_sprintrrf
 #endif
 
-
-#if __ANDROID_API__ >= 22
 int ns_msg_getflag(ns_msg __handle, int __flag) __INTRODUCED_IN(22);
 uint16_t ns_get16(const u_char* _Nonnull __src) __INTRODUCED_IN(22);
 uint32_t ns_get32(const u_char* _Nonnull __src) __INTRODUCED_IN(22);
@@ -572,8 +570,6 @@ void ns_name_rollback(const u_char* _Nonnull __src, const u_char* _Nullable * _N
 
 int ns_makecanon(const char* _Nonnull __src, char* _Nonnull __dst, size_t __dst_size) __INTRODUCED_IN(22);
 int ns_samename(const char* _Nonnull __lhs, const char* _Nonnull __rhs) __INTRODUCED_IN(22);
-#endif /* __ANDROID_API__ >= 22 */
-
 
 __END_DECLS
 

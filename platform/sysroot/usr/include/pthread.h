@@ -70,9 +70,7 @@ enum {
 
 #define PTHREAD_ONCE_INIT 0
 
-#if __ANDROID_API__ >= 24
 #define PTHREAD_BARRIER_SERIAL_THREAD (-1)
-#endif
 
 #if defined(__LP64__)
 #define PTHREAD_STACK_MIN 16384
@@ -100,11 +98,7 @@ int pthread_atfork(void (* _Nullable __prepare)(void), void (* _Nullable __paren
 int pthread_attr_destroy(pthread_attr_t* _Nonnull __attr);
 int pthread_attr_getdetachstate(const pthread_attr_t* _Nonnull __attr, int* _Nonnull __state);
 int pthread_attr_getguardsize(const pthread_attr_t* _Nonnull __attr, size_t* _Nonnull __size);
-
-#if __ANDROID_API__ >= 28
 int pthread_attr_getinheritsched(const pthread_attr_t* _Nonnull __attr, int* _Nonnull __flag) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 int pthread_attr_getschedparam(const pthread_attr_t* _Nonnull __attr, struct sched_param* _Nonnull __param);
 int pthread_attr_getschedpolicy(const pthread_attr_t* _Nonnull __attr, int* _Nonnull __policy);
 int pthread_attr_getscope(const pthread_attr_t* _Nonnull __attr, int* _Nonnull __scope);
@@ -113,11 +107,7 @@ int pthread_attr_getstacksize(const pthread_attr_t* _Nonnull __attr, size_t* _No
 int pthread_attr_init(pthread_attr_t* _Nonnull __attr);
 int pthread_attr_setdetachstate(pthread_attr_t* _Nonnull __attr, int __state);
 int pthread_attr_setguardsize(pthread_attr_t* _Nonnull __attr, size_t __size);
-
-#if __ANDROID_API__ >= 28
 int pthread_attr_setinheritsched(pthread_attr_t* _Nonnull __attr, int __flag) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 int pthread_attr_setschedparam(pthread_attr_t* _Nonnull __attr, const struct sched_param* _Nonnull __param);
 int pthread_attr_setschedpolicy(pthread_attr_t* _Nonnull __attr, int __policy);
 int pthread_attr_setscope(pthread_attr_t* _Nonnull __attr, int __scope);
@@ -132,12 +122,8 @@ int pthread_condattr_setclock(pthread_condattr_t* _Nonnull __attr, clockid_t __c
 int pthread_condattr_setpshared(pthread_condattr_t* _Nonnull __attr, int __shared);
 
 int pthread_cond_broadcast(pthread_cond_t* _Nonnull __cond);
-
-#if __ANDROID_API__ >= 30
 int pthread_cond_clockwait(pthread_cond_t* _Nonnull __cond, pthread_mutex_t* _Nonnull __mutex, clockid_t __clock,
                            const struct timespec* _Nullable __timeout) __INTRODUCED_IN(30);
-#endif /* __ANDROID_API__ >= 30 */
-
 int pthread_cond_destroy(pthread_cond_t* _Nonnull __cond);
 int pthread_cond_init(pthread_cond_t* _Nonnull __cond, const pthread_condattr_t* _Nullable __attr);
 int pthread_cond_signal(pthread_cond_t* _Nonnull __cond);
@@ -152,28 +138,11 @@ int pthread_cond_timedwait(pthread_cond_t* _Nonnull __cond, pthread_mutex_t* _No
  * Note that pthread_cond_clockwait() allows specifying an arbitrary clock and has superseded this
  * function.
  */
-
-#if (!defined(__LP64__)) || (defined(__LP64__) && __ANDROID_API__ >= 28)
 int pthread_cond_timedwait_monotonic_np(pthread_cond_t* _Nonnull __cond, pthread_mutex_t* _Nonnull __mutex,
                                         const struct timespec* _Nullable __timeout) __INTRODUCED_IN_64(28);
-#endif /* (!defined(__LP64__)) || (defined(__LP64__) && __ANDROID_API__ >= 28) */
-
 int pthread_cond_wait(pthread_cond_t* _Nonnull __cond, pthread_mutex_t* _Nonnull __mutex);
 
-#if defined(__clang__)
-/*
- * Disable -Wbuiltin-requires-header because clang confuses this declaration with the one defined in
- * "llvm/tools/clang/include/clang/Basic/Builtins.def", which did not define any formal arguments.
- * It seems to be an upstream bug and the fix (https://reviews.llvm.org/D58531) is still under
- * review. Thus, let's disable the warning for this function declaration.
- */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wbuiltin-requires-header"
-#endif
 int pthread_create(pthread_t* _Nonnull __pthread_ptr, pthread_attr_t const* _Nullable __attr, void* _Nonnull (* _Nonnull __start_routine)(void* _Nonnull), void* _Nullable);
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
 
 int pthread_detach(pthread_t __pthread);
 void pthread_exit(void* _Nullable __return_value) __noreturn;
@@ -218,26 +187,14 @@ int pthread_key_delete(pthread_key_t __key);
 int pthread_mutexattr_destroy(pthread_mutexattr_t* _Nonnull __attr);
 int pthread_mutexattr_getpshared(const pthread_mutexattr_t* _Nonnull __attr, int* _Nonnull __shared);
 int pthread_mutexattr_gettype(const pthread_mutexattr_t* _Nonnull __attr, int* _Nonnull __type);
-
-#if __ANDROID_API__ >= 28
 int pthread_mutexattr_getprotocol(const pthread_mutexattr_t* _Nonnull __attr, int* _Nonnull __protocol) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 int pthread_mutexattr_init(pthread_mutexattr_t* _Nonnull __attr);
 int pthread_mutexattr_setpshared(pthread_mutexattr_t* _Nonnull __attr, int __shared);
 int pthread_mutexattr_settype(pthread_mutexattr_t* _Nonnull __attr, int __type);
-
-#if __ANDROID_API__ >= 28
 int pthread_mutexattr_setprotocol(pthread_mutexattr_t* _Nonnull __attr, int __protocol) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
 
-
-
-#if __ANDROID_API__ >= 30
 int pthread_mutex_clocklock(pthread_mutex_t* _Nonnull __mutex, clockid_t __clock,
                             const struct timespec* _Nullable __abstime) __INTRODUCED_IN(30);
-#endif /* __ANDROID_API__ >= 30 */
-
 int pthread_mutex_destroy(pthread_mutex_t* _Nonnull __mutex);
 int pthread_mutex_init(pthread_mutex_t* _Nonnull __mutex, const pthread_mutexattr_t* _Nullable __attr);
 int pthread_mutex_lock(pthread_mutex_t* _Nonnull __mutex);
@@ -252,12 +209,8 @@ int pthread_mutex_timedlock(pthread_mutex_t* _Nonnull __mutex, const struct time
  * Note that pthread_mutex_clocklock() allows specifying an arbitrary clock and has superseded this
  * function.
  */
-
-#if __ANDROID_API__ >= 28
 int pthread_mutex_timedlock_monotonic_np(pthread_mutex_t* _Nonnull __mutex, const struct timespec* _Nullable __timeout)
     __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 int pthread_mutex_trylock(pthread_mutex_t* _Nonnull __mutex);
 int pthread_mutex_unlock(pthread_mutex_t* _Nonnull __mutex);
 
@@ -267,75 +220,49 @@ int pthread_rwlockattr_init(pthread_rwlockattr_t* _Nonnull __attr);
 int pthread_rwlockattr_destroy(pthread_rwlockattr_t* _Nonnull __attr);
 int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t* _Nonnull __attr, int* _Nonnull __shared);
 int pthread_rwlockattr_setpshared(pthread_rwlockattr_t* _Nonnull __attr, int __shared);
-
-#if __ANDROID_API__ >= 23
 int pthread_rwlockattr_getkind_np(const pthread_rwlockattr_t* _Nonnull __attr, int* _Nonnull __kind)
   __INTRODUCED_IN(23);
 int pthread_rwlockattr_setkind_np(pthread_rwlockattr_t* _Nonnull __attr, int __kind) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
 
-
-
-#if __ANDROID_API__ >= 30
 int pthread_rwlock_clockrdlock(pthread_rwlock_t* _Nonnull __rwlock, clockid_t __clock,
                                const struct timespec* _Nullable __timeout) __INTRODUCED_IN(30);
 int pthread_rwlock_clockwrlock(pthread_rwlock_t* _Nonnull __rwlock, clockid_t __clock,
                                const struct timespec* _Nullable __timeout) __INTRODUCED_IN(30);
-#endif /* __ANDROID_API__ >= 30 */
-
 int pthread_rwlock_destroy(pthread_rwlock_t* _Nonnull __rwlock);
 int pthread_rwlock_init(pthread_rwlock_t* _Nonnull __rwlock, const pthread_rwlockattr_t* _Nullable __attr);
 int pthread_rwlock_rdlock(pthread_rwlock_t* _Nonnull __rwlock);
 int pthread_rwlock_timedrdlock(pthread_rwlock_t* _Nonnull __rwlock, const struct timespec* _Nullable __timeout);
 /* See the comment on pthread_mutex_timedlock_monotonic_np for usage of this function. */
-
-#if __ANDROID_API__ >= 28
 int pthread_rwlock_timedrdlock_monotonic_np(pthread_rwlock_t* _Nonnull __rwlock,
                                             const struct timespec* _Nullable __timeout) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 int pthread_rwlock_timedwrlock(pthread_rwlock_t* _Nonnull __rwlock, const struct timespec* _Nullable __timeout);
 /* See the comment on pthread_mutex_timedlock_monotonic_np for usage of this function. */
-
-#if __ANDROID_API__ >= 28
 int pthread_rwlock_timedwrlock_monotonic_np(pthread_rwlock_t* _Nonnull __rwlock,
                                             const struct timespec* _Nullable __timeout) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 int pthread_rwlock_tryrdlock(pthread_rwlock_t* _Nonnull __rwlock);
 int pthread_rwlock_trywrlock(pthread_rwlock_t* _Nonnull __rwlock);
 int pthread_rwlock_unlock(pthread_rwlock_t* _Nonnull __rwlock);
 int pthread_rwlock_wrlock(pthread_rwlock_t* _Nonnull __rwlock);
 
-#if __ANDROID_API__ >= 24
 int pthread_barrierattr_init(pthread_barrierattr_t* _Nonnull __attr) __INTRODUCED_IN(24);
 int pthread_barrierattr_destroy(pthread_barrierattr_t* _Nonnull __attr) __INTRODUCED_IN(24);
 int pthread_barrierattr_getpshared(const pthread_barrierattr_t* _Nonnull __attr, int* _Nonnull __shared) __INTRODUCED_IN(24);
 int pthread_barrierattr_setpshared(pthread_barrierattr_t* _Nonnull __attr, int __shared) __INTRODUCED_IN(24);
-#endif
 
-#if __ANDROID_API__ >= 24
 int pthread_barrier_init(pthread_barrier_t* _Nonnull __barrier, const pthread_barrierattr_t* _Nullable __attr, unsigned __count) __INTRODUCED_IN(24);
 int pthread_barrier_destroy(pthread_barrier_t* _Nonnull __barrier) __INTRODUCED_IN(24);
 int pthread_barrier_wait(pthread_barrier_t* _Nonnull __barrier) __INTRODUCED_IN(24);
-#endif
 
-#if __ANDROID_API__ >= 24
 int pthread_spin_destroy(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN(24);
 int pthread_spin_init(pthread_spinlock_t* _Nonnull __spinlock, int __shared) __INTRODUCED_IN(24);
 int pthread_spin_lock(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN(24);
 int pthread_spin_trylock(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN(24);
 int pthread_spin_unlock(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN(24);
-#endif
 
 pthread_t pthread_self(void) __attribute_const__;
 
 #if defined(__USE_GNU)
-
-#if __ANDROID_API__ >= 26
 int pthread_getname_np(pthread_t __pthread, char* _Nonnull __buf, size_t __n) __INTRODUCED_IN(26);
-#endif /* __ANDROID_API__ >= 26 */
-
 #endif
 /* TODO: this should be __USE_GNU too. */
 int pthread_setname_np(pthread_t __pthread, const char* _Nonnull __name);
@@ -374,11 +301,7 @@ int pthread_getschedparam(pthread_t __pthread, int* _Nonnull __policy, struct sc
  *
  * Available since API level 28.
  */
-
-#if __ANDROID_API__ >= 28
 int pthread_setschedprio(pthread_t __pthread, int __priority) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 
 int pthread_setspecific(pthread_key_t __key, const void* _Nullable __value);
 

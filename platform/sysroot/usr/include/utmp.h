@@ -131,10 +131,6 @@ void endutent(void);
  *
  * Available since API level 23.
  */
-
-#if __ANDROID_API__ >= 23
 int login_tty(int __fd) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
 
 __END_DECLS

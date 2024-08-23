@@ -30,17 +30,9 @@
 #error "Never include this file directly; instead, include <poll.h>"
 #endif
 
-
-#if __ANDROID_API__ >= 23
 int __poll_chk(struct pollfd* _Nullable, nfds_t, int, size_t) __INTRODUCED_IN(23);
 int __ppoll_chk(struct pollfd* _Nullable, nfds_t, const struct timespec* _Nullable, const sigset_t* _Nullable, size_t) __INTRODUCED_IN(23);
-#endif /* __ANDROID_API__ >= 23 */
-
-
-#if __ANDROID_API__ >= 28
 int __ppoll64_chk(struct pollfd* _Nullable, nfds_t, const struct timespec* _Nullable, const sigset64_t* _Nullable, size_t) __INTRODUCED_IN(28);
-#endif /* __ANDROID_API__ >= 28 */
-
 
 #if defined(__BIONIC_FORTIFY)
 #define __bos_fd_count_trivially_safe(bos_val, fds, fd_count)              \

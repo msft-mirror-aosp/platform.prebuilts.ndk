@@ -79,8 +79,6 @@ typedef struct crash_detail_t crash_detail_t;
  *
  * \return a handle to the extra crash detail.
  */
-
-#if __ANDROID_API__ >= 35
 crash_detail_t* _Nullable android_crash_detail_register(
     const void* _Nonnull name, size_t name_size, const void* _Nullable data, size_t data_size) __INTRODUCED_IN(35);
 
@@ -124,7 +122,5 @@ void android_crash_detail_replace_data(crash_detail_t* _Nonnull crash_detail, co
  * \param name_size number of bytes of the buffer pointed to by name
  */
 void android_crash_detail_replace_name(crash_detail_t* _Nonnull crash_detail, const void* _Nonnull name, size_t name_size) __INTRODUCED_IN(35);
-#endif /* __ANDROID_API__ >= 35 */
-
 
 __END_DECLS
