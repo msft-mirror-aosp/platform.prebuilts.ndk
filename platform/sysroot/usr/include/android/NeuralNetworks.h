@@ -51,15 +51,23 @@
 
 #ifdef __ANDROID__
 #include <android/hardware_buffer.h>
+#else
 #endif  // __ANDROID__
+
+#if !defined(__DEPRECATED_IN)
+#define __DEPRECATED_IN(api_level, msg) __attribute__((annotate("deprecated_in=" #api_level)))
+#endif
 
 // This is required for building libneuralnetworks_cl,
 // the symbols have same names as in NDK, but
 // they are not bounded by API availability.
 #ifdef NN_COMPATIBILITY_LIBRARY_BUILD
 #define __NNAPI_INTRODUCED_IN(x)
+#define __NNAPI_DEPRECATED_IN(x)
 #else
 #define __NNAPI_INTRODUCED_IN(x) __INTRODUCED_IN(x)
+#define __NNAPI_DEPRECATED_IN(x) \
+    __DEPRECATED_IN(x, "NN API is deprecated. Users should migrate to TFlite.")
 #endif
 
 #ifndef __NNAPI_FL5_MIN_ANDROID_API__
@@ -87,8 +95,12 @@ __BEGIN_DECLS
  *             Set to NULL if unsuccessful.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-int ANeuralNetworksMemoryDesc_create(ANeuralNetworksMemoryDesc** desc) __NNAPI_INTRODUCED_IN(30);
+int ANeuralNetworksMemoryDesc_create(ANeuralNetworksMemoryDesc** desc) __NNAPI_INTRODUCED_IN(30)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Destroy a memory descriptor.
@@ -102,8 +114,12 @@ int ANeuralNetworksMemoryDesc_create(ANeuralNetworksMemoryDesc** desc) __NNAPI_I
  *
  * @param desc The memory descriptor to be destroyed. Passing NULL is acceptable and
  *             results in no operation.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-void ANeuralNetworksMemoryDesc_free(ANeuralNetworksMemoryDesc* desc) __NNAPI_INTRODUCED_IN(30);
+void ANeuralNetworksMemoryDesc_free(ANeuralNetworksMemoryDesc* desc) __NNAPI_INTRODUCED_IN(30)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Specify that a memory object will be playing the role of an input to an execution created from a
@@ -146,11 +162,14 @@ void ANeuralNetworksMemoryDesc_free(ANeuralNetworksMemoryDesc* desc) __NNAPI_INT
  *                  layouts.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksMemoryDesc_addInputRole(ANeuralNetworksMemoryDesc* desc,
                                            const ANeuralNetworksCompilation* compilation,
                                            uint32_t index, float frequency)
-        __NNAPI_INTRODUCED_IN(30);
+        __NNAPI_INTRODUCED_IN(30) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Specify that a memory object will be playing the role of an output to an execution created from a
@@ -193,11 +212,14 @@ int ANeuralNetworksMemoryDesc_addInputRole(ANeuralNetworksMemoryDesc* desc,
  *                  layouts.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksMemoryDesc_addOutputRole(ANeuralNetworksMemoryDesc* desc,
                                             const ANeuralNetworksCompilation* compilation,
                                             uint32_t index, float frequency)
-        __NNAPI_INTRODUCED_IN(30);
+        __NNAPI_INTRODUCED_IN(30) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Set the dimensional information of the memory descriptor.
@@ -221,9 +243,13 @@ int ANeuralNetworksMemoryDesc_addOutputRole(ANeuralNetworksMemoryDesc* desc,
  *                   corresponding axis has an unknown size.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksMemoryDesc_setDimensions(ANeuralNetworksMemoryDesc* desc, uint32_t rank,
-                                            const uint32_t* dimensions) __NNAPI_INTRODUCED_IN(30);
+                                            const uint32_t* dimensions) __NNAPI_INTRODUCED_IN(30)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Indicate that we have finished modifying a memory descriptor. Required before calling
@@ -238,8 +264,12 @@ int ANeuralNetworksMemoryDesc_setDimensions(ANeuralNetworksMemoryDesc* desc, uin
  * @param desc The memory descriptor to be finished.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-int ANeuralNetworksMemoryDesc_finish(ANeuralNetworksMemoryDesc* desc) __NNAPI_INTRODUCED_IN(30);
+int ANeuralNetworksMemoryDesc_finish(ANeuralNetworksMemoryDesc* desc) __NNAPI_INTRODUCED_IN(30)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Creates a memory object from a memory descriptor.
@@ -293,9 +323,13 @@ int ANeuralNetworksMemoryDesc_finish(ANeuralNetworksMemoryDesc* desc) __NNAPI_IN
  * @return ANEURALNETWORKS_NO_ERROR if successful; ANEURALNETWORKS_OP_FAILED if the memory is
  *         created with unspecified dimensions or rank and it is not supported for this set of
  *         roles.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksMemory_createFromDesc(const ANeuralNetworksMemoryDesc* desc,
-                                         ANeuralNetworksMemory** memory) __NNAPI_INTRODUCED_IN(30);
+                                         ANeuralNetworksMemory** memory) __NNAPI_INTRODUCED_IN(30)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Copies data from one memory object to another.
@@ -332,9 +366,12 @@ int ANeuralNetworksMemory_createFromDesc(const ANeuralNetworksMemoryDesc* desc,
  * @param dst The destination memory object.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksMemory_copy(const ANeuralNetworksMemory* src, const ANeuralNetworksMemory* dst)
-        __NNAPI_INTRODUCED_IN(30);
+        __NNAPI_INTRODUCED_IN(30) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the number of available devices.
@@ -344,8 +381,12 @@ int ANeuralNetworksMemory_copy(const ANeuralNetworksMemory* src, const ANeuralNe
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 3.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-int ANeuralNetworks_getDeviceCount(uint32_t* numDevices) __NNAPI_INTRODUCED_IN(29);
+int ANeuralNetworks_getDeviceCount(uint32_t* numDevices) __NNAPI_INTRODUCED_IN(29)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the representation of the specified device.
@@ -359,9 +400,12 @@ int ANeuralNetworks_getDeviceCount(uint32_t* numDevices) __NNAPI_INTRODUCED_IN(2
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 3.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworks_getDevice(uint32_t devIndex, ANeuralNetworksDevice** device)
-        __NNAPI_INTRODUCED_IN(29);
+        __NNAPI_INTRODUCED_IN(29) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the name of the specified device.
@@ -379,9 +423,12 @@ int ANeuralNetworks_getDevice(uint32_t devIndex, ANeuralNetworksDevice** device)
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 3.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksDevice_getName(const ANeuralNetworksDevice* device, const char** name)
-        __NNAPI_INTRODUCED_IN(29);
+        __NNAPI_INTRODUCED_IN(29) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the type of a given device.
@@ -398,9 +445,12 @@ int ANeuralNetworksDevice_getName(const ANeuralNetworksDevice* device, const cha
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 3.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksDevice_getType(const ANeuralNetworksDevice* device, int32_t* type)
-        __NNAPI_INTRODUCED_IN(29);
+        __NNAPI_INTRODUCED_IN(29) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the version of the driver implementation of the specified device.
@@ -428,9 +478,12 @@ int ANeuralNetworksDevice_getType(const ANeuralNetworksDevice* device, int32_t* 
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 3.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksDevice_getVersion(const ANeuralNetworksDevice* device, const char** version)
-        __NNAPI_INTRODUCED_IN(29);
+        __NNAPI_INTRODUCED_IN(29) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the NNAPI feature level of the specified NNAPI device.
@@ -455,9 +508,13 @@ int ANeuralNetworksDevice_getVersion(const ANeuralNetworksDevice* device, const 
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 3.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksDevice_getFeatureLevel(const ANeuralNetworksDevice* device,
-                                          int64_t* featureLevel) __NNAPI_INTRODUCED_IN(29);
+                                          int64_t* featureLevel) __NNAPI_INTRODUCED_IN(29)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Wait until the device is in a live state.
@@ -472,8 +529,12 @@ int ANeuralNetworksDevice_getFeatureLevel(const ANeuralNetworksDevice* device,
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 4.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-int ANeuralNetworksDevice_wait(const ANeuralNetworksDevice* device) __NNAPI_INTRODUCED_IN(30);
+int ANeuralNetworksDevice_wait(const ANeuralNetworksDevice* device) __NNAPI_INTRODUCED_IN(30)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the supported operations for a specified set of devices. If multiple devices
@@ -491,10 +552,14 @@ int ANeuralNetworksDevice_wait(const ANeuralNetworksDevice* device) __NNAPI_INTR
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 3.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksModel_getSupportedOperationsForDevices(
         const ANeuralNetworksModel* model, const ANeuralNetworksDevice* const* devices,
-        uint32_t numDevices, bool* supportedOps) __NNAPI_INTRODUCED_IN(29);
+        uint32_t numDevices, bool* supportedOps) __NNAPI_INTRODUCED_IN(29)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Create a {@link ANeuralNetworksCompilation} to compile the given model for a specified set
@@ -522,12 +587,15 @@ int ANeuralNetworksModel_getSupportedOperationsForDevices(
  *         if the model is invalid.
  *
  * Available since NNAPI feature level 3.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksCompilation_createForDevices(ANeuralNetworksModel* model,
                                                 const ANeuralNetworksDevice* const* devices,
                                                 uint32_t numDevices,
                                                 ANeuralNetworksCompilation** compilation)
-        __NNAPI_INTRODUCED_IN(29);
+        __NNAPI_INTRODUCED_IN(29) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Sets the compilation caching signature and the cache directory.
@@ -553,10 +621,13 @@ int ANeuralNetworksCompilation_createForDevices(ANeuralNetworksModel* model,
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 3.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksCompilation_setCaching(ANeuralNetworksCompilation* compilation,
                                           const char* cacheDir, const uint8_t* token)
-        __NNAPI_INTRODUCED_IN(29);
+        __NNAPI_INTRODUCED_IN(29) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Schedule synchronous evaluation of the execution.
@@ -596,8 +667,12 @@ int ANeuralNetworksCompilation_setCaching(ANeuralNetworksCompilation* compilatio
  * @return ANEURALNETWORKS_NO_ERROR if the execution completed normally.
  *         ANEURALNETWORKS_UNMAPPABLE if the execution input or output memory cannot
  *         be properly mapped.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-int ANeuralNetworksExecution_compute(ANeuralNetworksExecution* execution) __NNAPI_INTRODUCED_IN(29);
+int ANeuralNetworksExecution_compute(ANeuralNetworksExecution* execution) __NNAPI_INTRODUCED_IN(29)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the dimensional information of the specified output operand of the model of the
@@ -619,10 +694,13 @@ int ANeuralNetworksExecution_compute(ANeuralNetworksExecution* execution) __NNAP
  *         ANEURALNETWORKS_BAD_DATA if the index is invalid.
  *
  * Available since NNAPI feature level 3.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_getOutputOperandRank(ANeuralNetworksExecution* execution,
                                                   int32_t index, uint32_t* rank)
-        __NNAPI_INTRODUCED_IN(29);
+        __NNAPI_INTRODUCED_IN(29) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the dimensional information of the specified output operand of the model of the
@@ -645,10 +723,13 @@ int ANeuralNetworksExecution_getOutputOperandRank(ANeuralNetworksExecution* exec
  *         ANEURALNETWORKS_BAD_DATA if the index is invalid or if the target is a scalar.
  *
  * Available since NNAPI feature level 3.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_getOutputOperandDimensions(ANeuralNetworksExecution* execution,
                                                         int32_t index, uint32_t* dimensions)
-        __NNAPI_INTRODUCED_IN(29);
+        __NNAPI_INTRODUCED_IN(29) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Create a {@link ANeuralNetworksBurst} to apply the given compilation.
@@ -665,9 +746,13 @@ int ANeuralNetworksExecution_getOutputOperandDimensions(ANeuralNetworksExecution
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful, ANEURALNETWORKS_BAD_DATA
  *         if the compilation is invalid.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksBurst_create(ANeuralNetworksCompilation* compilation,
-                                ANeuralNetworksBurst** burst) __NNAPI_INTRODUCED_IN(29);
+                                ANeuralNetworksBurst** burst) __NNAPI_INTRODUCED_IN(29)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Destroys the burst object.
@@ -676,8 +761,12 @@ int ANeuralNetworksBurst_create(ANeuralNetworksCompilation* compilation,
  *
  * @param burst The burst object to be destroyed. Passing NULL is acceptable and
  *              results in no operation.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-void ANeuralNetworksBurst_free(ANeuralNetworksBurst* burst) __NNAPI_INTRODUCED_IN(29);
+void ANeuralNetworksBurst_free(ANeuralNetworksBurst* burst) __NNAPI_INTRODUCED_IN(29)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Schedule synchronous evaluation of the execution on a burst object.
@@ -722,9 +811,13 @@ void ANeuralNetworksBurst_free(ANeuralNetworksBurst* burst) __NNAPI_INTRODUCED_I
  *                  ANeuralNetworksCompilation} as the burst object.
  *
  * @return ANEURALNETWORKS_NO_ERROR if the execution completed normally.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_burstCompute(ANeuralNetworksExecution* execution,
-                                          ANeuralNetworksBurst* burst) __NNAPI_INTRODUCED_IN(29);
+                                          ANeuralNetworksBurst* burst) __NNAPI_INTRODUCED_IN(29)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Creates a shared memory object from an AHardwareBuffer handle.
@@ -758,11 +851,14 @@ int ANeuralNetworksExecution_burstCompute(ANeuralNetworksExecution* execution,
  * @return ANEURALNETWORKS_NO_ERROR if the request completed normally.
  *
  * @see AHardwareBuffer
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 #ifdef __ANDROID__
 int ANeuralNetworksMemory_createFromAHardwareBuffer(const AHardwareBuffer* ahwb,
                                                     ANeuralNetworksMemory** memory)
-        __NNAPI_INTRODUCED_IN(29);
+        __NNAPI_INTRODUCED_IN(29) __NNAPI_DEPRECATED_IN(35);
 #endif  // __ANDROID__
 
 /**
@@ -789,9 +885,12 @@ int ANeuralNetworksMemory_createFromAHardwareBuffer(const AHardwareBuffer* ahwb,
  * @param measure 'true' if duration is to be measured, 'false' if not.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_setMeasureTiming(ANeuralNetworksExecution* execution, bool measure)
-        __NNAPI_INTRODUCED_IN(29);
+        __NNAPI_INTRODUCED_IN(29) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the time spent in the latest computation evaluated on the specified
@@ -814,10 +913,13 @@ int ANeuralNetworksExecution_setMeasureTiming(ANeuralNetworksExecution* executio
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 3.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_getDuration(const ANeuralNetworksExecution* execution,
                                          int32_t durationCode, uint64_t* duration)
-        __NNAPI_INTRODUCED_IN(29);
+        __NNAPI_INTRODUCED_IN(29) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Creates a shared memory object from a file descriptor.
@@ -842,9 +944,13 @@ int ANeuralNetworksExecution_getDuration(const ANeuralNetworksExecution* executi
  *               Set to NULL if unsuccessful.
  *
  * @return ANEURALNETWORKS_NO_ERROR if the request completed normally.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksMemory_createFromFd(size_t size, int protect, int fd, size_t offset,
-                                       ANeuralNetworksMemory** memory) __NNAPI_INTRODUCED_IN(27);
+                                       ANeuralNetworksMemory** memory) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Delete a memory object.
@@ -857,8 +963,12 @@ int ANeuralNetworksMemory_createFromFd(size_t size, int protect, int fd, size_t 
  *
  * @param memory The memory object to be freed. Passing NULL is acceptable and
  *               results in no operation.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-void ANeuralNetworksMemory_free(ANeuralNetworksMemory* memory) __NNAPI_INTRODUCED_IN(27);
+void ANeuralNetworksMemory_free(ANeuralNetworksMemory* memory) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Create an empty {@link ANeuralNetworksModel}.
@@ -885,8 +995,12 @@ void ANeuralNetworksMemory_free(ANeuralNetworksMemory* memory) __NNAPI_INTRODUCE
  *              Set to NULL if unsuccessful.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-int ANeuralNetworksModel_create(ANeuralNetworksModel** model) __NNAPI_INTRODUCED_IN(27);
+int ANeuralNetworksModel_create(ANeuralNetworksModel** model) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Destroy a model.
@@ -900,8 +1014,12 @@ int ANeuralNetworksModel_create(ANeuralNetworksModel** model) __NNAPI_INTRODUCED
  *
  * @param model The model to be destroyed. Passing NULL is acceptable and
  *              results in no operation.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-void ANeuralNetworksModel_free(ANeuralNetworksModel* model) __NNAPI_INTRODUCED_IN(27);
+void ANeuralNetworksModel_free(ANeuralNetworksModel* model) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Indicate that we have finished modifying a model. Required before
@@ -920,8 +1038,12 @@ void ANeuralNetworksModel_free(ANeuralNetworksModel* model) __NNAPI_INTRODUCED_I
  * @param model The model to be finished.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-int ANeuralNetworksModel_finish(ANeuralNetworksModel* model) __NNAPI_INTRODUCED_IN(27);
+int ANeuralNetworksModel_finish(ANeuralNetworksModel* model) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Add an operand to a model.
@@ -972,10 +1094,13 @@ int ANeuralNetworksModel_finish(ANeuralNetworksModel* model) __NNAPI_INTRODUCED_
  *             {@link ANeuralNetworksModel_addOperand}.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksModel_addOperand(ANeuralNetworksModel* model,
                                     const ANeuralNetworksOperandType* type)
-        __NNAPI_INTRODUCED_IN(27);
+        __NNAPI_INTRODUCED_IN(27) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Sets an operand to a constant value.
@@ -1011,10 +1136,13 @@ int ANeuralNetworksModel_addOperand(ANeuralNetworksModel* model,
  * @param length The size in bytes of the data value.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksModel_setOperandValue(ANeuralNetworksModel* model, int32_t index,
                                          const void* buffer, size_t length)
-        __NNAPI_INTRODUCED_IN(27);
+        __NNAPI_INTRODUCED_IN(27) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Sets an operand's per channel quantization parameters.
@@ -1034,10 +1162,14 @@ int ANeuralNetworksModel_setOperandValue(ANeuralNetworksModel* model, int32_t in
  *                    this function.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksModel_setOperandSymmPerChannelQuantParams(
         ANeuralNetworksModel* model, int32_t index,
-        const ANeuralNetworksSymmPerChannelQuantParams* channelQuant) __NNAPI_INTRODUCED_IN(29);
+        const ANeuralNetworksSymmPerChannelQuantParams* channelQuant) __NNAPI_INTRODUCED_IN(29)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Sets an operand to a value stored in a memory object.
@@ -1076,11 +1208,14 @@ int ANeuralNetworksModel_setOperandSymmPerChannelQuantParams(
  * @param length The size in bytes of the data value.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksModel_setOperandValueFromMemory(ANeuralNetworksModel* model, int32_t index,
                                                    const ANeuralNetworksMemory* memory,
                                                    size_t offset, size_t length)
-        __NNAPI_INTRODUCED_IN(27);
+        __NNAPI_INTRODUCED_IN(27) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Sets an operand to a value that is a reference to another NNAPI model.
@@ -1106,10 +1241,13 @@ int ANeuralNetworksModel_setOperandValueFromMemory(ANeuralNetworksModel* model, 
  * @param value The model to be referenced.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksModel_setOperandValueFromModel(ANeuralNetworksModel* model, int32_t index,
                                                   const ANeuralNetworksModel* value)
-        __NNAPI_INTRODUCED_IN(30);
+        __NNAPI_INTRODUCED_IN(30) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Add an operation to a model.
@@ -1132,11 +1270,15 @@ int ANeuralNetworksModel_setOperandValueFromModel(ANeuralNetworksModel* model, i
  * Available since NNAPI feature level 1.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksModel_addOperation(ANeuralNetworksModel* model,
                                       ANeuralNetworksOperationType type, uint32_t inputCount,
                                       const uint32_t* inputs, uint32_t outputCount,
-                                      const uint32_t* outputs) __NNAPI_INTRODUCED_IN(27);
+                                      const uint32_t* outputs) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Specifies which operands will be the model's inputs and
@@ -1161,11 +1303,14 @@ int ANeuralNetworksModel_addOperation(ANeuralNetworksModel* model,
  *
  * Available since NNAPI feature level 1.
  *
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksModel_identifyInputsAndOutputs(ANeuralNetworksModel* model, uint32_t inputCount,
                                                   const uint32_t* inputs, uint32_t outputCount,
-                                                  const uint32_t* outputs)
-        __NNAPI_INTRODUCED_IN(27);
+                                                  const uint32_t* outputs) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Specifies whether {@link ANEURALNETWORKS_TENSOR_FLOAT32} is allowed to be
@@ -1191,9 +1336,12 @@ int ANeuralNetworksModel_identifyInputsAndOutputs(ANeuralNetworksModel* model, u
  * Available since NNAPI feature level 2.
  *
  * See {@link ANeuralNetworksModel} for information on multithreaded usage.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksModel_relaxComputationFloat32toFloat16(ANeuralNetworksModel* model, bool allow)
-        __NNAPI_INTRODUCED_IN(28);
+        __NNAPI_INTRODUCED_IN(28) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Create a {@link ANeuralNetworksCompilation} to compile the given model.
@@ -1225,10 +1373,13 @@ int ANeuralNetworksModel_relaxComputationFloat32toFloat16(ANeuralNetworksModel* 
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful, ANEURALNETWORKS_BAD_DATA
  *         if the model is invalid.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksCompilation_create(ANeuralNetworksModel* model,
                                       ANeuralNetworksCompilation** compilation)
-        __NNAPI_INTRODUCED_IN(27);
+        __NNAPI_INTRODUCED_IN(27) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Destroy a compilation.
@@ -1242,9 +1393,12 @@ int ANeuralNetworksCompilation_create(ANeuralNetworksModel* model,
  *
  * @param compilation The compilation to be destroyed. Passing NULL is acceptable and
  *                    results in no operation.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 void ANeuralNetworksCompilation_free(ANeuralNetworksCompilation* compilation)
-        __NNAPI_INTRODUCED_IN(27);
+        __NNAPI_INTRODUCED_IN(27) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Sets the execution preference.
@@ -1262,9 +1416,13 @@ void ANeuralNetworksCompilation_free(ANeuralNetworksCompilation* compilation)
  *                  {@link ANEURALNETWORKS_PREFER_SUSTAINED_SPEED}.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksCompilation_setPreference(ANeuralNetworksCompilation* compilation,
-                                             int32_t preference) __NNAPI_INTRODUCED_IN(27);
+                                             int32_t preference) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Indicate that we have finished modifying a compilation. Required before
@@ -1288,9 +1446,12 @@ int ANeuralNetworksCompilation_setPreference(ANeuralNetworksCompilation* compila
  * @param compilation The compilation to be finished.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksCompilation_finish(ANeuralNetworksCompilation* compilation)
-        __NNAPI_INTRODUCED_IN(27);
+        __NNAPI_INTRODUCED_IN(27) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Set the execution priority.
@@ -1314,9 +1475,12 @@ int ANeuralNetworksCompilation_finish(ANeuralNetworksCompilation* compilation)
  *     ANEURALNETWORKS_PRIORITY_*.
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksCompilation_setPriority(ANeuralNetworksCompilation* compilation, int priority)
-        __NNAPI_INTRODUCED_IN(30);
+        __NNAPI_INTRODUCED_IN(30) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Set the maximum expected duration for compiling the model.
@@ -1357,9 +1521,13 @@ int ANeuralNetworksCompilation_setPriority(ANeuralNetworksCompilation* compilati
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 4.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksCompilation_setTimeout(ANeuralNetworksCompilation* compilation,
-                                          uint64_t duration) __NNAPI_INTRODUCED_IN(30);
+                                          uint64_t duration) __NNAPI_INTRODUCED_IN(30)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Create a {@link ANeuralNetworksExecution} to apply the given compilation.
@@ -1380,9 +1548,13 @@ int ANeuralNetworksCompilation_setTimeout(ANeuralNetworksCompilation* compilatio
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful, ANEURALNETWORKS_BAD_DATA
  *         if the compilation is invalid.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_create(ANeuralNetworksCompilation* compilation,
-                                    ANeuralNetworksExecution** execution) __NNAPI_INTRODUCED_IN(27);
+                                    ANeuralNetworksExecution** execution) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Destroy an execution.
@@ -1404,8 +1576,12 @@ int ANeuralNetworksExecution_create(ANeuralNetworksCompilation* compilation,
  *
  * @param execution The execution to be destroyed. Passing NULL is acceptable and
  *                  results in no operation.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-void ANeuralNetworksExecution_free(ANeuralNetworksExecution* execution) __NNAPI_INTRODUCED_IN(27);
+void ANeuralNetworksExecution_free(ANeuralNetworksExecution* execution) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Associate a user buffer with an input of the model of the
@@ -1462,10 +1638,14 @@ void ANeuralNetworksExecution_free(ANeuralNetworksExecution* execution) __NNAPI_
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful, ANEURALNETWORKS_BAD_DATA if the
  *         name is not recognized or the buffer is too small for the input.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_setInput(ANeuralNetworksExecution* execution, int32_t index,
                                       const ANeuralNetworksOperandType* type, const void* buffer,
-                                      size_t length) __NNAPI_INTRODUCED_IN(27);
+                                      size_t length) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Associate a region of a memory object with an input of the model of the
@@ -1532,11 +1712,15 @@ int ANeuralNetworksExecution_setInput(ANeuralNetworksExecution* execution, int32
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful, ANEURALNETWORKS_BAD_DATA if the
  *         name is not recognized or the buffer is too small for the input.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_setInputFromMemory(ANeuralNetworksExecution* execution, int32_t index,
                                                 const ANeuralNetworksOperandType* type,
                                                 const ANeuralNetworksMemory* memory, size_t offset,
-                                                size_t length) __NNAPI_INTRODUCED_IN(27);
+                                                size_t length) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Associate a user buffer with an output of the model of the
@@ -1597,10 +1781,14 @@ int ANeuralNetworksExecution_setInputFromMemory(ANeuralNetworksExecution* execut
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful, ANEURALNETWORKS_BAD_DATA if the
  *         name is not recognized or the buffer is too small for the output.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_setOutput(ANeuralNetworksExecution* execution, int32_t index,
                                        const ANeuralNetworksOperandType* type, void* buffer,
-                                       size_t length) __NNAPI_INTRODUCED_IN(27);
+                                       size_t length) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Associate a region of a memory object with an output of the model of the
@@ -1672,11 +1860,15 @@ int ANeuralNetworksExecution_setOutput(ANeuralNetworksExecution* execution, int3
  *
  * @return ANEURALNETWORKS_NO_ERROR if successful, ANEURALNETWORKS_BAD_DATA if the
  *         name is not recognized or the buffer is too small for the output.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_setOutputFromMemory(ANeuralNetworksExecution* execution, int32_t index,
                                                  const ANeuralNetworksOperandType* type,
                                                  const ANeuralNetworksMemory* memory, size_t offset,
-                                                 size_t length) __NNAPI_INTRODUCED_IN(27);
+                                                 size_t length) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Schedule asynchronous evaluation of the execution.
@@ -1729,9 +1921,13 @@ int ANeuralNetworksExecution_setOutputFromMemory(ANeuralNetworksExecution* execu
  *              NULL if there's an error.
  *
  * @return ANEURALNETWORKS_NO_ERROR if the evaluation is successfully scheduled.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_startCompute(ANeuralNetworksExecution* execution,
-                                          ANeuralNetworksEvent** event) __NNAPI_INTRODUCED_IN(27);
+                                          ANeuralNetworksEvent** event) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Set the maximum expected duration of the specified execution.
@@ -1778,9 +1974,12 @@ int ANeuralNetworksExecution_startCompute(ANeuralNetworksExecution* execution,
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 4.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_setTimeout(ANeuralNetworksExecution* execution, uint64_t duration)
-        __NNAPI_INTRODUCED_IN(30);
+        __NNAPI_INTRODUCED_IN(30) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Set the maximum duration of WHILE loops in the specified execution.
@@ -1809,9 +2008,12 @@ int ANeuralNetworksExecution_setTimeout(ANeuralNetworksExecution* execution, uin
  *         ANEURALNETWORKS_UNEXPECTED_NULL if execution is NULL.
  *
  * Available since NNAPI feature level 4.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_setLoopTimeout(ANeuralNetworksExecution* execution, uint64_t duration)
-        __NNAPI_INTRODUCED_IN(30);
+        __NNAPI_INTRODUCED_IN(30) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the default timeout value for WHILE loops.
@@ -1819,8 +2021,12 @@ int ANeuralNetworksExecution_setLoopTimeout(ANeuralNetworksExecution* execution,
  * @return The default timeout value in nanoseconds.
  *
  * Available since NNAPI feature level 4.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-uint64_t ANeuralNetworks_getDefaultLoopTimeout() __NNAPI_INTRODUCED_IN(30);
+uint64_t ANeuralNetworks_getDefaultLoopTimeout() __NNAPI_INTRODUCED_IN(30)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the maximum timeout value for WHILE loops.
@@ -1828,8 +2034,12 @@ uint64_t ANeuralNetworks_getDefaultLoopTimeout() __NNAPI_INTRODUCED_IN(30);
  * @return The maximum timeout value in nanoseconds.
  *
  * Available since NNAPI feature level 4.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-uint64_t ANeuralNetworks_getMaximumLoopTimeout() __NNAPI_INTRODUCED_IN(30);
+uint64_t ANeuralNetworks_getMaximumLoopTimeout() __NNAPI_INTRODUCED_IN(30)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Waits until the execution completes.
@@ -1855,8 +2065,12 @@ uint64_t ANeuralNetworks_getMaximumLoopTimeout() __NNAPI_INTRODUCED_IN(30);
  * @return ANEURALNETWORKS_NO_ERROR if the execution completed normally.
  *         ANEURALNETWORKS_UNMAPPABLE if the execution input or output memory cannot
  *         be properly mapped.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-int ANeuralNetworksEvent_wait(ANeuralNetworksEvent* event) __NNAPI_INTRODUCED_IN(27);
+int ANeuralNetworksEvent_wait(ANeuralNetworksEvent* event) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Destroys the event.
@@ -1867,8 +2081,12 @@ int ANeuralNetworksEvent_wait(ANeuralNetworksEvent* event) __NNAPI_INTRODUCED_IN
  *
  * @param event The event object to be destroyed. Passing NULL is acceptable and
  *              results in no operation.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-void ANeuralNetworksEvent_free(ANeuralNetworksEvent* event) __NNAPI_INTRODUCED_IN(27);
+void ANeuralNetworksEvent_free(ANeuralNetworksEvent* event) __NNAPI_INTRODUCED_IN(27)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Create a {@link ANeuralNetworksEvent} from a sync_fence file descriptor.
@@ -1882,9 +2100,12 @@ void ANeuralNetworksEvent_free(ANeuralNetworksEvent* event) __NNAPI_INTRODUCED_I
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 4.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksEvent_createFromSyncFenceFd(int sync_fence_fd, ANeuralNetworksEvent** event)
-        __NNAPI_INTRODUCED_IN(30);
+        __NNAPI_INTRODUCED_IN(30) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get sync_fence file descriptor from the event.
@@ -1906,9 +2127,12 @@ int ANeuralNetworksEvent_createFromSyncFenceFd(int sync_fence_fd, ANeuralNetwork
  * @return ANEURALNETWORKS_NO_ERROR if successful.
  *
  * Available since NNAPI feature level 4.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksEvent_getSyncFenceFd(const ANeuralNetworksEvent* event, int* sync_fence_fd)
-        __NNAPI_INTRODUCED_IN(30);
+        __NNAPI_INTRODUCED_IN(30) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Schedule asynchronous evaluation of the execution with dependencies.
@@ -1985,11 +2209,14 @@ int ANeuralNetworksEvent_getSyncFenceFd(const ANeuralNetworksEvent* event, int* 
  * @return ANEURALNETWORKS_NO_ERROR if the evaluation is successfully scheduled.
  *
  * Available since NNAPI feature level 4.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_startComputeWithDependencies(
         ANeuralNetworksExecution* execution, const ANeuralNetworksEvent* const* dependencies,
         uint32_t num_dependencies, uint64_t duration, ANeuralNetworksEvent** event)
-        __NNAPI_INTRODUCED_IN(30);
+        __NNAPI_INTRODUCED_IN(30) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the NNAPI runtime feature level.
@@ -2025,8 +2252,12 @@ int ANeuralNetworksExecution_startComputeWithDependencies(
  * It is NOT an Android API level.
  *
  * Available since NNAPI feature level 5.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
-int64_t ANeuralNetworks_getRuntimeFeatureLevel() __NNAPI_INTRODUCED_IN(31);
+int64_t ANeuralNetworks_getRuntimeFeatureLevel() __NNAPI_INTRODUCED_IN(31)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Specifies whether the {@link ANeuralNetworksExecution} is able to accept padded input and output
@@ -2061,9 +2292,13 @@ int64_t ANeuralNetworks_getRuntimeFeatureLevel() __NNAPI_INTRODUCED_IN(31);
  *         {@link ANeuralNetworksExecution_setOutputFromMemory} has been called on the execution.
  *
  * Available since NNAPI feature level 5.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_enableInputAndOutputPadding(ANeuralNetworksExecution* execution,
-                                                         bool enable) __NNAPI_INTRODUCED_IN(31);
+                                                         bool enable) __NNAPI_INTRODUCED_IN(31)
+        __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the preferred buffer and memory alignment of an input to an execution created from a
@@ -2092,10 +2327,13 @@ int ANeuralNetworksExecution_enableInputAndOutputPadding(ANeuralNetworksExecutio
  *         ANEURALNETWORKS_BAD_DATA if the index is out of range.
  *
  * Available since NNAPI feature level 5.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksCompilation_getPreferredMemoryAlignmentForInput(
         const ANeuralNetworksCompilation* compilation, uint32_t index, uint32_t* alignment)
-        __NNAPI_INTRODUCED_IN(31);
+        __NNAPI_INTRODUCED_IN(31) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the preferred buffer and memory end padding of an input to an execution created from a
@@ -2130,10 +2368,13 @@ int ANeuralNetworksCompilation_getPreferredMemoryAlignmentForInput(
  *         ANEURALNETWORKS_BAD_DATA if the index is out of range.
  *
  * Available since NNAPI feature level 5.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksCompilation_getPreferredMemoryPaddingForInput(
         const ANeuralNetworksCompilation* compilation, uint32_t index, uint32_t* padding)
-        __NNAPI_INTRODUCED_IN(31);
+        __NNAPI_INTRODUCED_IN(31) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the preferred buffer and memory alignment of an output to an execution created from a
@@ -2162,10 +2403,13 @@ int ANeuralNetworksCompilation_getPreferredMemoryPaddingForInput(
  *         ANEURALNETWORKS_BAD_DATA if the index is out of range.
  *
  * Available since NNAPI feature level 5.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksCompilation_getPreferredMemoryAlignmentForOutput(
         const ANeuralNetworksCompilation* compilation, uint32_t index, uint32_t* alignment)
-        __NNAPI_INTRODUCED_IN(31);
+        __NNAPI_INTRODUCED_IN(31) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Get the preferred memory end padding of an output to an execution created from a particular
@@ -2200,10 +2444,13 @@ int ANeuralNetworksCompilation_getPreferredMemoryAlignmentForOutput(
  *         ANEURALNETWORKS_BAD_DATA if the index is out of range.
  *
  * Available since NNAPI feature level 5.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksCompilation_getPreferredMemoryPaddingForOutput(
         const ANeuralNetworksCompilation* compilation, uint32_t index, uint32_t* padding)
-        __NNAPI_INTRODUCED_IN(31);
+        __NNAPI_INTRODUCED_IN(31) __NNAPI_DEPRECATED_IN(35);
 
 /**
  * Specifies whether the {@link ANeuralNetworksExecution} can be reused for multiple computations.
@@ -2229,9 +2476,12 @@ int ANeuralNetworksCompilation_getPreferredMemoryPaddingForOutput(
  *         ANEURALNETWORKS_BAD_STATE if the execution is not in the preparation state.
  *
  * Available since NNAPI feature level 5.
+ * @deprecated NNAPI is deprecated. See
+ *   <a href="https://developer.android.com/ndk/guides/neuralnetworks">this webpage</a>
+ *   for more details.
  */
 int ANeuralNetworksExecution_setReusable(ANeuralNetworksExecution* execution, bool reusable)
-        __NNAPI_INTRODUCED_IN(31);
+        __NNAPI_INTRODUCED_IN(31) __NNAPI_DEPRECATED_IN(35);
 
 __END_DECLS
 
