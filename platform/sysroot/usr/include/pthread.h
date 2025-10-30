@@ -170,8 +170,6 @@ int pthread_getattr_np(pthread_t __pthread, pthread_attr_t* _Nonnull __attr);
 
 int pthread_getcpuclockid(pthread_t __pthread, clockid_t* _Nonnull __clock);
 
-void* _Nullable pthread_getspecific(pthread_key_t __key);
-
 pid_t pthread_gettid_np(pthread_t __pthread);
 
 int pthread_join(pthread_t __pthread, void* _Nullable * _Nullable __return_value_ptr);
@@ -189,6 +187,8 @@ int pthread_join(pthread_t __pthread, void* _Nullable * _Nullable __return_value
  * different language, you should consider similar implementation choices and
  * avoid a direct one-to-one mapping from thread locals to pthread keys.
  *
+ * The destructor function is only called for non-null values.
+ *
  * Returns 0 on success and returns an error number on failure.
  */
 int pthread_key_create(pthread_key_t* _Nonnull __key_ptr, void (* _Nullable __key_destructor)(void* _Nullable));
@@ -197,9 +197,27 @@ int pthread_key_create(pthread_key_t* _Nonnull __key_ptr, void (* _Nullable __ke
  * [pthread_key_delete(3)](https://man7.org/linux/man-pages/man3/pthread_key_delete.3p.html)
  * deletes a key for thread-specific data.
  *
+ * Note that pthread_key_delete() does _not_ run destructor functions:
+ * the caller must take care of any necessary cleanup of thread-specific data themselves.
+ * This function only deletes the key itself.
+ *
  * Returns 0 on success and returns an error number on failure.
  */
 int pthread_key_delete(pthread_key_t __key);
+
+/**
+ * [pthread_getspecific(3)](https://man7.org/linux/man-pages/man3/pthread_getspecific.3p.html)
+ * returns the calling thread's thread-specific value for the given key.
+ */
+void* _Nullable pthread_getspecific(pthread_key_t __key);
+
+/**
+ * [pthread_setspecific(3)](https://man7.org/linux/man-pages/man3/pthread_setspecific.3p.html)
+ * sets the calling thread's thread-specific value for the given key.
+ *
+ * Returns 0 on success and returns an error number on failure.
+ */
+int pthread_setspecific(pthread_key_t __key, const void* _Nullable __value);
 
 int pthread_mutexattr_destroy(pthread_mutexattr_t* _Nonnull __attr);
 int pthread_mutexattr_getpshared(const pthread_mutexattr_t* _Nonnull __attr, int* _Nonnull __shared);
@@ -296,25 +314,46 @@ int pthread_rwlock_wrlock(pthread_rwlock_t* _Nonnull __rwlock);
 
 #if __BIONIC_AVAILABILITY_GUARD(24)
 int pthread_barrierattr_init(pthread_barrierattr_t* _Nonnull __attr) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+#if __BIONIC_AVAILABILITY_GUARD(24)
 int pthread_barrierattr_destroy(pthread_barrierattr_t* _Nonnull __attr) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+#if __BIONIC_AVAILABILITY_GUARD(24)
 int pthread_barrierattr_getpshared(const pthread_barrierattr_t* _Nonnull __attr, int* _Nonnull __shared) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+#if __BIONIC_AVAILABILITY_GUARD(24)
 int pthread_barrierattr_setpshared(pthread_barrierattr_t* _Nonnull __attr, int __shared) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
 
+#if __BIONIC_AVAILABILITY_GUARD(24)
 int pthread_barrier_init(pthread_barrier_t* _Nonnull __barrier, const pthread_barrierattr_t* _Nullable __attr, unsigned __count) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+#if __BIONIC_AVAILABILITY_GUARD(24)
 int pthread_barrier_destroy(pthread_barrier_t* _Nonnull __barrier) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+#if __BIONIC_AVAILABILITY_GUARD(24)
 int pthread_barrier_wait(pthread_barrier_t* _Nonnull __barrier) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
 
+#if __BIONIC_AVAILABILITY_GUARD(24)
 int pthread_spin_destroy(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+#if __BIONIC_AVAILABILITY_GUARD(24)
 int pthread_spin_init(pthread_spinlock_t* _Nonnull __spinlock, int __shared) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+#if __BIONIC_AVAILABILITY_GUARD(24)
 int pthread_spin_lock(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+#if __BIONIC_AVAILABILITY_GUARD(24)
 int pthread_spin_trylock(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN(24);
+#endif /* __BIONIC_AVAILABILITY_GUARD(24) */
+#if __BIONIC_AVAILABILITY_GUARD(24)
 int pthread_spin_unlock(pthread_spinlock_t* _Nonnull __spinlock) __INTRODUCED_IN(24);
 #endif /* __BIONIC_AVAILABILITY_GUARD(24) */
 
 
 pthread_t pthread_self(void) __attribute_const__;
 
-#if defined(__USE_GNU) && __BIONIC_AVAILABILITY_GUARD(26)
 /**
  * [pthread_getname_np(3)](https://man7.org/linux/man-pages/man3/pthread_getname_np.3.html)
  * gets the name of the given thread.
@@ -322,8 +361,9 @@ pthread_t pthread_self(void) __attribute_const__;
  *
  * Returns 0 on success and returns an error number on failure.
  *
- * Available since API level 26.
+ * Available since API level 26 when compiling with `_GNU_SOURCE`.
  */
+#if defined(__USE_GNU) && __BIONIC_AVAILABILITY_GUARD(26)
 int pthread_getname_np(pthread_t __pthread, char* _Nonnull __buf, size_t __n) __INTRODUCED_IN(26);
 #endif
 
@@ -347,7 +387,7 @@ int pthread_setname_np(pthread_t __pthread, const char* _Nonnull __name);
  *
  * Returns 0 on success and returns an error number on failure.
  *
- * Available since API level 36.
+ * Available since API level 36 when compiling with `_GNU_SOURCE`.
  * See sched_getaffinity() and pthread_gettid_np() for greater portability.
  */
 #if defined(__USE_GNU) && __BIONIC_AVAILABILITY_GUARD(36)
@@ -360,7 +400,7 @@ int pthread_getaffinity_np(pthread_t __pthread, size_t __cpu_set_size, cpu_set_t
  *
  * Returns 0 on success and returns an error number on failure.
  *
- * Available since API level 36.
+ * Available since API level 36 when compiling with `_GNU_SOURCE`.
  * See sched_getaffinity() and pthread_gettid_np() for greater portability.
  */
 #if defined(__USE_GNU) && __BIONIC_AVAILABILITY_GUARD(36)
@@ -405,9 +445,6 @@ int pthread_getschedparam(pthread_t __pthread, int* _Nonnull __policy, struct sc
 #if __BIONIC_AVAILABILITY_GUARD(28)
 int pthread_setschedprio(pthread_t __pthread, int __priority) __INTRODUCED_IN(28);
 #endif /* __BIONIC_AVAILABILITY_GUARD(28) */
-
-
-int pthread_setspecific(pthread_key_t __key, const void* _Nullable __value);
 
 typedef void (* _Nullable __pthread_cleanup_func_t)(void* _Nullable);
 
