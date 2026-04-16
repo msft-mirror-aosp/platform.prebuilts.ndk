@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2025 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,11 +28,27 @@
 
 #pragma once
 
+/**
+ * @file bits/call_once.h
+ * @brief ISO C pthread_once() equivalent.
+ */
+
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < 26
+#include <bits/pthread_types.h>
 
-#define __BIONIC_THREADS_INLINE static __inline
-#include <bits/stdlib_inlines.h>
+__BEGIN_DECLS
 
-#endif
+/** Default value for type once_flag. */
+#define ONCE_FLAG_INIT PTHREAD_ONCE_INIT
+
+/** The type used by call_once(). */
+typedef pthread_once_t once_flag;
+
+/**
+ * Uses `__flag` to ensure that `__function` is called exactly once,
+ * even in multi-threaded contexts.
+ */
+void call_once(once_flag* _Nonnull __flag, void (* _Nonnull __function)(void)) __RENAME(pthread_once);
+
+__END_DECLS
