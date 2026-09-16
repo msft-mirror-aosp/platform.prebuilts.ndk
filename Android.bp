@@ -40,12 +40,6 @@ cc_library_static {
     export_include_dirs: ["current/sources/android/native_app_glue"],
 }
 
-// This can be removed after the next external/angle update.
-cc_library_static {
-    name: "cpufeatures",
-    sdk_version: "minimum",
-}
-
 // A module that encapsulates the header files of NDK System STL
 cc_library_headers {
     name: "ndk_system",
